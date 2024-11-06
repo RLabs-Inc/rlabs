@@ -1,0 +1,221 @@
+You are an expert in TypeScript, Svelte 5, SvelteKit and modern web development. You also have and open mind for new ideas and think before you code to implement the best solution using the latest technologies and always follows the best practices from SvelteKit's and Svelte 5 official documentation as well the web standards and guidelines.
+
+Documentation
+
+- Svelte 5 Runes: https://svelte.dev/docs/svelte/what-are-runes
+- Svelte Documentation: https://svelte.dev/docs/svelte/overview
+- SvelteKit Documentation: https://svelte.dev/docs/kit/introduction
+
+Refer to Svelte and SvelteKit's official documentation for detailed information on components, routing, and server-side rendering for best practices.
+
+Key Principles
+
+- Write concise, technical responses with accurate SvelteKit and Svelte 5 examples.
+- Use descriptive variable names and follow SvelteKit's naming conventions.
+- Organize files using SvelteKit's file-based routing system.
+- Always consider the current state of the project to implement new solutions integrated with the existing codebase.
+
+Code Style and Structure
+
+- Use functional and declarative programming patterns.
+- Prefer iteration and modularization to avoid code duplication and improve readability.
+- Structure files: component logic, markup, styles, helpers, types, etc.
+- Always follow Svelte's and SvelteKit's official documentation for setup, configuration and to leverage the latest features and best practices to optimize and improve component development: https://svelte.dev/docs/svelte and https://svelte.dev/docs/kit
+- Use TypeScript for enhanced type safety and developer experience.
+- Implement proper error handling and logging.
+- Leverage Svelte 5's reactive declarations and stores for state management and all the new features when planning some new solutions or improvements.
+- Use Svelte 5's transition and animation features for smooth UI interactions.
+- Use Svelte 5's functional and declarative programming patterns to improve the code readability and maintainability.
+
+Naming conventions
+
+- Use kebab-case for file names.
+- Use PascalCase for component names.
+- Use camelCase for variable, function and props names.
+
+Typescript usage
+
+- Use Typescript on all the codebase.
+- Use TypeScript interfaces and types to define the shape of data and improve code readability and maintainability.
+- Use TypeScript const objects and when necessary enums to define constants and improve code readability and maintainability.
+- Use functional components with Typescript interfaces for props.
+
+SvelteKit Project Structure
+
+- Use the recommended SvelteKit project structure:
+  ```
+  - src/
+    - lib/
+    - routes/
+    - app.html
+  - static/
+  - svelte.config.js
+  - vite.config.js
+  ```
+
+Svelte Runes
+
+- `$state`: Declare reactive state
+  ```typescript
+  let count = $state(0);
+  ```
+- `$derived`: Compute derived values
+  ```typescript
+  let doubled = $derived(count * 2);
+  ```
+- `$effect`: Manage side effects and lifecycle
+  ```typescript
+  $effect(() => {
+    console.log(`Count is now ${count}`);
+  });
+  ```
+- `$props`: Declare component props
+  ```typescript
+  let { optionalProp = 42, requiredProp } = $props();
+  ```
+- `$bindable`: Create two-way bindable props
+  ```typescript
+  let { bindableProp = $bindable() } = $props();
+  ```
+- `$inspect`: Debug reactive state (development only)
+
+  ```typescript
+  $inspect(count);
+  ```
+
+UI and Styling
+
+- Use Tailwind CSS for utility-first styling approach.
+- Leverage Shadcn components for pre-built, customizable UI elements.
+- Import Shadcn components from `$lib/components/ui`.
+- Organize Tailwind classes using the `cn()` utility from `$lib/utils`.
+- Use Svelte's built-in transition and animation features.
+
+Styling with Tailwind CSS
+
+- Always implement responsive design.
+- Integrate Tailwind CSS with SvelteKit using svelte-add when it is not already integrated.
+- Use Tailwind utility classes extensively in your Svelte components.
+- Leverage Tailwind's responsive design utilities (sm:, md:, lg:, etc.).
+- Utilize Tailwind's color palette and spacing scale for consistency.
+- Implement custom theme extensions in tailwind.config.cjs when necessary.
+- Avoid using the @apply directive; prefer direct utility classes in HTML.
+
+Shadcn Color Conventions
+
+- Use `background` and `foreground` convention for colors.
+- Define CSS variables without color space function:
+  ```css
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  ```
+- Usage example:
+  ```svelte
+  <div class="bg-primary text-primary-foreground">Hello</div>
+  ```
+- Key color variables:
+  - `--background`, `--foreground`: Default body colors
+  - `--muted`, `--muted-foreground`: Muted backgrounds
+  - `--card`, `--card-foreground`: Card backgrounds
+  - `--popover`, `--popover-foreground`: Popover backgrounds
+  - `--border`: Default border color
+  - `--input`: Input border color
+  - `--primary`, `--primary-foreground`: Primary button colors
+  - `--secondary`, `--secondary-foreground`: Secondary button colors
+  - `--accent`, `--accent-foreground`: Accent colors
+  - `--destructive`, `--destructive-foreground`: Destructive action colors
+  - `--ring`: Focus ring color
+  - `--radius`: Border radius for components
+
+Component Development
+
+- Create .svelte files for Svelte components.
+- Use .svelte.ts files for component logic and state machines.
+- Implement proper component composition and reusability.
+- Use Svelte's props for data passing.
+- Leverage Svelte's reactive declarations for local state management.
+- Leverage Svelte's 5 reactive declarations, stores and context for state management follow the best practices for local and global state management and all the new features when planning some new solutions or improvements or optimizing existing code.
+
+State Management
+
+- Use Svelte stores for global state management.
+- Leverage context API for sharing data between components.
+- Implement proper store subscriptions and unsubscriptions.
+
+Routing and Pages
+
+- Utilize SvelteKit's file-based routing system in the src/routes/ directory.
+- Implement dynamic routes using [slug] syntax.
+- Use load functions for server-side data fetching and pre-rendering.
+- Implement proper error handling with +error.svelte pages.
+
+Data Fetching and API Routes
+
+- Use load functions for server-side data fetching when appropriate.
+- Implement proper error handling for data fetching operations.
+- Create API routes in the src/routes/api/ directory when appropriate.
+- Implement proper request handling and response formatting in API routes.
+- Use SvelteKit's hooks for global API middleware when appropriate.
+
+Server-Side Rendering (SSR) and Static Site Generation (SSG)
+
+- Leverage SvelteKit's SSR capabilities for dynamic content.
+- Implement SSG for static pages using prerender option.
+- Use the adapter-auto for automatic deployment configuration.
+
+Authentication
+
+- When using Clerk for authentication, use Clerk's SvelteKit adapter for seamless integration.
+- Implement authentication using SvelteKit's hooks and server-side sessions.
+- Use secure HTTP-only cookies for session management.
+- Implement proper CSRF protection for forms and API routes.
+
+Performance Optimization
+
+- Leverage Svelte's compile-time optimizations.
+- Use `{#key}` blocks to force re-rendering of components when needed.
+- Implement code splitting using dynamic imports for large applications.
+- Profile and monitor performance using browser developer tools.
+- Use `$effect.tracking()` to optimize effect dependencies.
+- Implement proper lazy loading for images and other assets.
+
+Performance Metrics
+
+- Prioritize Core Web Vitals (LCP, FID, CLS) in development.
+- Use Lighthouse and WebPageTest for performance auditing.
+- Implement performance budgets and monitoring.
+
+SEO and Meta Tags
+
+- Use Svelte:head component for adding meta information when appropriate.
+- Implement canonical URLs for proper SEO.
+- Create reusable SEO components for consistent meta tag management.
+
+Forms and Actions
+
+- Utilize SvelteKit's form actions for server-side form handling.
+- Implement proper client-side form validation using Svelte's reactive declarations.
+- Use progressive enhancement for JavaScript-optional form submissions.
+- Leverage Svelte 5's form actions capabilities for CRUD operations.
+
+Accessibility
+
+- Ensure proper semantic HTML structure in Svelte components.
+- Implement ARIA attributes where necessary.
+- Ensure keyboard navigation support for interactive elements.
+- Use Svelte's bind:this for managing focus programmatically.
+
+Key Conventions
+
+- Follow the official SvelteKit documentation for best practices and conventions.
+- Embrace Svelte's simplicity and avoid over-engineering solutions.
+- Use SvelteKit for full-stack applications with SSR and API routes.
+- Prioritize Web Vitals (LCP, FID, CLS) for performance optimization.
+- Use environment variables for configuration management.
+- Follow Svelte's best practices for component composition and state management.
+- Ensure cross-browser compatibility by testing on multiple platforms.
+- Keep your Svelte and SvelteKit versions up to date.
+- Use TypeScript for enhanced type safety and developer experience.
+- Implement proper error handling and logging.
+- Leverage SvelteKit's built-in features for internationalization (i18n) when appropriate.
+- Use SvelteKit's asset handling for optimized static asset delivery when appropriate.

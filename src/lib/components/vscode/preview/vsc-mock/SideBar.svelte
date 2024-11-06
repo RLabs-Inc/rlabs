@@ -1,0 +1,112 @@
+<script lang="ts">
+  import { File, Folder, MoreHorizontal } from 'lucide-svelte';
+  import { exampleFiles } from '$lib/constants/example-files';
+  import { getSelectedFile } from '$lib/state/vscode/preview.svelte';
+  import SideBarItem from './SideBarItem.svelte';
+
+  import { getMonacoEditor } from '$lib/components/vscode/monaco-editor/monaco.svelte';
+  const monacoEditor = getMonacoEditor();
+
+  type FolderStates = {
+    'vscode-theme-generator': boolean;
+    src: boolean;
+    'example-files': boolean;
+  };
+  const selectedFile = getSelectedFile();
+
+  const folderStates = $state({
+    'vscode-theme-generator': true,
+    src: true,
+    'example-files': true
+  });
+
+  const handleFileSelect = (name: string) => {
+    selectedFile().set(name);
+    monacoEditor.changeModel(selectedFile().file.snippet, selectedFile().file.language);
+  };
+
+  const handleFolderToggle = (name: keyof FolderStates) => {
+    folderStates[name] = !folderStates[name];
+  };
+</script>
+
+<div
+  class="sideBar flex w-36 flex-shrink-0 flex-col border-r md:w-52"
+  style="background-color: var(--bg1); border-right: 1px solid var(--border);"
+>
+  <div class="flex items-center justify-between gap-2 p-2">
+    <span class="text-xs font-bold" style="color: var(--fg1);">EXPLORER</span>
+    <MoreHorizontal class="h-4 w-4" style="color: var(--fg1);" />
+  </div>
+  <div class="custom-scrollbar h-full overflow-y-scroll text-sm">
+    <SideBarItem
+      name="vscode-theme-generator"
+      icon={Folder}
+      isOpen={folderStates['vscode-theme-generator']}
+      folderToggle={handleFolderToggle}
+      fileSelect={handleFileSelect}
+      isFolder
+      isMain
+      isActive={false}
+    >
+      <SideBarItem
+        name="src"
+        icon={Folder}
+        isOpen={folderStates.src}
+        folderToggle={handleFolderToggle}
+        fileSelect={handleFileSelect}
+        isFolder
+        isActive={false}
+        isMain={false}
+      >
+        <SideBarItem
+          name="example-files"
+          icon={Folder}
+          isOpen={folderStates['example-files']}
+          folderToggle={handleFolderToggle}
+          fileSelect={handleFileSelect}
+          isFolder
+          isActive={false}
+          isMain={false}
+          class="sticky"
+        >
+          <div class="">
+            {#each exampleFiles as file}
+              <SideBarItem
+                name={file.name}
+                icon={File}
+                isFolder={false}
+                isOpen={false}
+                folderToggle={handleFolderToggle}
+                fileSelect={handleFileSelect}
+                isActive={false}
+                isMain={false}
+              />
+            {/each}
+          </div>
+        </SideBarItem>
+      </SideBarItem>
+    </SideBarItem>
+  </div>
+</div>
+
+<style>
+  .custom-scrollbar {
+    scrollbar-width: 1px;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 1px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    border: 2px solid transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+</style>
