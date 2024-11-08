@@ -1,26 +1,91 @@
 <script lang="ts">
-  import Preview from '$lib/components/vscode/preview/Preview.svelte';
+  import { onMount, onDestroy } from 'svelte';
+  import VSCEditor from '$lib/components/vscode/preview/vsc-mock/VSCEditor.svelte';
   import ThemeCard from '$lib/components/vscode/theme/ThemeCard.svelte';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
+  import { getMonacoEditor } from '$lib/components/vscode/monaco-editor/monaco.svelte';
+  import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
   import type { Theme } from '$lib/types/theme';
+  import { randomInteger } from '$lib/utils/vscode/math';
 
   const { data }: { data: { themes: Theme[] } } = $props();
   const selectedTheme = getSelectedTheme();
+  const monacoEditor = getMonacoEditor();
+  selectedTheme().set(data.themes[0]);
 
-  selectedTheme.set(data.themes[0]);
+  let randomThemeInterval: NodeJS.Timeout;
+
+  onMount(() => {
+    randomizeSelectedTheme();
+  });
+
+  onDestroy(() => {
+    stopRandomizingSelectedTheme();
+  });
+
+  const randomizeSelectedTheme = () => {
+    randomThemeInterval = setInterval(() => {
+      const themeNumber = randomInteger(0, data.themes.length - 1);
+      selectedTheme().set(data.themes[themeNumber]);
+      monacoEditor.changeTheme(
+        generateSemanticThemeJSON(
+          'theme',
+          data.themes[themeNumber].uiColors,
+          data.themes[themeNumber].syntaxColors,
+          data.themes[themeNumber].ansiColors
+        ).themeJSON
+      );
+    }, 1000);
+  };
+
+  const stopRandomizingSelectedTheme = () => {
+    clearInterval(randomThemeInterval);
+  };
 </script>
 
-<section class="flex h-full flex-col gap-4 px-4 py-4 lg:px-8">
-  <div class="flex h-[75vh] flex-col items-center justify-center gap-2">
-    <h1 class="text-5xl font-black">Welcome to VSCode Themes Community</h1>
-    <h2 class="text-2xl font-bold text-muted-foreground">
-      Discover and share new themes for VSCode.
-    </h2>
-    <Preview theme={selectedTheme.theme || data.themes[0]} />
+<section
+  class="min-h-[calc(100vh-5.2rem)] sm:min-h-0"
+  style={`background: ${selectedTheme().theme?.uiColors.BG1.slice(0, -2) + 'aa'}; transition-property: all; transition-duration: 200ms;`}
+>
+  <h1
+    class="px-5 pt-10 text-center text-3xl font-black drop-shadow-md md:pt-20 md:text-6xl"
+    style={`color: ${selectedTheme().theme?.uiColors.FG1}`}
+  >
+    Welcome to VSCode Themes Community
+  </h1>
+  <div
+    class="w-full px-4 py-1"
+    style={`color: ${selectedTheme().theme?.uiColors.AC2}; transition-property: all; transition-duration: 200ms;`}
+  >
+    <h2 class="text-center text-2xl font-black drop-shadow-md sm:text-5xl">Discover new themes</h2>
   </div>
-  <div class="grid grid-cols-1 gap-20 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+  <div
+    class="sticky top-14 z-10 flex w-full flex-col items-center justify-center gap-5 p-5 pb-24 shadow-sm backdrop-blur-xl sm:pb-12"
+  >
+    <div class="h-[20rem] w-full drop-shadow-md sm:h-[30rem] lg:w-2/3 xl:w-1/2">
+      <VSCEditor theme={selectedTheme().theme || data.themes[0]} />
+      <div
+        class="mt-2 flex flex-col items-center justify-start gap-0 pb-4 md:flex-row md:items-baseline md:justify-end md:gap-2"
+        style={`color: ${selectedTheme().theme?.uiColors.AC1}`}
+      >
+        <h3 class="text-xl font-black drop-shadow-sm lg:text-2xl">{selectedTheme().theme?.name}</h3>
+        <p
+          class="text-xs font-bold drop-shadow-sm"
+          style={`color: ${selectedTheme().theme?.uiColors.FG1}`}
+        >
+          <span class="text-xs font-normal drop-shadow-sm">by</span>
+          {selectedTheme().theme?.userName}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden grid-cols-1 gap-10 p-10 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
     {#each data.themes as theme, index (theme.id)}
-      <ThemeCard {theme} />
+      <ThemeCard {theme} stopRandomizing={stopRandomizingSelectedTheme} />
     {/each}
   </div>
 </section>
+
+<style>
+</style>

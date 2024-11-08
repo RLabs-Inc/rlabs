@@ -5,4 +5,4 @@
 </script>
 
 <Header />
-<main>{@render children()}</main>
+<main class="h-[calc(100vh-2rem)] pt-14">{@render children()}</main>

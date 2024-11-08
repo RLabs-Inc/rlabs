@@ -42,22 +42,13 @@ export const ThemeInsertSchema = ThemeSchema.omit({
 export type InsertTheme = z.infer<typeof ThemeInsertSchema>;
 
 export type UIColorsGenerationOptions = {
-  isDark: boolean;
-  scheme: ColorSchemes;
-  baseHue: number;
-  uiSaturation: number;
   few?: boolean;
   lockedColors: Partial<UIColors>;
 };
 export type SyntaxColorsGenerationOptions = {
-  uiColors: UIColors;
-  schemeHues: number[];
-  syntaxSaturation: number;
   lockedColors: Partial<SyntaxColors>;
 };
 export type AnsiColorsGenerationOptions = {
-  background: string;
-  ansiSaturation: number;
   lockedColors: Partial<AnsiColors>;
 };
 

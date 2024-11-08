@@ -8,13 +8,11 @@
   ];
 </script>
 
-<div class="flex flex-col overflow-auto">
-  <div
-    class="flex overflow-hidden truncate"
-    style="background-color: var(--bg2); transition: all 200ms ease-in-out;"
-  >
+<div class="flex flex-col">
+  <div class="flex" style="background-color: var(--bg1); transition: all 200ms ease-in-out;">
     {#each tabs as tab}
       <EditorTab name={tab.name} active={tab.active} />
     {/each}
   </div>
+  <div class="h-[1.45rem] w-full" style="background-color: var(--bg2);"></div>
 </div>

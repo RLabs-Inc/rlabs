@@ -3,7 +3,7 @@
   import { Bell, GitBranch, Check, UploadCloud, CircleX, TriangleAlert } from 'lucide-svelte';
 
   const leftItems = [
-    { text: 'main', icon: GitBranch },
+    { text: 'main*', icon: GitBranch },
     { icon: UploadCloud },
     { text: '0', icon: CircleX },
     { text: '0', icon: TriangleAlert }
@@ -20,14 +20,14 @@
 </script>
 
 <div
-  class="flex h-6 w-full items-center overflow-hidden truncate text-xs"
+  class="flex h-7 w-full items-center overflow-hidden truncate text-xs"
   style="color: var(--fg3)"
 >
   <div
-    class="flex h-6 w-10 flex-shrink-0 items-center justify-center"
+    class="flex h-7 w-9 flex-shrink-0 items-center justify-center"
     style="color: var(--fgAc1); background-color: var(--ac1)"
   >
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fill-rule="evenodd"
         clip-rule="evenodd"
@@ -37,7 +37,7 @@
     </svg>
   </div>
   <div
-    class="flex h-6 flex-1 items-center justify-between overflow-hidden truncate px-2 text-xs"
+    class="flex h-7 flex-1 items-center justify-between overflow-hidden truncate px-2 text-xs"
     style="color: var(--fgAc2); background-color: var(--ac2)"
   >
     <div class="flex items-center space-x-2 overflow-hidden truncate">
@@ -47,7 +47,7 @@
           style="color: var(--fgAc2)"
         >
           {#if item.icon}
-            <item.icon class="mr-1 h-4 w-4" />
+            <item.icon class="mr-1 h-3 w-3" />
           {/if}
           <span>{item.text}</span>
         </div>

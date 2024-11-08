@@ -1,6 +1,8 @@
 <script lang="ts"></script>
 
-<footer class="sticky bottom-0 z-50 flex flex-col items-center justify-center bg-background">
+<footer
+  class="sticky bottom-0 z-50 flex flex-col items-center justify-center bg-background/40 backdrop-blur-lg"
+>
   <div class="-mt-[0.65rem] flex w-full items-center justify-center gap-1">
     <div class="w-full border-t border-border"></div>
     <img src="/images/RLabs-Lamp.png" alt="RLabs" class="w-4" />

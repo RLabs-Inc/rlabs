@@ -15,7 +15,7 @@
     folderToggle: (name: keyof FolderStates) => void;
     fileSelect: (name: string) => void;
     name: string;
-    icon: typeof Folder | typeof File;
+    icon: typeof Folder | string;
     isFolder: boolean;
     isOpen: boolean;
     isMain: boolean;
@@ -34,7 +34,7 @@
 
 <button
   class={clsx(
-    'item flex w-full cursor-pointer items-center truncate px-2 py-2',
+    'item flex w-full cursor-pointer items-center truncate px-2 py-1',
     isOpen && !isMain && 'sticky top-7',
     isActive && 'active',
     isMain && 'main',
@@ -54,7 +54,7 @@
   {#if isFolder}
     <Folder class="mr-1 h-4 w-4 text-yellow-400" />
   {:else}
-    <File class="mr-1 h-4 w-4 text-inherit" />
+    <img src={icon} class="mr-1 h-4 w-4" alt={name} />
   {/if}
   <span class="truncate">{name}</span>
 </button>

@@ -31,14 +31,14 @@
 </script>
 
 <div
-  class="sideBar flex w-36 flex-shrink-0 flex-col border-r md:w-52"
+  class="sideBar flex w-12 flex-col sm:w-36 md:w-52"
   style="background-color: var(--bg1); border-right: 1px solid var(--border);"
 >
-  <div class="flex items-center justify-between gap-2 p-2">
+  <div class="flex items-center justify-between p-2">
     <span class="text-xs font-bold" style="color: var(--fg1);">EXPLORER</span>
     <MoreHorizontal class="h-4 w-4" style="color: var(--fg1);" />
   </div>
-  <div class="custom-scrollbar h-full overflow-y-scroll text-sm">
+  <div class="custom-scrollbar overflow-y-auto text-sm">
     <SideBarItem
       name="vscode-theme-generator"
       icon={Folder}
@@ -74,12 +74,11 @@
             {#each exampleFiles as file}
               <SideBarItem
                 name={file.name}
-                icon={File}
+                icon={file.icon}
                 isFolder={false}
                 isOpen={false}
                 folderToggle={handleFolderToggle}
                 fileSelect={handleFileSelect}
-                isActive={false}
                 isMain={false}
               />
             {/each}

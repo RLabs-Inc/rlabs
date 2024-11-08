@@ -1,10 +1,16 @@
 import Color from 'color';
-import type { AnsiColors } from '../../types/colors';
-import type { AnsiColorsGenerationOptions } from '../../types/theme';
+import { type AnsiColors } from '$lib/types/color';
+import type { AnsiColorsGenerationOptions } from '$lib/types/theme';
+import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
+import { ensureReadability } from './colorUtils.svelte';
 
-export function generateAnsiColors(options: AnsiColorsGenerationOptions): AnsiColors {
-  const { ansiSaturation, background, lockedColors } = options;
-  const baseSaturation = ansiSaturation;
+const uiColorsState = getUiColors();
+
+export function generateAnsiColors(options: AnsiColorsGenerationOptions): {
+  generatedAnsiColors: AnsiColors;
+} {
+  const { lockedColors } = options;
+  const baseSaturation = 30 + Math.random() * 30; // 30-60
   const baseLightness = 30 + Math.random() * 30; // 30-60
 
   const generateColor = (baseHue: number, isGrayscale: boolean = false) => {
@@ -28,7 +34,9 @@ export function generateAnsiColors(options: AnsiColorsGenerationOptions): AnsiCo
     White: lockedColors.White
       ? lockedColors.White
       : Color.hsl(30 + Math.random() * 30, 10 + Math.random() * 15, 92 + Math.random() * 8).hexa(), // More beige variation
-    BrightBlack: lockedColors.BrightBlack ? lockedColors.BrightBlack : Color.hsl(0, 0, 20 + Math.random() * 10).hexa(), // Darker gray
+    BrightBlack: lockedColors.BrightBlack
+      ? lockedColors.BrightBlack
+      : Color.hsl(0, 0, 20 + Math.random() * 10).hexa(), // Darker gray
     BrightRed: lockedColors.BrightRed ? lockedColors.BrightRed : '',
     BrightGreen: lockedColors.BrightGreen ? lockedColors.BrightGreen : '',
     BrightYellow: lockedColors.BrightYellow ? lockedColors.BrightYellow : '',
@@ -37,23 +45,28 @@ export function generateAnsiColors(options: AnsiColorsGenerationOptions): AnsiCo
     BrightCyan: lockedColors.BrightCyan ? lockedColors.BrightCyan : '',
     BrightWhite: lockedColors.BrightWhite
       ? lockedColors.BrightWhite
-      : Color.hsl(30 + Math.random() * 30, 5 + Math.random() * 10, 97 + Math.random() * 3).hexa(), // Slight beige tint
+      : Color.hsl(30 + Math.random() * 30, 5 + Math.random() * 10, 97 + Math.random() * 3).hexa() // Slight beige tint
   };
 
   // Generate bright colors based on their counterparts
   ['Red', 'Green', 'Yellow', 'Blue', 'Magenta', 'Cyan'].forEach((color) => {
     if (colors[`Bright${color}` as keyof AnsiColors] === '') {
-      colors[`Bright${color}` as keyof AnsiColors] = brightenColor(colors[color as keyof AnsiColors]);
+      colors[`Bright${color}` as keyof AnsiColors] = brightenColor(
+        colors[color as keyof AnsiColors]
+      );
     }
   });
 
   // Ensure readability for all colors except Black and BrightBlack
   Object.keys(colors).forEach((key) => {
     if (!lockedColors || !lockedColors[key as keyof AnsiColors]) {
-      colors[key as keyof AnsiColors] = ensureReadabilityExceptBlack(colors[key as keyof AnsiColors], background);
+      colors[key as keyof AnsiColors] = ensureReadabilityExceptBlack(
+        colors[key as keyof AnsiColors],
+        uiColorsState().uiColors.BG1
+      );
     }
   });
-  return colors;
+  return { generatedAnsiColors: colors };
 }
 
 export const ensureReadabilityExceptBlack = (color: string, bgColor: string) => {
@@ -72,7 +85,7 @@ export function updateAnsiColorsWithSaturation(
   background: string,
   currentColors: AnsiColors,
   newAnsiSaturation: number,
-  lockedColors: Partial<AnsiColors>,
+  lockedColors: Partial<AnsiColors>
 ): AnsiColors {
   const updateColorSaturation = (color: string, newSaturation: number) => {
     const hsl = Color(color).hsl();
@@ -86,7 +99,7 @@ export function updateAnsiColorsWithSaturation(
       if (!key.includes('Bright')) {
         updatedColors[key as keyof AnsiColors] = updateColorSaturation(
           updatedColors[key as keyof AnsiColors],
-          newAnsiSaturation,
+          newAnsiSaturation
         );
       }
     }
@@ -95,7 +108,9 @@ export function updateAnsiColorsWithSaturation(
   // Generate bright colors based on their counterparts
   ['Red', 'Green', 'Yellow', 'Blue', 'Magenta', 'Cyan'].forEach((color) => {
     if (!lockedColors || !lockedColors[`Bright${color}` as keyof AnsiColors]) {
-      updatedColors[`Bright${color}` as keyof AnsiColors] = brightenColor(updatedColors[color as keyof AnsiColors]);
+      updatedColors[`Bright${color}` as keyof AnsiColors] = brightenColor(
+        updatedColors[color as keyof AnsiColors]
+      );
     }
   });
 
@@ -103,7 +118,7 @@ export function updateAnsiColorsWithSaturation(
     if (!lockedColors || !lockedColors[key as keyof AnsiColors]) {
       updatedColors[key as keyof AnsiColors] = ensureReadabilityExceptBlack(
         updatedColors[key as keyof AnsiColors],
-        background,
+        uiColorsState().uiColors.BG1
       );
     }
   });

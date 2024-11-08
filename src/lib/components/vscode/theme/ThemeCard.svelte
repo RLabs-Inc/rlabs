@@ -1,8 +1,17 @@
 <script lang="ts">
+  import { invalidateAll } from '$app/navigation';
+  import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
+  import { getMonacoEditor } from '$lib/components/vscode/monaco-editor/monaco.svelte';
   import DownloadButton from '$lib/components/vscode/theme/DownloadButton.svelte';
-  import type { Theme } from '$lib/types/theme';
 
-  const { theme }: { theme: Theme } = $props();
+  import type { Theme } from '$lib/types/theme';
+  import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
+  import clsx from 'clsx';
+
+  const { theme, stopRandomizing }: { theme: Theme; stopRandomizing: () => void } = $props();
+
+  const selectedTheme = getSelectedTheme();
+  const monacoEditor = getMonacoEditor();
 
   let styleVars = $derived(` 
     --color-background: ${theme.uiColors.BG1}; 
@@ -16,15 +25,56 @@
   `);
   let isDownloading = $state(false);
 
-  function downloadTheme() {
+  async function downloadThemeVSIX() {
     isDownloading = true;
-    setTimeout(() => {
-      isDownloading = false;
-    }, 2000);
+    const vsixBuffer = await fetch(`/api/vscode/download-theme?id=${theme.id}`);
+    if (vsixBuffer) {
+      const blob = new Blob([await vsixBuffer.blob()], {
+        type: 'application/octet-stream'
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${theme.name}.vsix`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    }
+    invalidateAll();
+    isDownloading = false;
+  }
+
+  function handleClick() {
+    stopRandomizing();
+    selectedTheme().set(theme);
+    monacoEditor.changeTheme(
+      generateSemanticThemeJSON('theme', theme.uiColors, theme.syntaxColors, theme.ansiColors)
+        .themeJSON
+    );
   }
 </script>
 
-<div class="theme-card flex flex-col gap-1 overflow-hidden rounded-md" style={styleVars}>
+<div
+  class={clsx(
+    'theme-card flex cursor-pointer flex-col gap-1 overflow-hidden rounded-md focus:outline-none',
+    selectedTheme().theme?.name === theme.name ? 'active' : 'hover:scale-105 focus:scale-105'
+  )}
+  style={styleVars}
+  onclick={() => {
+    handleClick();
+  }}
+  onkeydown={(event) => {
+    if (event.key === 'Enter') {
+      handleClick();
+    }
+  }}
+  aria-label={theme.name}
+  aria-roledescription="Theme Card"
+  aria-keyshortcuts="Enter"
+  tabindex="0"
+  role="button"
+>
   <div class="flex h-2 w-full items-center">
     <div class="h-2 w-full" style="background-color: var(--color-accent)"></div>
     <div class="h-2 w-full" style="background-color: var(--color-accent-2)"></div>
@@ -41,7 +91,7 @@
 
     <DownloadButton
       count={theme.downloads}
-      {downloadTheme}
+      downloadTheme={downloadThemeVSIX}
       {isDownloading}
       fg1={theme.uiColors.FG1}
       ac1={theme.uiColors.AC1}
@@ -53,6 +103,11 @@
   .theme-card {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    transition-property: all;
+    transition-duration: 200ms;
+  }
+  .theme-card.active {
+    scale: 1.1;
   }
   .theme-name {
     color: var(--color-accent);

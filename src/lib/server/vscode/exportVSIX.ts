@@ -2,7 +2,7 @@ import type { Theme } from '../../types/theme';
 import fs from 'fs/promises';
 import path from 'path';
 import JSZip from 'jszip';
-import { generateSemanticThemeJSON } from './export';
+import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
 
 const TEMPLATE_DIR = path.join(process.cwd(), 'vsix-template');
 console.log('TEMPLATE_DIR:', TEMPLATE_DIR);
@@ -29,7 +29,10 @@ export async function generateVSIX(theme: Theme): Promise<Buffer> {
       // Replace variables in package.json and README.md
       if (file === 'package.json' || file === 'README.md') {
         content = content.replace(/\${themeName}/g, theme.name);
-        content = content.replace(/\${themeNameKebab}/g, theme.name.toLowerCase().replace(/\s+/g, '-'));
+        content = content.replace(
+          /\${themeNameKebab}/g,
+          theme.name.toLowerCase().replace(/\s+/g, '-')
+        );
         content = content.replace(/\${uiTheme}/g, theme.isDark ? 'vs-dark' : 'vs');
       }
 
@@ -47,7 +50,12 @@ export async function generateVSIX(theme: Theme): Promise<Buffer> {
   }
 
   // Generate theme JSON
-  const { themeObject } = generateSemanticThemeJSON(theme.name, theme.uiColors, theme.syntaxColors, theme.ansiColors);
+  const { themeObject } = generateSemanticThemeJSON(
+    theme.name,
+    theme.uiColors,
+    theme.syntaxColors,
+    theme.ansiColors
+  );
 
   // Create themes folder inside the extension folder
   const themesFolder = extensionFolder.folder('themes');

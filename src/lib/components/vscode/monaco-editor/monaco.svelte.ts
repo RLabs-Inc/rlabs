@@ -82,7 +82,9 @@ function getMonacoEditor() {
   };
 
   const changeTheme = (theme: string) => {
-    highlighter.setTheme(theme);
+    highlighter.setTheme(JSON.parse(theme));
+    registerLanguages();
+    shikiToMonaco(highlighter, monaco);
   };
 
   return {

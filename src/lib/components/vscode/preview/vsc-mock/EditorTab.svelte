@@ -6,8 +6,8 @@
 
 <div
   class={clsx(
-    'tab cursor-pointer items-center truncate px-2 py-2 text-sm transition-colors duration-200 md:px-4',
-    active ? 'active flex border-t-2' : 'hidden border-r md:flex'
+    'tab cursor-pointer items-center px-2 py-2 text-sm transition-colors duration-200 md:px-4',
+    active ? 'active flex border-t' : 'hidden border-r md:flex'
   )}
 >
   {name}
@@ -16,17 +16,17 @@
 
 <style>
   .tab.active {
-    background: var(--bg1);
+    background: var(--bg2);
     color: var(--fg1);
     border-color: var(--ac1);
   }
   .tab {
-    background: var(--bg2);
+    background: var(--bg1);
     color: var(--comment);
     border-color: var(--border);
   }
   .tab:hover {
-    background: var(--bg1);
+    background: var(--bg2);
     color: var(--fg1);
   }
 </style>

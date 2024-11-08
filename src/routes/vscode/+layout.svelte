@@ -5,4 +5,4 @@
 </script>
 
 <Header />
-<main>{@render children()}</main>
+<main class="">{@render children()}</main>

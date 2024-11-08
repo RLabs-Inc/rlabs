@@ -10,17 +10,19 @@
   const themeJSON = $derived(
     generateSemanticThemeJSON(
       'theme',
-      selectedTheme.theme?.uiColors || initialUIColors,
-      selectedTheme.theme?.syntaxColors || initialSyntaxColors,
-      selectedTheme.theme?.ansiColors || initialAnsiColors
+      selectedTheme().theme?.uiColors || initialUIColors,
+      selectedTheme().theme?.syntaxColors || initialSyntaxColors,
+      selectedTheme().theme?.ansiColors || initialAnsiColors
     ).themeJSON
   );
 
   const selectedFile = getSelectedFile();
 </script>
 
-<MonacoEditor
-  theme={themeJSON}
-  lang={selectedFile().file.language || 'typescript'}
-  snippet={selectedFile().file.snippet || 'console.log("Hello, world!");'}
-/>
+<div class="h-full w-full">
+  <MonacoEditor
+    theme={themeJSON}
+    lang={selectedFile().file.language || 'typescript'}
+    snippet={selectedFile().file.snippet || 'console.log("Hello, world!");'}
+  />
+</div>
