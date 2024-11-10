@@ -1,8 +1,9 @@
 import Color from 'color';
+import { ensureReadability } from './colorUtils.svelte';
+import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
+
 import { type AnsiColors } from '$lib/types/color';
 import type { AnsiColorsGenerationOptions } from '$lib/types/theme';
-import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
-import { ensureReadability } from './colorUtils.svelte';
 
 const uiColorsState = getUiColors();
 

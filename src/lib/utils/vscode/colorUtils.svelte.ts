@@ -1,4 +1,5 @@
 import Color from 'color';
+
 import { ColorSchemes } from '$lib/types/color';
 
 export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): number[] {

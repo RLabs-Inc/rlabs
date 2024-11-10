@@ -1,6 +1,7 @@
-import { ColorSchemes } from '$lib/types/color';
 import { generateSchemeHues } from '$lib/utils/vscode/colorUtils.svelte';
 import { getControls } from '$lib/state/vscode/controls.svelte';
+
+import { ColorSchemes } from '$lib/types/color';
 
 let schemeHues = $state<number[]>([]);
 

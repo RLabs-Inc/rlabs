@@ -1,13 +1,12 @@
-import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
-
-import { initialAnsiColors } from '$lib/constants/colors';
 import {
   generateAnsiColors,
   updateAnsiColorsWithSaturation
 } from '$lib/utils/vscode/ansiColors.svelte';
+import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
 import { type AnsiColors } from '$lib/types/color';
 import type { AnsiColorsGenerationOptions } from '$lib/types/theme';
+import { initialAnsiColors } from '$lib/constants/colors';
 
 let ansiColors = $state<AnsiColors>(initialAnsiColors);
 const lockedAnsiColors = $state<Partial<AnsiColors>>({});

@@ -1,16 +1,17 @@
-import { ColorSchemes } from '$lib/types/color';
-import { randomInteger } from '$lib/utils/vscode/math';
-import type { Theme } from '$lib/types/theme';
-import { randomEnum } from '$lib/utils/vscode/math';
-import { initialUIColors, initialSyntaxColors, initialAnsiColors } from '$lib/constants/colors';
+import { randomInteger, randomEnum } from '$lib/utils/vscode/math';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
-import { getMonacoEditor } from '$lib/components/vscode/monaco-editor/monaco.svelte';
+
+import { getSelectedColor } from './editor.svelte';
 import { getControls } from '$lib/state/vscode/controls.svelte';
+import { getSchemeHues } from './scheme-colors.svelte';
 import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
 import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
 import { getAnsiColors } from '$lib/state/vscode/ansi-colors.svelte';
-import { getSchemeHues } from './scheme-colors.svelte';
-import { getSelectedColor } from './editor.svelte';
+import { getMonacoEditor } from '$lib/components/vscode/monaco-editor/monaco.svelte';
+
+import type { Theme } from '$lib/types/theme';
+import { ColorSchemes } from '$lib/types/color';
+import { initialUIColors, initialSyntaxColors, initialAnsiColors } from '$lib/constants/colors';
 
 let theme = $state<Theme>({
   id: 0,

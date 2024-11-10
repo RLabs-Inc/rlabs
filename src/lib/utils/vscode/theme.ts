@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type Theme, ThemeSchema } from '$lib/types/theme';
 import { ColorSchemes } from '$lib/types/color';
+import { type Theme, ThemeSchema } from '$lib/types/theme';
 
 export function parseThemeFromDB(rawTheme: any): Theme {
   const parsedTheme = {

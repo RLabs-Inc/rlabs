@@ -1,13 +1,13 @@
 import Color from 'color';
-import type { SyntaxColors } from '$lib/types/color';
-import type { SyntaxColorsGenerationOptions } from '$lib/types/theme';
 import { randomInteger, randomNumber } from '$lib/utils/vscode/math';
 import { ensureReadability, adjustCommentColor } from '$lib/utils/vscode/colorUtils.svelte';
-
 import { getControls } from '$lib/state/vscode/controls.svelte';
+import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';
 import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
 import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
-import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';
+
+import type { SyntaxColors } from '$lib/types/color';
+import type { SyntaxColorsGenerationOptions } from '$lib/types/theme';
 
 export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
   generatedSyntaxColors: SyntaxColors;

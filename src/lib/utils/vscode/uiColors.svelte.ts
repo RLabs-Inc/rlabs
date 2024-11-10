@@ -1,11 +1,11 @@
 import Color from 'color';
-
-import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';
+import { randomInteger, randomNumber } from '$lib/utils/vscode/math';
+import { ensureReadability } from '$lib/utils/vscode/colorUtils.svelte';
 import { getControls } from '$lib/state/vscode/controls.svelte';
+import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';
+
 import { type UIColors } from '$lib/types/color';
 import type { UIColorsGenerationOptions } from '$lib/types/theme';
-import { ensureReadability } from '$lib/utils/vscode/colorUtils.svelte';
-import { randomInteger, randomNumber } from '$lib/utils/vscode/math';
 
 export function generateUIColors(options: UIColorsGenerationOptions): {
   generatedUIColors: UIColors;

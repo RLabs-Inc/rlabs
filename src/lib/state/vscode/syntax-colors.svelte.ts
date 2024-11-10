@@ -1,13 +1,12 @@
-import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
-
-import { initialSyntaxColors } from '$lib/constants/colors';
 import {
   generateSyntaxColors,
   updateSyntaxColorsWithSaturation
 } from '$lib/utils/vscode/syntaxColors.svelte';
+import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
 import { type SyntaxColors } from '$lib/types/color';
 import type { SyntaxColorsGenerationOptions } from '$lib/types/theme';
+import { initialSyntaxColors } from '$lib/constants/colors';
 
 let syntaxColors = $state<SyntaxColors>(initialSyntaxColors);
 const lockedSyntaxColors = $state<Partial<SyntaxColors>>({});

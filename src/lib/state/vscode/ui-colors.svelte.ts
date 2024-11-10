@@ -1,10 +1,9 @@
-import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
-
-import { initialUIColors } from '$lib/constants/colors';
 import { generateUIColors, updateUIColorsWithSaturation } from '$lib/utils/vscode/uiColors.svelte';
+import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
 import { type UIColors } from '$lib/types/color';
 import type { UIColorsGenerationOptions } from '$lib/types/theme';
+import { initialUIColors } from '$lib/constants/colors';
 
 let uiColors = $state<UIColors>(initialUIColors);
 const lockedUIColors = $state<Partial<UIColors>>({});

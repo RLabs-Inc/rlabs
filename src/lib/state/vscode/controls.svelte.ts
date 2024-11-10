@@ -1,7 +1,7 @@
 import { randomInteger, randomEnum } from '$lib/utils/vscode/math';
+import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
 import { ColorSchemes } from '$lib/types/color';
-import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
 let isDark = $state(true);
 let scheme = $state(randomEnum(Object(ColorSchemes)));
@@ -16,17 +16,7 @@ let fewerRandomColors = $state(false);
 
 export function getControls() {
   function setIsDark(value: boolean) {
-    // const selectedThemeState = getSelectedTheme();
     isDark = value;
-    // const schemeHuesState = getSchemeHues();
-    // const uiColorsState = getUiColors();
-    // const syntaxColorsState = getSyntaxColors();
-    // const ansiColorsState = getAnsiColors();
-
-    // schemeHuesState().generate();
-    // uiColorsState().generate();
-    // syntaxColorsState().generate();
-    // ansiColorsState().generate();
   }
 
   function setScheme(value: string) {
@@ -51,8 +41,6 @@ export function getControls() {
 
   function setAnsiSaturation(value: number[]) {
     ansiSaturation = value;
-    // const ansiColorsState = getAnsiColors();
-    // ansiColorsState().setAnsiSaturation(value[0]);
   }
 
   function setThemeName(value: string) {
