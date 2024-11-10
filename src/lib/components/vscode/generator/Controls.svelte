@@ -55,9 +55,9 @@
     )`;
 
   function handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'R' || event.key === 'r') {
+    if (event.ctrlKey && event.key === 'r') {
       controls().randomize();
-    } else if (event.key === 'G' || event.key === 'g') {
+    } else if (event.ctrlKey && event.key === 'g') {
       controls().generate();
     }
   }
@@ -88,6 +88,11 @@
             </Button>
 
             <span class="text-xs">or</span>
+            <kbd
+              class="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1 text-sm font-semibold text-gray-800 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100"
+              >^</kbd
+            >
+            +
             <kbd
               class="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1 text-sm font-semibold text-gray-800 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100"
               >r</kbd
@@ -199,6 +204,11 @@
               <span class="text-xs">or</span>
               <kbd
                 class="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1 text-sm font-semibold text-gray-800 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100"
+                >^</kbd
+              >
+              +
+              <kbd
+                class="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1 text-sm font-semibold text-gray-800 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-100"
                 >g</kbd
               >
               <!-- Each time the colors are generated, a certain number of base hues are generated according to the choosen color scheme. 
@@ -220,8 +230,9 @@
           </div>
         </div>
       </div>
-
-      <ColorPicker />
+      <div class="py-3">
+        <ColorPicker />
+      </div>
       <div class="w-full rounded-md border border-border p-2 shadow-sm">
         <LoadSaveTheme {userId} themes={themes || []} />
       </div>

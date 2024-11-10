@@ -26,7 +26,7 @@
     "@types/color": "^4.2.0",
     "@types/eslint": "^9.6.0",
     "autoprefixer": "^10.4.20",
-    "bits-ui": "^1.0.0-next.46",
+    "bits-ui": "^1.0.0-next.49",
     "clsx": "^2.1.1",
     "drizzle-kit": "^0.22.0",
     "eslint": "^9.7.0",
@@ -55,6 +55,7 @@
     "color": "^4.2.3",
     "drizzle-orm": "^0.33.0",
     "jszip": "^3.10.1",
+    "mode-watcher": "^0.4.1",
     "svelte-clerk": "^0.3.7",
     "zod": "^3.23.8"
   }

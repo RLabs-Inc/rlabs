@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { page } from '$app/stores';
   import { Menu } from 'lucide-svelte';
-  import { buttonVariants } from '$lib/components/ui/button';
   import { Button } from '$lib/components/ui/button';
-  import { Sheet, SheetContent, SheetTrigger, SheetClose } from '$lib/components/ui/sheet';
+  import { Sheet, SheetContent, SheetTrigger } from '$lib/components/ui/sheet';
+  import ModeToggle from '$lib/components/ModeToggle.svelte';
   let open = $state(false);
 </script>
 
@@ -18,8 +19,16 @@
     </Button>
 
     <div class="flex items-center gap-2">
-      <Button href="/vscode" variant="link">VSCode Themes Community</Button>
-      <Button href="/about" variant="link">About</Button>
+      <Button
+        class={$page.url.pathname === '/vscode' ? 'underline' : ''}
+        href="/vscode"
+        variant="link">VSCode Themes Community</Button
+      >
+      <Button
+        class={$page.url.pathname === '/about' ? 'underline' : ''}
+        href="/about"
+        variant="link">About</Button
+      >
     </div>
   </div>
   <Sheet bind:open>
@@ -45,15 +54,25 @@
 
       <div class="">
         <div class="mt-2 flex flex-col items-start justify-start gap-2">
-          <Button href="/vscode" variant="link" onclick={() => (open = false)}
-            >VSCode Themes Community</Button
+          <Button
+            class={$page.url.pathname === '/vscode' ? 'underline' : ''}
+            href="/vscode"
+            variant="link"
+            onclick={() => (open = false)}>VSCode Themes Community</Button
           >
-          <Button href="/about" variant="link" onclick={() => (open = false)}>About</Button>
+          <Button
+            class={$page.url.pathname === '/about' ? 'underline' : ''}
+            href="/about"
+            variant="link"
+            onclick={() => (open = false)}>About</Button
+          >
         </div>
       </div>
     </SheetContent>
   </Sheet>
-  <!-- <ModeToggle /> -->
+  <div class="ml-2">
+    <ModeToggle />
+  </div>
 </nav>
 
 <style scoped></style>

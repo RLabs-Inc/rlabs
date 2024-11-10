@@ -15,10 +15,11 @@
 </script>
 
 {#if selectedColor}
-  <div class="flex flex-col items-center justify-center gap-2">
-    <span class="font-bold capitalize">{selectedColor.name}</span>
+  <div
+    class="flex flex-col items-center justify-center gap-2 rounded-md border border-border p-2 text-xs shadow-sm"
+  >
+    <span class="text-sm font-black capitalize drop-shadow-sm">{selectedColor.name} </span>
     <ColorPicker
-      --focus-color="black"
       bind:hex={selectedColor.color}
       sliderDirection="horizontal"
       components={ChromeVariant}

@@ -4,18 +4,19 @@
   import { Button } from '$lib/components/ui/button';
   import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
   import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
-  const { color, name }: { color: string; name: string } = $props();
-  const hasAlpha = color.length > 7 && color.toUpperCase().slice(-2) !== 'FF';
 
   const uiColorsState = getUiColors();
   const selectedColorState = getSelectedColor();
+
+  const { color, name }: { color: string; name: string } = $props();
+  const hasAlpha = color.length > 7 && color.toUpperCase().slice(-2) !== 'FF';
 
   const isLocked = $derived.by(() => {
     return Object.keys(uiColorsState().lockedUIColors).includes(name);
   });
 
   const textColor = $derived.by(() => {
-    if (hasAlpha) return 'black';
+    if (hasAlpha) return '--text-foreground';
     if (Color(color).isDark()) return 'white';
     return 'black';
   });

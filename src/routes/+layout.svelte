@@ -2,6 +2,7 @@
   import '../app.css';
   import type { Snippet } from 'svelte';
   import { ClerkProvider } from 'svelte-clerk';
+  import { ModeWatcher } from 'mode-watcher';
   import Footer from '$lib/components/Footer.svelte';
   import {
     PUBLIC_CLERK_PUBLISHABLE_KEY,
@@ -18,6 +19,7 @@
   publishableKey={PUBLIC_CLERK_PUBLISHABLE_KEY}
 >
   <div class="grid h-screen grid-rows-[auto_1fr_auto]">
+    <ModeWatcher />
     {@render children()}
     <Footer />
   </div>
