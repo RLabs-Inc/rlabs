@@ -21,11 +21,18 @@
   import { Slider } from '$lib/components/ui/slider';
 
   import { getControls } from '$lib/state/vscode/controls.svelte';
+  import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
+  import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
+  import { getAnsiColors } from '$lib/state/vscode/ansi-colors.svelte';
+
   import LoadSaveTheme from './LoadSaveTheme.svelte';
   import type { Theme } from '$lib/types/theme';
 
   const { userId, themes }: { userId: string | null; themes: Theme[] } = $props();
   const controls = getControls();
+  const uiColorsState = getUiColors();
+  const syntaxColorsState = getSyntaxColors();
+  const ansiColorsState = getAnsiColors();
 
   const getSaturationGradient = (hue: number) => `
   linear-gradient(to right,
@@ -73,6 +80,12 @@
         <Button class="w-full text-wrap text-xs" size="sm" onclick={controls().randomize}
           >Randomize a new {controls().isDark ? 'dark' : 'light'} theme</Button
         >
+        <!-- Each time the colors are generated, a certain number of base hues are generated according to the choosen color scheme. 
+          This option allows to generate only one set of scheme hues using the selected base hue and scheme that is used as base to generate
+          for all colors for the theme. Without this option, a set of scheme hues is generated from the base color, then after the UI colors 
+          are generated two new sets of scheme hues are generated from both AC1 and AC2 colors and added to the initial scheme hues set. 
+          This larger set of scheme hues is then used to generate the syntax colors. 
+        -->
         <div class="flex max-w-[50px] items-center justify-center gap-1">
           <Label class="text-wrap text-xs">Fewer colors?</Label>
           <Checkbox
@@ -105,6 +118,7 @@
       <Slider
         value={controls().baseHue}
         onValueChange={controls().setBaseHue}
+        onValueCommit={(value) => controls().generate()}
         min={0}
         max={360}
         bgColor={baseHueGradient}
@@ -113,7 +127,8 @@
     <Accordion type="single">
       <AccordionItem value="ui">
         <AccordionTrigger class="text-xs"
-          >Select the saturation for the next set of generated UI, Syntax and/or Ansi colors</AccordionTrigger
+          >Adjust saturation for UI, Syntax and/or Ansi set of colors and/or set for next
+          generation.</AccordionTrigger
         >
         <AccordionContent>
           <div class="flex flex-col gap-2">
@@ -122,6 +137,7 @@
               <Slider
                 value={controls().uiSaturation}
                 onValueChange={controls().setUiSaturation}
+                onValueCommit={(value) => uiColorsState().setUiSaturation(value[0])}
                 min={0}
                 max={100}
                 bgColor={saturationGradient}
@@ -132,6 +148,7 @@
               <Slider
                 value={controls().syntaxSaturation}
                 onValueChange={controls().setSyntaxSaturation}
+                onValueCommit={(value) => syntaxColorsState().setSyntaxSaturation(value[0])}
                 min={0}
                 max={100}
                 bgColor={saturationGradient}
@@ -142,6 +159,7 @@
               <Slider
                 value={controls().ansiSaturation}
                 onValueChange={controls().setAnsiSaturation}
+                onValueCommit={(value) => ansiColorsState().setAnsiSaturation(value[0])}
                 min={0}
                 max={100}
                 bgColor={saturationGradient}
@@ -155,6 +173,12 @@
       <Button class="w-full text-wrap text-xs" size="sm" onclick={controls().generate}>
         Generate colors
       </Button>
+      <!-- Each time the colors are generated, a certain number of base hues are generated according to the choosen color scheme. 
+          This option allows to generate only one set of scheme hues using the selected base hue and scheme that is used as base to generate
+          for all colors for the theme. Without this option, a set of scheme hues is generated from the base color, then after the UI colors 
+          are generated two new sets of scheme hues are generated from both AC1 and AC2 colors and added to the initial scheme hues set. 
+          This larger set of scheme hues is then used to generate the syntax colors. 
+        -->
       <div class="flex max-w-[50px] items-center justify-center gap-1">
         <Label class="text-wrap text-xs">Fewer colors?</Label>
         <Checkbox
