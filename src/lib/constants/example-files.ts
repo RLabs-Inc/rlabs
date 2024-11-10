@@ -4,6 +4,7 @@ export const exampleFiles = [
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
     language: 'typescript',
+    displayName: 'Typescript',
     snippet: `import Color from 'color';
     
 import type { VSCodeTheme } from '../../types/theme';
@@ -91,6 +92,7 @@ console.log(reverseArray(numbers)) // Output: [5, 4, 3, 2, 1]
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg',
     language: 'javascript',
+    displayName: 'Javascript',
     snippet: `
     // Async function to fetch user data
 async function fetchUserData(userId) {
@@ -150,6 +152,7 @@ console.log(circle.radius) // Output: 7
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg',
     language: 'html',
+    displayName: 'HTML',
     snippet: `
 <!DOCTYPE html>
 <html lang="en">
@@ -216,6 +219,7 @@ console.log(circle.radius) // Output: 7
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg',
     language: 'css',
+    displayName: 'CSS',
     snippet: `
 /* Variables */
 :root {
@@ -325,6 +329,7 @@ footer {
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sass/sass-original.svg',
     language: 'scss',
+    displayName: 'SCSS',
     snippet: `
 // Variables
 $primary-color: #3498db;
@@ -449,6 +454,7 @@ footer {
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg',
     language: 'vue',
+    displayName: 'Vue',
     snippet: `
 <template>
   <div class="todo-app">
@@ -548,6 +554,7 @@ button {
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg',
     language: 'vue-html',
+    displayName: 'Vue HTML',
     snippet: `
 <template>
   <div class="user-profile">
@@ -592,6 +599,7 @@ button {
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg',
     language: 'svelte',
+    displayName: 'Svelte',
     snippet: `
 <script>
 	let count = 0;
@@ -692,6 +700,7 @@ button {
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
     language: 'tsx',
+    displayName: 'React',
     snippet: `
 import React, { useState, useEffect } from 'react'
 
@@ -784,6 +793,7 @@ export default TodoApp
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ruby/ruby-original.svg',
     language: 'ruby',
+    displayName: 'Ruby',
     snippet: `
     # A simple Ruby program demonstrating various features
 
@@ -890,6 +900,7 @@ class Person
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg',
     language: 'php',
+    displayName: 'PHP',
     snippet: `
 <?php
 // A simple PHP program demonstrating various features
@@ -1011,6 +1022,7 @@ echo "Current date and time: " . $date->format('Y-m-d H:i:s') . "\n";
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg',
     language: 'go',
+    displayName: 'Go',
     snippet: `
 package main
 
@@ -1160,6 +1172,7 @@ func divide(a, b float64) (float64, error) {
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg',
     language: 'java',
+    displayName: 'Java',
     snippet: `
 import java.util.*;
     import java.io.*;
@@ -1296,6 +1309,7 @@ import java.util.*;
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg',
     language: 'csharp',
+    displayName: 'C#',
     snippet: `
 using System;
 using System.Collections.Generic;
@@ -1416,6 +1430,7 @@ class Program
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
     language: 'python',
+    displayName: 'Python',
     snippet: `
 import asyncio
 import aiofiles
@@ -1503,6 +1518,7 @@ if __name__ == "__main__":
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg',
     language: 'rust',
+    displayName: 'Rust',
     snippet: `
 use std::collections::HashMap;
 use std::fs::File;
@@ -1612,6 +1628,7 @@ fn main() -> std::io::Result<()> {
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swift/swift-original.svg',
     language: 'swift',
+    displayName: 'Swift',
     snippet: `
 import Foundation
 
@@ -1718,6 +1735,7 @@ RunLoop.main.run(until: Date(timeIntervalSinceNow: 5))
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg',
     language: 'cpp',
+    displayName: 'C++',
     snippet: `
 #include <iostream>
 #include <vector>
@@ -1825,6 +1843,7 @@ int main() {
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg',
     language: 'c',
+    displayName: 'C',
     snippet: `
 #include <stdio.h>
 #include <stdlib.h>
@@ -1929,6 +1948,7 @@ int main() {
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/lua/lua-original.svg',
     language: 'lua',
+    displayName: 'Lua',
     snippet: `
 -- Define the Person class
 Person = {}
@@ -2061,6 +2081,7 @@ print(p3)  -- Output: Point(4, 6)
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg',
     language: 'sql',
+    displayName: 'SQL',
     snippet: `
 -- Create tables
 CREATE TABLE employees (
@@ -2164,6 +2185,7 @@ VALUES (6, 'Young Employee', 16, 1, 30000.00);
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/yaml/yaml-original.svg',
     language: 'yaml',
+    displayName: 'YAML',
     snippet: `
 # Company Configuration
 company:
@@ -2298,6 +2320,7 @@ description: |
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/json/json-original.svg',
     language: 'json',
+    displayName: 'JSON',
     snippet: `
 {
   "company": {
@@ -2380,6 +2403,7 @@ description: |
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg',
     language: 'bash',
+    displayName: 'Bash',
     snippet: `
 #!/bin/bash
 
@@ -2474,6 +2498,7 @@ echo "Script execution completed."
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg',
     language: 'markdown',
+    displayName: 'Markdown',
     snippet: `
 # Project Documentation
 

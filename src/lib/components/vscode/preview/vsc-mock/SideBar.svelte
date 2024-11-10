@@ -1,7 +1,7 @@
 <script lang="ts">
   import { File, Folder, MoreHorizontal } from 'lucide-svelte';
   import { exampleFiles } from '$lib/constants/example-files';
-  import { getSelectedFile } from '$lib/state/vscode/preview.svelte';
+  import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import SideBarItem from './SideBarItem.svelte';
 
   import { getMonacoEditor } from '$lib/components/vscode/monaco-editor/monaco.svelte';

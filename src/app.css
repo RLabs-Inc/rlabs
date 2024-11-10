@@ -24,7 +24,7 @@
     --destructive-foreground: 0 0% 98%;
     --ring: 0 0% 3.9%;
     --radius: 0.5rem;
-	--sidebar-background: 0 0% 98%;
+    --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
@@ -54,7 +54,7 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --ring: 0 0% 83.1%;
-	--sidebar-background: 240 5.9% 10%;
+    --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -62,6 +62,11 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    --cp-bg-color: #333;
+    --cp-border-color: white;
+    --cp-text-color: white;
+    --cp-input-color: #555;
+    --cp-button-hover-color: #777;
   }
 }
 
@@ -72,4 +77,9 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Hide the button-like elements in the color picker */
+.button-like {
+  display: none;
 }

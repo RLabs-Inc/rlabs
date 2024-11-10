@@ -2,7 +2,7 @@
   import { initialAnsiColors, initialSyntaxColors, initialUIColors } from '$lib/constants/colors';
   import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
   import MonacoEditor from '../../monaco-editor/MonacoEditor.svelte';
-  import { getSelectedFile } from '$lib/state/vscode/preview.svelte';
+  import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
   const selectedTheme = getSelectedTheme();

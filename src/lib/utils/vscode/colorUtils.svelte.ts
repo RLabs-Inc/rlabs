@@ -2,7 +2,6 @@ import Color from 'color';
 import { ColorSchemes } from '$lib/types/color';
 
 export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): number[] {
-  console.log('generateSchemeHues', baseHue, scheme);
   let result: number[];
   const goldenRatio = 0.618033988749895;
   // const fibSequence = [1, 1, 2, 3, 5, 8, 13, 21]
@@ -251,7 +250,6 @@ export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): numbe
     default:
       result = [baseHue];
   }
-  console.log('generateSchemeHues', result);
   return result;
 }
 

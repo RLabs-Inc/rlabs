@@ -22,11 +22,12 @@ export const ThemeSchema = z.object({
   syntaxSaturation: z.number(),
   ansiSaturation: z.number(),
   isPublic: z.boolean(),
+  schemeHues: z.array(z.number()).optional(),
   uiColors: UIColorsSchema,
   syntaxColors: SyntaxColorsSchema,
   ansiColors: AnsiColorsSchema,
-  shares: z.number(),
-  downloads: z.number(),
+  shares: z.number().optional(),
+  downloads: z.number().optional(),
   createdAt: z.date(),
   updatedAt: z.date()
 });

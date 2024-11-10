@@ -1,6 +1,9 @@
 <script lang="ts">
   import Color from 'color';
+  import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import { Bell, GitBranch, Check, UploadCloud, CircleX, TriangleAlert } from 'lucide-svelte';
+
+  const selectedFile = getSelectedFile();
 
   const leftItems = [
     { text: 'main*', icon: GitBranch },
@@ -8,12 +11,15 @@
     { text: '0', icon: CircleX },
     { text: '0', icon: TriangleAlert }
   ];
-  const rightItems = [
+
+  const language = $derived(selectedFile().file.displayName);
+
+  const getRightItems = () => [
     { text: 'Ln 1, Col 1' },
     { text: 'Spaces: 2' },
     { text: 'UTF-8' },
     { text: 'LF' },
-    { text: 'Svelte' },
+    { text: language },
     { text: 'Prettier', icon: Check },
     { icon: Bell }
   ];
@@ -54,9 +60,9 @@
       {/each}
     </div>
     <div class="hidden items-center space-x-2 md:flex">
-      {#each rightItems as item}
+      {#each getRightItems() as item}
         <div
-          class="flex cursor-pointer items-center truncate p-1 transition-colors duration-200 hover:brightness-125"
+          class="flex cursor-pointer items-center truncate p-1 capitalize transition-colors duration-200 hover:brightness-125"
           style="color: var(--fgAc2)"
         >
           {#if item.icon}

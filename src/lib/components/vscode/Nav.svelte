@@ -25,7 +25,7 @@
           <Button href="/vscode/saved-themes" variant="link">Saved themes</Button>
         </SignedIn>
         <SignedOut>
-          <Button href="/vscode/login" variant="link">Login</Button>
+          <Button href="/auth/sign-in" variant="link">Login</Button>
         </SignedOut>
       </div>
     </div>

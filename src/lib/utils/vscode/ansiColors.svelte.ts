@@ -82,7 +82,6 @@ export const brightenColor = (color: string) => {
 };
 
 export function updateAnsiColorsWithSaturation(
-  background: string,
   currentColors: AnsiColors,
   newAnsiSaturation: number,
   lockedColors: Partial<AnsiColors>

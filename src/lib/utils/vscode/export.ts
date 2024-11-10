@@ -1003,12 +1003,7 @@ export function generateSemanticThemeJSON(
           foreground: syntaxColors.storage
         }
       },
-      {
-        scope: ['storage.type'],
-        settings: {
-          foreground: syntaxColors.type
-        }
-      },
+
       {
         scope: ['storage.modifier'],
         settings: {
@@ -1179,23 +1174,29 @@ export function generateSemanticThemeJSON(
       },
 
       //--------------------------------------------------------------------
-      // PONCTUATION
+      // PUNCTUATION
       //--------------------------------------------------------------------
       {
-        scope: [
-          'punctuation.definition.string.begin',
-          'punctuation.definition.string.end',
-          'punctuation.support.type.property-name.begin',
-          'punctuation.support.type.property-name.end'
-        ],
+        scope: ['punctuation.definition'],
         settings: {
           foreground: syntaxColors.punctuation
         }
       },
       {
         scope: [
-          'punctuation.definition.keyword.css',
+          'punctuation.support',
+          'punctuation.support.type.property-name.begin',
+          'punctuation.support.type.property-name.end'
+        ],
+
+        settings: {
+          foreground: syntaxColors.support
+        }
+      },
+      {
+        scope: [
           'entity.other.attribute-name punctuation',
+          'punctuation.definition.keyword.css',
           'punctuation.section.property-list.begin.bracket.curly.css',
           'punctuation.section.property-list.end.bracket.curly.css',
           'punctuation.definition.attribute-selector.end.bracket.square.scss',
@@ -1231,13 +1232,8 @@ export function generateSemanticThemeJSON(
         }
       },
       {
-        scope: ['punctuation.definition.constant.restructuredtext'],
-        settings: {
-          foreground: colors.AC2
-        }
-      },
-      {
         scope: [
+          'punctuation.section',
           'punctuation.definition.string',
           'punctuation.definition.string.begin',
           'punctuation.definition.string.end',
@@ -1248,10 +1244,6 @@ export function generateSemanticThemeJSON(
           'punctuation.section.embedded.begin.jsx',
           'punctuation.section.embedded.end.jsx',
           'meta.string-contents.quoted.double punctuation.definition.variable',
-          'punctuation.definition.interpolation.begin',
-          'punctuation.definition.interpolation.end',
-          'punctuation.definition.template-expression.begin',
-          'punctuation.definition.template-expression.end',
           'punctuation.definition.variable.makefile'
         ],
         settings: {
@@ -1272,9 +1264,16 @@ export function generateSemanticThemeJSON(
         }
       },
       {
-        scope: ['punctuation string.interpolated'],
+        scope: [
+          'punctuation string.interpolated',
+          'punctuation.definition.interpolation.begin',
+          'punctuation.definition.interpolation.end',
+          'punctuation.definition.constant.restructuredtext',
+          'punctuation.definition.template-expression.begin',
+          'punctuation.definition.template-expression.end'
+        ],
         settings: {
-          foreground: colors.AC2
+          foreground: colors.AC1
         }
       },
 

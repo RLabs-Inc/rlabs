@@ -10,6 +10,8 @@ export const clamp = (value: number, min: number, max: number) => {
   return Math.min(Math.max(value, min), max);
 };
 export const randomEnum = (enumObj: ColorSchemes) => {
-  const enumValues = Object.values(enumObj).filter((value) => typeof value === 'string');
+  const enumValues = Object.values(enumObj).filter(
+    (value) => typeof value === 'string' && isNaN(parseInt(value))
+  );
   return enumValues[Math.floor(Math.random() * enumValues.length)];
 };

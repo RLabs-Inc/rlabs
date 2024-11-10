@@ -1,44 +1,57 @@
 <script lang="ts">
-  import type { Theme } from '$lib/types/theme';
   import Color from 'color';
+  import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
   import ActivityBar from './ActivityBar.svelte';
   import EditorGroup from './EditorGroup.svelte';
   import SideBar from './SideBar.svelte';
   import StatusBar from './StatusBar.svelte';
-  import TopBar from './TopBar.svelte';
-
-  const { theme }: { theme: Theme } = $props();
+  const selectedThemeState = getSelectedTheme();
 
   const fgAc1 = $derived.by(() => {
-    if (theme.isDark) {
-      return Color(theme.uiColors.AC1).isDark() ? theme.uiColors.FG1 : theme.uiColors.FG3;
+    if (selectedThemeState().theme?.isDark) {
+      return Color(selectedThemeState().theme?.uiColors.AC1).isDark()
+        ? selectedThemeState().theme?.uiColors.FG1
+        : selectedThemeState().theme?.uiColors.FG3;
     } else {
-      return Color(theme.uiColors.AC1).isDark() ? theme.uiColors.FG3 : theme.uiColors.FG1;
+      return Color(selectedThemeState().theme?.uiColors.AC1).isDark()
+        ? selectedThemeState().theme?.uiColors.FG3
+        : selectedThemeState().theme?.uiColors.FG1;
     }
   });
   const fgAc2 = $derived.by(() => {
-    if (theme.isDark) {
-      return Color(theme.uiColors.AC2).isDark() ? theme.uiColors.FG1 : theme.uiColors.FG3;
+    if (selectedThemeState().theme?.isDark) {
+      return Color(selectedThemeState().theme?.uiColors.AC2).isDark()
+        ? selectedThemeState().theme?.uiColors.FG1
+        : selectedThemeState().theme?.uiColors.FG3;
     } else {
-      return Color(theme.uiColors.AC2).isDark() ? theme.uiColors.FG3 : theme.uiColors.FG1;
+      return Color(selectedThemeState().theme?.uiColors.AC2).isDark()
+        ? selectedThemeState().theme?.uiColors.FG3
+        : selectedThemeState().theme?.uiColors.FG1;
     }
   });
 
+  function getColorWithOpacity(color: string | undefined, opacity: number) {
+    if (color && color.length > 7) {
+      return color.slice(0, -2) + opacity.toString();
+    }
+    return color + opacity.toString();
+  }
+
   const colors = $derived(
     ` 
-      --bg1: ${theme.uiColors.BG1};
-      --bg2: ${theme.uiColors.BG2};
-      --fg1: ${theme.uiColors.FG1};
-      --fg2: ${theme.uiColors.FG2};
-      --fg3: ${theme.uiColors.FG3};
-      --ac1: ${theme.uiColors.AC1};
-      --ac2: ${theme.uiColors.AC2};
-      --listActive: ${theme.uiColors.AC1.slice(0, -2) + '80'};
-      --listHover: ${theme.uiColors.AC1.slice(0, -2) + '40'};
-      --tabHover: ${theme.uiColors.BG2.slice(0, -2) + '80'};
-      --border: ${theme.uiColors.BORDER};
-      --comment: ${theme.syntaxColors.comment};
+      --bg1: ${selectedThemeState().theme?.uiColors.BG1};
+      --bg2: ${selectedThemeState().theme?.uiColors.BG2};
+      --fg1: ${selectedThemeState().theme?.uiColors.FG1};
+      --fg2: ${selectedThemeState().theme?.uiColors.FG2};
+      --fg3: ${selectedThemeState().theme?.uiColors.FG3};
+      --ac1: ${selectedThemeState().theme?.uiColors.AC1};
+      --ac2: ${selectedThemeState().theme?.uiColors.AC2};
+      --listActive: ${getColorWithOpacity(selectedThemeState().theme?.uiColors.AC1, 80)};
+      --listHover: ${getColorWithOpacity(selectedThemeState().theme?.uiColors.AC1, 40)};
+      --tabHover: ${getColorWithOpacity(selectedThemeState().theme?.uiColors.BG2, 80)};
+      --border: ${selectedThemeState().theme?.uiColors.BORDER};
+      --comment: ${selectedThemeState().theme?.syntaxColors.comment};
       --fgAc1: ${fgAc1};
       --fgAc2: ${fgAc2};
     `

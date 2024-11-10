@@ -1,51 +1,60 @@
 <script lang="ts">
+  import type { PageData } from './$types';
+  import { onDestroy, onMount } from 'svelte';
   import VSCEditor from '$lib/components/vscode/preview/vsc-mock/VSCEditor.svelte';
   import Controls from '$lib/components/vscode/generator/Controls.svelte';
   import UIColors from '$lib/components/vscode/generator/UIColors.svelte';
   import AnsiColors from '$lib/components/vscode/generator/AnsiColors.svelte';
   import SyntaxColors from '$lib/components/vscode/generator/SyntaxColors.svelte';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
-
-  import { initialAnsiColors, initialSyntaxColors, initialUIColors } from '$lib/constants/colors';
+  import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import type { Theme } from '$lib/types/theme';
 
-  const initialTheme: Theme = {
-    id: 0,
-    name: '',
-    userId: '',
-    userName: '',
-    isDark: false,
-    scheme: 'dark',
-    baseHue: 220,
-    uiSaturation: 100,
-    syntaxSaturation: 100,
-    ansiSaturation: 100,
-    isPublic: false,
-    uiColors: initialUIColors,
-    syntaxColors: initialSyntaxColors,
-    ansiColors: initialAnsiColors,
-    shares: 0,
-    downloads: 0,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
   const selectedTheme = getSelectedTheme();
+  const selectedFile = getSelectedFile();
 
-  const currentTheme = $derived(selectedTheme().theme || initialTheme);
+  const { data }: { data: PageData } = $props();
+
+  let theme = $state<Theme | undefined>(undefined);
+
+  onMount(() => {
+    if (data.id) {
+      theme = data.themes?.find((theme) => theme.id === Number(data.id));
+    }
+  });
+
+  if (!selectedTheme().theme) {
+    selectedTheme().reset();
+  }
+
+  onDestroy(() => {
+    selectedTheme().reset();
+    selectedFile().set('typescript.js');
+  });
 </script>
 
-<section class="">
-  <div class="flex flex-col items-center justify-center px-5 py-20">
-    <div class="flex w-full gap-5">
-      <Controls />
-      <div class="max-h-[50rem] w-full flex-1">
-        <VSCEditor theme={currentTheme} />
+<section class="min-h-[calc(100vh-2rem)]">
+  <div class="flex flex-col items-center justify-center px-5 pt-20">
+    <div class="flex w-full flex-wrap gap-5 lg:flex-nowrap">
+      <div class="flex w-full flex-col gap-5 lg:w-auto">
+        <Controls userId={data.userId} themes={data.themes || []} />
       </div>
-      <div class="flex flex-col gap-5">
-        <UIColors />
-        <AnsiColors />
+      <div class="flex w-full flex-col gap-5">
+        <div class="flex flex-wrap gap-5 xl:flex-nowrap">
+          <div class="max-w-3/6 max-h-[40.4rem] flex-1">
+            <VSCEditor />
+          </div>
+          <div class="flex w-full flex-col gap-5 md:flex-row xl:w-auto xl:flex-col">
+            <div class="flex-1">
+              <UIColors />
+            </div>
+            <div class="flex-1">
+              <AnsiColors />
+            </div>
+          </div>
+        </div>
+        <SyntaxColors />
       </div>
     </div>
-    <SyntaxColors />
   </div>
 </section>

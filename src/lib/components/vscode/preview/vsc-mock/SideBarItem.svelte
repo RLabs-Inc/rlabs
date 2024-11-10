@@ -1,7 +1,7 @@
 <script lang="ts">
   import clsx from 'clsx';
   import { ChevronDown, ChevronRight, Folder, File } from 'lucide-svelte';
-  import { getSelectedFile } from '$lib/state/vscode/preview.svelte';
+  import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
 
   type FolderStates = {
     'vscode-theme-generator': boolean;

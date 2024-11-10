@@ -7,19 +7,16 @@ import type { UIColorsGenerationOptions } from '$lib/types/theme';
 import { ensureReadability } from '$lib/utils/vscode/colorUtils.svelte';
 import { randomInteger, randomNumber } from '$lib/utils/vscode/math';
 
-const schemeHuesState = getSchemeHues();
-const controlsState = getControls();
-
 export function generateUIColors(options: UIColorsGenerationOptions): {
   generatedUIColors: UIColors;
 } {
+  const schemeHuesState = getSchemeHues();
+  const controlsState = getControls();
   const { few, lockedColors } = options;
-  console.log('generateUIColors', schemeHuesState().schemeHues);
   const bgBase = controlsState().isDark ? randomInteger(0, 5) : randomInteger(90, 100);
   const fgBase = controlsState().isDark ? randomInteger(85, 100) : randomInteger(0, 15);
 
   const generateColor = (hue: number, saturation: number, lightness: number) => {
-    console.log('generateColor', hue, saturation, lightness);
     const randomHueShift = randomNumber(-5, 5);
     const randomSaturationShift = randomNumber(-10, 10);
     const randomLightnessShift = randomNumber(-5, 5);
@@ -164,7 +161,6 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
         )
       ).hex() + '70'
   };
-
   // Ensure readability for specific colors
   Object.keys(colors).forEach((key) => {
     if (
@@ -192,7 +188,6 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
     schemeHuesState().generateAdditionalHues(ac1Hue, controlsState().scheme);
     schemeHuesState().generateAdditionalHues(ac2Hue, controlsState().scheme);
   }
-
   return { generatedUIColors: colors };
 }
 

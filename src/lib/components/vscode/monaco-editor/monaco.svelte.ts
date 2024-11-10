@@ -64,7 +64,8 @@ function getMonacoEditor() {
       theme: 'theme',
       readOnly: true,
       fontFamily: 'Recursive, monospace',
-      'semanticHighlighting.enabled': true
+      'semanticHighlighting.enabled': true,
+      minimap: { enabled: false }
     });
     model = monaco.editor.createModel(snippet, lang);
     editor.setModel(model);
@@ -82,9 +83,11 @@ function getMonacoEditor() {
   };
 
   const changeTheme = (theme: string) => {
-    highlighter.setTheme(JSON.parse(theme));
-    registerLanguages();
-    shikiToMonaco(highlighter, monaco);
+    if (highlighter) {
+      highlighter.setTheme(JSON.parse(theme));
+      registerLanguages();
+      shikiToMonaco(highlighter, monaco);
+    }
   };
 
   return {

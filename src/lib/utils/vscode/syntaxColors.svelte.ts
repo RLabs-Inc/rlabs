@@ -9,13 +9,12 @@ import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
 import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
 import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';
 
-const controlsState = getControls();
-const uiColorsState = getUiColors();
-const schemeHuesState = getSchemeHues();
-const syntaxColorsState = getSyntaxColors();
 export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
   generatedSyntaxColors: SyntaxColors;
 } {
+  const controlsState = getControls();
+  const uiColorsState = getUiColors();
+  const schemeHuesState = getSchemeHues();
   const { lockedColors } = options;
   const baseLightness = controlsState().isDark ? 80 : 25;
   const inverseBaseLightness = controlsState().isDark ? 15 : 85;
@@ -411,6 +410,8 @@ export function updateSyntaxColorsWithSaturation(
   newSyntaxSaturation: number,
   lockedColors?: Partial<SyntaxColors>
 ): SyntaxColors {
+  const uiColorsState = getUiColors();
+  const syntaxColorsState = getSyntaxColors();
   const updateColorSaturation = (color: string, saturationMultiplier: number) => {
     const hsl = Color(color).hsl();
     const newSaturation = Math.max(2, Math.min(100, newSyntaxSaturation * saturationMultiplier));

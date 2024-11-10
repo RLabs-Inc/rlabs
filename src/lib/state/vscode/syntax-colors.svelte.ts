@@ -1,6 +1,10 @@
-import { initialSyntaxColors } from '$lib/constants/colors';
+import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
-import { generateSyntaxColors } from '$lib/utils/vscode/syntaxColors.svelte';
+import { initialSyntaxColors } from '$lib/constants/colors';
+import {
+  generateSyntaxColors,
+  updateSyntaxColorsWithSaturation
+} from '$lib/utils/vscode/syntaxColors.svelte';
 
 import { type SyntaxColors } from '$lib/types/color';
 import type { SyntaxColorsGenerationOptions } from '$lib/types/theme';
@@ -15,13 +19,15 @@ export function getSyntaxColors() {
 
   function setSyntaxColor(key: keyof SyntaxColors, value: string) {
     syntaxColors[key] = value;
+    const selectedTheme = getSelectedTheme();
+    selectedTheme().update();
   }
 
-  function toggleLockedSyntaxColor(key: keyof SyntaxColors, color: string) {
-    if (lockedSyntaxColors[key]) {
-      delete lockedSyntaxColors[key];
+  function toggleLockedSyntaxColor(key: string, color: string) {
+    if (lockedSyntaxColors[key as keyof SyntaxColors]) {
+      delete lockedSyntaxColors[key as keyof SyntaxColors];
     } else {
-      lockedSyntaxColors[key] = color;
+      lockedSyntaxColors[key as keyof SyntaxColors] = color;
     }
   }
 
@@ -31,6 +37,12 @@ export function getSyntaxColors() {
     };
     const { generatedSyntaxColors } = generateSyntaxColors(options);
     setSyntaxColors(generatedSyntaxColors);
+  }
+
+  function setSyntaxSaturation(value: number) {
+    setSyntaxColors(updateSyntaxColorsWithSaturation(syntaxColors, value, lockedSyntaxColors));
+    const selectedTheme = getSelectedTheme();
+    selectedTheme().update();
   }
 
   return () => ({
@@ -44,7 +56,9 @@ export function getSyntaxColors() {
       return lockedSyntaxColors;
     },
     setSyntaxColor,
+    setSyntaxColors,
     toggleLockedSyntaxColor,
-    generate
+    generate,
+    setSyntaxSaturation
   });
 }

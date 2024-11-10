@@ -1,6 +1,7 @@
-import { initialUIColors } from '$lib/constants/colors';
+import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
-import { generateUIColors } from '$lib/utils/vscode/uiColors.svelte';
+import { initialUIColors } from '$lib/constants/colors';
+import { generateUIColors, updateUIColorsWithSaturation } from '$lib/utils/vscode/uiColors.svelte';
 
 import { type UIColors } from '$lib/types/color';
 import type { UIColorsGenerationOptions } from '$lib/types/theme';
@@ -15,23 +16,31 @@ export function getUiColors() {
 
   function setUiColor(key: keyof UIColors, value: string) {
     uiColors[key] = value;
+    const selectedTheme = getSelectedTheme();
+    selectedTheme().update();
   }
 
-  function toggleLockedUIColor(key: keyof UIColors, color: string) {
-    if (lockedUIColors[key]) {
-      delete lockedUIColors[key];
+  function toggleLockedUIColor(key: string, color: string) {
+    if (lockedUIColors[key as keyof UIColors]) {
+      delete lockedUIColors[key as keyof UIColors];
     } else {
-      lockedUIColors[key] = color;
+      lockedUIColors[key as keyof UIColors] = color;
     }
   }
 
-  function generate() {
+  function generate(fewerColors: boolean) {
     const options: UIColorsGenerationOptions = {
-      few: true,
+      few: fewerColors,
       lockedColors: lockedUIColors
     };
     const { generatedUIColors } = generateUIColors(options);
     setUiColors(generatedUIColors);
+  }
+
+  function setUiSaturation(value: number) {
+    setUiColors(updateUIColorsWithSaturation(uiColors, value, lockedUIColors));
+    const selectedTheme = getSelectedTheme();
+    selectedTheme().update();
   }
 
   return () => ({
@@ -45,7 +54,9 @@ export function getUiColors() {
       return lockedUIColors;
     },
     setUiColor,
+    setUiColors,
     toggleLockedUIColor,
-    generate
+    generate,
+    setUiSaturation
   });
 }
