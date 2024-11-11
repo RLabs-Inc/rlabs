@@ -2,4 +2,6 @@
   import { SignIn } from 'svelte-clerk';
 </script>
 
-<SignIn />
+<section class="flex h-[calc(100vh-2rem)] items-center justify-center">
+  <SignIn />
+</section>

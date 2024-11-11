@@ -5,7 +5,6 @@ import JSZip from 'jszip';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
 
 const TEMPLATE_DIR = path.join(process.cwd(), 'vsix-template');
-console.log('TEMPLATE_DIR:', TEMPLATE_DIR);
 
 export async function generateVSIX(theme: Theme): Promise<Buffer> {
   const zip = new JSZip();

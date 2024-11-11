@@ -20,8 +20,8 @@
 
     <div class="flex items-center gap-2">
       <Button
-        class={$page.url.pathname === '/vscode' ? 'underline' : ''}
-        href="/vscode"
+        class={$page.url.pathname === '/vscode-themes-community' ? 'underline' : ''}
+        href="/vscode-themes-community"
         variant="link">VSCode Themes Community</Button
       >
       <Button
@@ -55,8 +55,8 @@
       <div class="">
         <div class="mt-2 flex flex-col items-start justify-start gap-2">
           <Button
-            class={$page.url.pathname === '/vscode' ? 'underline' : ''}
-            href="/vscode"
+            class={$page.url.pathname === '/vscode-themes-community' ? 'underline' : ''}
+            href="/vscode-themes-community"
             variant="link"
             onclick={() => (open = false)}>VSCode Themes Community</Button
           >

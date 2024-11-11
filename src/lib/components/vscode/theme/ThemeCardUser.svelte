@@ -78,6 +78,7 @@
         method: 'DELETE'
       });
       invalidateAll();
+      selectedTheme().reset();
       setTimeout(() => {
         isDeleting = false;
       }, 2000);

@@ -1,9 +1,7 @@
 import Color from 'color';
 
-import type { TokenColors, VSCodeTheme } from '$lib/types/theme';
+import type { VSCodeTheme } from '$lib/types/theme';
 import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/color';
-import { getAllTokenColors } from './export-theme';
-import { getSemanticTokenColors } from './export-theme/semantic';
 
 export function generateSemanticThemeJSON(
   name: string = 'Generated Color Theme',
@@ -11,8 +9,6 @@ export function generateSemanticThemeJSON(
   syntaxColors: SyntaxColors,
   ansiColors: AnsiColors
 ): { themeJSON: string; themeObject: VSCodeTheme } {
-  const tokenColors: TokenColors = { colors, syntaxColors, ansiColors };
-
   const getAC1Foreground = () => {
     if (Color(colors.BG1).isDark()) {
       return Color(colors.AC1).isDark() ? colors.FG1 : colors.FG3;
@@ -258,7 +254,7 @@ export function generateSemanticThemeJSON(
       // # Side Bar
       // # The Side Bar contains views like the Explorer and Search.
       'sideBar.border': colors.BORDER, //# Side Bar border color on the side separating the editor
-      'sideBar.foreground': colors.FG2, //# Side Bar foreground color. The Side Bar is the container for views like Explorer and Search
+      // sideBar.foreground: //# Side Bar foreground color. The Side Bar is the container for views like Explorer and Search
       'sideBar.background': colors.BG1, //# Side Bar background color
       //"sideBar.dropBackground": //# Drag and drop feedback color for the side bar sections. The color should have transparency so that the side bar sections can still shine through.
       'sideBarTitle.foreground': colors.FG1, //# Side Bar title foreground color
@@ -370,7 +366,7 @@ export function generateSemanticThemeJSON(
       // # FIND
       'editor.findMatchBackground': colors.findMatch,
       'editor.findMatchForeground': colors.FG1, //# Text color of the current search match.
-      'editor.findMatchHighlightBackground': getColorWithOpacity(colors.findMatch, '50'), // Color of the other search matches
+      'editor.findMatchHighlightBackground': colors.findMatch, // Color of the other search matches
       'editor.findMatchHighlightForeground': colors.FG1, // Foreground color of the other search matches.
       'editor.findRangeHighlightBackground': colors.selection, // Color the range limiting the search
       // "editor.findMatchBorder": colors.BORDER, // Border color of the current search match.
@@ -842,12 +838,2222 @@ export function generateSemanticThemeJSON(
       'charts.green': colors.SUCCESS,
       'charts.purple': ansiColors.Magenta
     },
-    tokenColors: getAllTokenColors(tokenColors),
-    semanticTokenColors: getSemanticTokenColors(tokenColors)
+    tokenColors: [
+      //---------------------------------------------------------
+      // GENERAL TOKKENS
+      //---------------------------------------------------------
+      {
+        scope: ['string'],
+        settings: {
+          foreground: colors.FG1
+        }
+      },
+      {
+        scope: ['emphasis'],
+        settings: {
+          fontStyle: 'italic'
+        }
+      },
+      {
+        scope: ['strong'],
+        settings: {
+          fontStyle: 'bold'
+        }
+      },
+      {
+        scope: ['invalid'],
+        settings: {
+          foreground: colors.ERROR,
+          fontStyle: 'strikethrough'
+        }
+      },
+      {
+        scope: ['invalid.deprecated'],
+        settings: {
+          foreground: colors.WARNING,
+          fontStyle: 'underline italic'
+        }
+      },
+      {
+        scope: ['header'],
+        settings: {
+          foreground: colors.AC2
+        }
+      },
+      {
+        scope: ['source'],
+        settings: {
+          foreground: colors.FG1
+        }
+      },
+      {
+        scope: ['source.ini'],
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        scope: ['source.ignore'],
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      //--------------------------------------------------------------------
+      // MARKUP
+      //--------------------------------------------------------------------
+      {
+        scope: ['markup.inserted'],
+        settings: {
+          foreground: colors.SUCCESS
+        }
+      },
+      {
+        scope: ['markup.deleted'],
+        settings: {
+          foreground: colors.ERROR
+        }
+      },
+      {
+        scope: ['markup.changed'],
+        settings: {
+          foreground: colors.WARNING
+        }
+      },
+      {
+        scope: ['markup.error'],
+        settings: {
+          foreground: colors.ERROR
+        }
+      },
+      {
+        scope: ['markup.underline'],
+        settings: {
+          fontStyle: 'underline'
+        }
+      },
+      {
+        scope: ['markup.bold'],
+        settings: {
+          // foreground: colors.WARNING,
+          fontStyle: 'bold'
+        }
+      },
+      {
+        scope: ['markup.heading'],
+        settings: {
+          foreground: colors.AC1,
+          fontStyle: 'bold'
+        }
+      },
+      {
+        scope: ['markup.italic'],
+        settings: {
+          fontStyle: 'italic'
+        }
+      },
+      {
+        scope: ['markup.quote'],
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        scope: ['markup.inline.raw', 'markup.raw.restructuredtext'],
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        scope: ['markup.underline.link', 'markup.underline.link.image'],
+        settings: {
+          foreground: colors.INFO
+        }
+      },
+      //--------------------------------------------------------------------
+      // ENTITIES
+      //--------------------------------------------------------------------
+      {
+        scope: ['entity.name.class', 'entity.name.type.class', 'entity.other.inherited-class'],
+        settings: {
+          foreground: syntaxColors.class
+        }
+      },
+      {
+        scope: ['entity.name.type'],
+        settings: {
+          foreground: syntaxColors.type
+        }
+      },
+      {
+        scope: [
+          'entity.name.type.module',
+          'entity.name.type.type-parameter',
+          'meta.indexer.mappedtype.declaration entity.name.type',
+          'meta.type.parameters entity.name.type'
+        ],
+        settings: {
+          foreground: syntaxColors.typeParameter
+        }
+      },
+      //--------------------------------------------------------------------
+      // STORAGE
+      //--------------------------------------------------------------------
+      {
+        scope: ['storage'],
+        settings: {
+          foreground: syntaxColors.storage
+        }
+      },
+
+      {
+        scope: ['storage.modifier'],
+        settings: {
+          foreground: syntaxColors.modifier
+        }
+      },
+      //--------------------------------------------------------------------
+      // SUPPORT
+      //--------------------------------------------------------------------
+      {
+        scope: ['support'],
+        settings: {
+          foreground: syntaxColors.support
+        }
+      },
+      {
+        scope: ['support.type'],
+        settings: {
+          foreground: syntaxColors.type
+        }
+      },
+      {
+        scope: ['support.constant'],
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+
+      {
+        scope: ['support.function'],
+        settings: {
+          foreground: syntaxColors.supportFunction
+        }
+      },
+      {
+        scope: ['support.class'],
+        settings: {
+          foreground: syntaxColors.class
+        }
+      },
+      {
+        scope: ['support.other'],
+        settings: {
+          foreground: syntaxColors.other
+        }
+      },
+      //--------------------------------------------------------------------
+      // COMMENTS
+      //--------------------------------------------------------------------
+      {
+        scope: ['comment', 'punctuation.definition.comment', 'unused.comment', 'wildcard.comment'],
+        settings: {
+          foreground: syntaxColors.comment
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // CONSTANTS
+      //--------------------------------------------------------------------
+      {
+        scope: ['constant', 'constant.numeric'],
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+      {
+        scope: ['constant.other.color'],
+        settings: {
+          foreground: syntaxColors.other
+        }
+      },
+      {
+        scope: ['constant.character'],
+        settings: {
+          foreground: colors.WARNING
+        }
+      },
+      {
+        scope: [
+          'constant.character.escape',
+          'constant.character.string.escape',
+          'constant.regexp',
+          'constant.language'
+        ],
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        scope: ['constant.other.date', 'constant.other.timestamp'],
+        settings: {
+          foreground: syntaxColors.datetime
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // KEYWORDS
+      //--------------------------------------------------------------------
+      {
+        scope: ['keyword', 'punctuation.definition.keyword'],
+        settings: {
+          foreground: syntaxColors.keyword
+        }
+      },
+      {
+        scope: ['keyword.operator'],
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+      {
+        scope: ['keyword.other.unit'],
+        settings: {
+          foreground: syntaxColors.unit
+        }
+      },
+      {
+        scope: ['keyword.control', 'keyword.other.template', 'keyword.other.substitution'],
+        settings: {
+          foreground: syntaxColors.control
+        }
+      },
+      {
+        scope: ['keyword.other.this'],
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        scope: ['keyword.control.import', 'keyword.control.from'],
+        settings: {
+          foreground: syntaxColors.controlImport
+        }
+      },
+      {
+        scope: ['keyword.control.new', 'keyword.operator.new', 'keyword.other.important.css'],
+        settings: {
+          foreground: colors.WARNING
+        }
+      },
+      {
+        scope: [
+          'keyword.control.flow',
+          'keyword.control.loop',
+          'keyword.control.conditional',
+          'keyword.operator.ternary'
+        ],
+        settings: {
+          foreground: syntaxColors.controlFlow
+        }
+      },
+      {
+        scope: [
+          'keyword.operator.logical',
+          'keyword.operator.relational',
+          'keyword.operator.comparison',
+          'keyword.operator.assignment',
+          'keyword.operator.arithmetic',
+          'keyword.operator.bitwise',
+          'keyword.operator.logical.js',
+          'keyword.operator.logical.ts',
+          'keyword.operator.logical.jsx',
+          'keyword.operator.logical.tsx'
+        ],
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // PUNCTUATION
+      //--------------------------------------------------------------------
+      {
+        scope: ['punctuation.definition'],
+        settings: {
+          foreground: syntaxColors.punctuation
+        }
+      },
+      {
+        scope: [
+          'punctuation.support',
+          'punctuation.support.type.property-name.begin',
+          'punctuation.support.type.property-name.end'
+        ],
+
+        settings: {
+          foreground: syntaxColors.support
+        }
+      },
+      {
+        scope: [
+          'entity.other.attribute-name punctuation',
+          'punctuation.definition.keyword.css',
+          'punctuation.section.property-list.begin.bracket.curly.css',
+          'punctuation.section.property-list.end.bracket.curly.css',
+          'punctuation.definition.attribute-selector.end.bracket.square.scss',
+          'punctuation.definition.attribute-selector.begin.bracket.square.scss'
+        ],
+        settings: {
+          foreground: syntaxColors.punctuation
+        }
+      },
+      {
+        scope: [
+          'meta.brace.round',
+          'meta.brace.square',
+          'meta.brace.curly',
+          'punctuation.separator',
+          'meta.function-call punctuation',
+          'punctuation.definition.arguments.begin',
+          'punctuation.definition.arguments.end',
+          'punctuation.definition.entity.begin',
+          'punctuation.definition.entity.end',
+          'punctuation.definition.type.begin',
+          'punctuation.definition.type.end',
+          'punctuation.section.scope.begin',
+          'punctuation.section.scope.end',
+          'meta.group.toml',
+          'meta.group.double.toml',
+          'punctuation.definition.block.scalar.folded.yaml',
+          'punctuation.definition.block.scalar.literal.yaml',
+          'punctuation.definition.block.sequence.item.yaml'
+        ],
+        settings: {
+          foreground: syntaxColors.punctuationBrace
+        }
+      },
+      {
+        scope: [
+          'punctuation.section',
+          'punctuation.definition.string',
+          'punctuation.definition.string.begin',
+          'punctuation.definition.string.end',
+          'punctuation.section.embedded.begin',
+          'punctuation.section.embedded.end',
+          'punctuation.section.embedded.begin.tsx',
+          'punctuation.section.embedded.end.tsx',
+          'punctuation.section.embedded.begin.jsx',
+          'punctuation.section.embedded.end.jsx',
+          'meta.string-contents.quoted.double punctuation.definition.variable',
+          'punctuation.definition.variable.makefile'
+        ],
+        settings: {
+          foreground: syntaxColors.punctuationQuote
+        }
+      },
+      {
+        scope: [
+          'punctuation.separator',
+          'punctuation.separator.comma',
+          'punctuation.separator.comma.css',
+          'punctuation.separator.key-value',
+          'punctuation.separator.key-value.css',
+          'punctuation.separator.list.comma.css'
+        ],
+        settings: {
+          foreground: syntaxColors.punctuationComma
+        }
+      },
+      {
+        scope: [
+          'punctuation string.interpolated',
+          'punctuation.definition.interpolation.begin',
+          'punctuation.definition.interpolation.end',
+          'punctuation.definition.constant.restructuredtext',
+          'punctuation.definition.template-expression.begin',
+          'punctuation.definition.template-expression.end'
+        ],
+        settings: {
+          foreground: colors.AC1
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // VARIABLES
+      //--------------------------------------------------------------------
+      {
+        scope: ['variable', 'string.interpolated'],
+        settings: {
+          foreground: syntaxColors.variable
+        }
+      },
+      {
+        scope: ['variable.language', 'variable.parameter.language', 'variable.other.language'],
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        scope: ['variable.other.constant'],
+        settings: {
+          foreground: syntaxColors.variableReadonly
+        }
+      },
+      {
+        scope: [
+          'meta.import variable.other.readwrite.alias',
+          'meta.export variable.other.readwrite.alias',
+          'meta.variable.assignment.destructured.object.coffee variable variable',
+          'variable.other.readwrite.js'
+        ],
+        settings: {
+          foreground: syntaxColors.variable
+        }
+      },
+
+      {
+        scope: [
+          'variable.other.property',
+          'variable.object.property',
+          'variable.property.cli',
+          'variable.property',
+          'variable.other.object.property',
+          'variable.other.object.instance.property',
+          'variable.other.constant.property'
+        ],
+        settings: {
+          foreground: syntaxColors.variableProperty
+        }
+      },
+      {
+        scope: [
+          'support.variable.property',
+          'support.variable.property.js',
+          'support.variable.property.ts'
+        ],
+        settings: {
+          foreground: syntaxColors.supportProperty
+        }
+      },
+      {
+        scope: [
+          'variable.parameter',
+          'variable.parameter.cli',
+          'variable.other.parameter',
+          'entity.name.variable.parameter',
+          'meta.at-rule.function variable',
+          'meta.at-rule.mixin variable'
+        ],
+        settings: {
+          foreground: syntaxColors.parameter
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // FUNCTIONS
+      //--------------------------------------------------------------------
+      {
+        scope: ['entity.name.function'],
+        settings: {
+          foreground: syntaxColors.function
+        }
+      },
+      {
+        scope: ['meta.function-call', 'meta.function-call.generic', 'meta.function-call.object'],
+        settings: {
+          foreground: syntaxColors.functionCall
+        }
+      },
+      {
+        scope: ['variable.function'],
+        settings: {
+          foreground: syntaxColors.functionCall
+        }
+      },
+      {
+        scope: [
+          'support.function.magic',
+          'storage.modifier.async',
+          'keyword.control.trycatch',
+          'keyword.control.trycatch.js',
+          'keyword.control.trycatch.ts',
+          'keyword.control.trycatch.tsx',
+          'keyword.control.trycatch.jsx'
+        ],
+        settings: {
+          foreground: syntaxColors.supportFunction
+        }
+      },
+      {
+        scope: [
+          'entity.name.type.type-parameter',
+          'meta.indexer.mappedtype.declaration entity.name.type',
+          'meta.type.parameters entity.name.type'
+        ],
+        settings: {
+          foreground: syntaxColors.typeParameter
+        }
+      },
+      {
+        scope: ['entity.other.attribute-name', 'meta.object-literal.key.js'],
+        settings: {
+          foreground: syntaxColors.attribute
+          //"fontStyle": "bold"
+        }
+      },
+      {
+        scope: ['entity.other.property-name', 'meta.property-name', 'variable.other.property.cli'],
+        settings: {
+          foreground: syntaxColors.property
+        }
+      },
+      {
+        scope: ['support.type.property-name'],
+        settings: {
+          foreground: syntaxColors.supportProperty
+        }
+      },
+      {
+        scope: ['support.variable', 'variable.other.predefined'],
+        settings: {
+          foreground: syntaxColors.supportVariable
+        }
+      },
+      {
+        scope: ['support.function'],
+        settings: {
+          foreground: syntaxColors.supportFunction
+        }
+      },
+      {
+        scope: ['support.method', 'support.function.misc'],
+        settings: {
+          foreground: syntaxColors.supportMethod
+        }
+      },
+      {
+        scope: ['support.method-call'],
+        settings: {
+          foreground: syntaxColors.supportMethod
+        }
+      },
+      {
+        scope: ['entity.name.function.member'],
+        settings: {
+          foreground: syntaxColors.method
+        }
+      },
+      {
+        name: 'Decorators',
+        scope: [
+          'meta.annotation variable.function',
+          'meta.annotation variable.annotation.function',
+          'meta.annotation punctuation.definition.annotation',
+          'meta.decorator',
+          'punctuation.decorator'
+        ],
+        settings: {
+          foreground: syntaxColors.functionCall
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // REGEXP
+      //--------------------------------------------------------------------
+
+      {
+        name: 'Regex string begin/end in JS/TS',
+        scope: [
+          'string.regexp punctuation.definition.string.begin',
+          'string.regexp punctuation.definition.string.end'
+        ],
+        settings: {
+          foreground: colors.AC1
+        }
+      },
+      {
+        name: 'Regex anchors (^, $)',
+        scope: 'keyword.control.anchor.regexp',
+        settings: {
+          foreground: colors.AC2
+        }
+      },
+      {
+        name: 'Regex regular string match',
+        scope: 'string.regexp.ts',
+        settings: {
+          foreground: colors.FG1
+        }
+      },
+      {
+        name: 'Regex group parenthesis & backreference (\\1, \\2, \\3, ...)',
+        scope: ['punctuation.definition.group.regexp', 'keyword.other.back-reference.regexp'],
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        name: 'Regex character class []',
+        scope: 'punctuation.definition.character-class.regexp',
+        settings: {
+          foreground: colors.INFO
+        }
+      },
+      {
+        name: 'Regex character classes (\\d, \\w, \\s)',
+        scope: 'constant.other.character-class.regexp',
+        settings: {
+          foreground: syntaxColors.class
+        }
+      },
+      {
+        name: 'Regex range',
+        scope: 'constant.other.character-class.range.regexp',
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+      {
+        name: 'Regex quantifier',
+        scope: 'keyword.operator.quantifier.regexp',
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+      {
+        name: 'Regex constant/numeric',
+        scope: 'constant.character.numeric.regexp',
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+      {
+        name: 'Regex lookaheads, negative lookaheads, lookbehinds, negative lookbehinds',
+        scope: [
+          'punctuation.definition.group.no-capture.regexp',
+          'meta.assertion.look-ahead.regexp',
+          'meta.assertion.negative-look-ahead.regexp'
+        ],
+        settings: {
+          foreground: colors.ERROR
+        }
+      },
+
+      {
+        scope: [
+          'string.regexp',
+          'constant.other.character-class.set.regexp',
+          'constant.character.escape.backslash.regexp'
+        ],
+        settings: {
+          foreground: syntaxColors.other
+        }
+      },
+      {
+        scope: ['punctuation.definition.group.capture.regexp'],
+        settings: {
+          foreground: colors.SUCCESS
+        }
+      },
+
+      {
+        scope: [
+          'punctuation.definition.group.assertion.regexp',
+          'keyword.operator.negation.regexp'
+        ],
+        settings: {
+          foreground: colors.ERROR
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // JSON
+      //--------------------------------------------------------------------
+      {
+        scope: ['source.json meta.structure.dictionary.json support.type.property-name.json'],
+        settings: {
+          foreground: colors.AC1
+        }
+      },
+      {
+        scope: [
+          'source.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json support.type.property-name.json'
+        ],
+        settings: {
+          foreground: colors.AC2
+        }
+      },
+      {
+        scope: [
+          'source.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json support.type.property-name.json'
+        ],
+        settings: {
+          foreground: ansiColors.BrightGreen
+        }
+      },
+      {
+        scope: [
+          'source.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json support.type.property-name.json'
+        ],
+        settings: {
+          foreground: ansiColors.BrightCyan
+        }
+      },
+      {
+        scope: [
+          'source.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json support.type.property-name.json'
+        ],
+        settings: {
+          foreground: ansiColors.BrightBlue
+        }
+      },
+      {
+        scope: [
+          'source.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json support.type.property-name.json'
+        ],
+        settings: {
+          foreground: ansiColors.BrightMagenta
+        }
+      },
+      {
+        scope: [
+          'source.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json support.type.property-name.json'
+        ],
+        settings: {
+          foreground: ansiColors.BrightRed
+        }
+      },
+      {
+        scope: [
+          'source.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json meta.structure.dictionary.value.json meta.structure.dictionary.json support.type.property-name.json'
+        ],
+        settings: {
+          foreground: ansiColors.BrightYellow
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // MISC
+      //--------------------------------------------------------------------
+      {
+        scope: 'token.info-token',
+        settings: {
+          foreground: colors.INFO
+        }
+      },
+      {
+        scope: 'token.warn-token',
+        settings: {
+          foreground: colors.WARNING
+        }
+      },
+      {
+        scope: 'token.error-token',
+        settings: {
+          foreground: colors.ERROR
+        }
+      },
+      {
+        scope: 'token.debug-token',
+        settings: {
+          foreground: colors.WARNING
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // C++
+      //--------------------------------------------------------------------
+      {
+        name: 'C++ extern keyword',
+        scope: 'storage.modifier.specifier.extern.cpp',
+        settings: {
+          foreground: colors.WARNING
+        }
+      },
+      {
+        name: 'C++ scope resolution',
+        scope: [
+          'entity.name.scope-resolution.template.call.cpp',
+          'entity.name.scope-resolution.cpp',
+          'entity.name.scope-resolution.function.definition.cpp'
+        ],
+        settings: {
+          foreground: syntaxColors.function
+        }
+      },
+      {
+        scope: ['entity.name.scope-resolution.parameter.cpp'],
+        settings: {
+          foreground: syntaxColors.parameter
+        }
+      },
+      {
+        name: 'C++ doc keywords',
+        scope: 'storage.type.class.doxygen',
+        settings: {
+          foreground: syntaxColors.class
+        }
+      },
+      {
+        name: 'C++ operators',
+        scope: ['storage.modifier.reference.cpp'],
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // C#
+      //--------------------------------------------------------------------
+      {
+        name: 'C# Interpolated Strings',
+        scope: 'meta.interpolation.cs',
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        name: 'C# xml-style docs',
+        scope: 'comment.block.documentation.cs',
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // CSS
+      //--------------------------------------------------------------------
+      {
+        scope: ['entity.other.attribute-name.class.css'],
+        settings: {
+          foreground: syntaxColors.class
+        }
+      },
+      {
+        scope: ['entity.other.attribute-name.pseudo-class.css'],
+        settings: {
+          foreground: syntaxColors.type
+        }
+      },
+      {
+        name: 'Classes',
+        scope: [
+          'source.css entity.other.attribute-name.class.css',
+          'entity.other.attribute-name.parent-selector.css punctuation.definition.entity.css'
+        ],
+        settings: {
+          foreground: syntaxColors.class
+        }
+      },
+      {
+        name: 'Operators',
+        scope: 'punctuation.separator.operator.css',
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+      {
+        name: 'Pseudo classes',
+        scope: 'source.css entity.other.attribute-name.pseudo-class',
+        settings: {
+          foreground: syntaxColors.type
+        }
+      },
+      {
+        scope: 'source.css constant.other.unicode-range',
+        settings: {
+          foreground: syntaxColors.other
+        }
+      },
+      {
+        scope: 'source.css variable.parameter.url',
+        settings: {
+          foreground: colors.INFO,
+          fontStyle: ''
+        }
+      },
+      {
+        name: 'CSS vendored property names',
+        scope: ['support.type.vendored.property-name'],
+        settings: {
+          foreground: syntaxColors.supportProperty
+        }
+      },
+      {
+        name: 'Less/SCSS right-hand variables (@/$-prefixed)',
+        scope: [
+          'source.css meta.property-value variable',
+          'source.css meta.property-value variable.other.less',
+          'source.css meta.property-value variable.other.less punctuation.definition.variable.less',
+          'meta.definition.variable.scss'
+        ],
+        settings: {
+          foreground: colors.AC2
+        }
+      },
+      {
+        name: 'CSS variables (--prefixed)',
+        scope: [
+          'source.css meta.property-list variable',
+          'meta.property-list variable.other.less',
+          'meta.property-list variable.other.less punctuation.definition.variable.less'
+        ],
+        settings: {
+          foreground: colors.AC2
+        }
+      },
+      {
+        name: 'CSS Percentage values',
+        scope: 'keyword.other.unit.percentage.css',
+        settings: {
+          foreground: syntaxColors.unit
+        }
+      },
+      {
+        name: 'CSS Attribute selectors',
+        scope: ['source.css meta.attribute-selector'],
+        settings: {
+          foreground: syntaxColors.selector
+        }
+      },
+      {
+        scope: ['meta.attribute-selector.scss'],
+        settings: {
+          foreground: syntaxColors.selector
+        }
+      },
+      {
+        name: 'Tag names in Stylesheets',
+        scope: ['entity.name.tag.css', 'entity.name.tag.less', 'entity.name.tag.custom.css'],
+        settings: {
+          foreground: syntaxColors.tag
+        }
+      },
+      {
+        name: 'Wildcard(*) selector in Stylesheets',
+        scope: [
+          'entity.name.tag.wildcard.css',
+          'entity.name.tag.wildcard.less',
+          'entity.name.tag.wildcard.scss',
+          'entity.name.tag.wildcard.sass'
+        ],
+        settings: {
+          foreground: syntaxColors.tagPunctuation
+        }
+      },
+      {
+        scope: [
+          'source.css support.type.property-name',
+          'source.sass support.type.property-name',
+          'source.scss support.type.property-name',
+          'source.less support.type.property-name',
+          'source.stylus support.type.property-name',
+          'source.postcss support.type.property-name'
+        ],
+        settings: {
+          foreground: syntaxColors.property
+        }
+      },
+      {
+        name: 'Constant property values in Stylesheets',
+        scope: ['support.constant.property-value.css', 'constant.numeric.css'],
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+      {
+        scope: ['keyword.control.at-rule.apply.tailwind'],
+        settings: {
+          foreground: syntaxColors.controlImport
+          // fontStyle: "bold",
+        }
+      },
+      {
+        scope: ['keyword.control.at-rule.tailwind.tailwind'],
+        settings: {
+          foreground: syntaxColors.control
+        }
+      },
+      {
+        scope: ['keyword.control.at-rule.layer.tailwind'],
+        settings: {
+          foreground: syntaxColors.controlFlow
+        }
+      },
+      {
+        scope: ['meta.selector'],
+        settings: {
+          foreground: syntaxColors.selector
+        }
+      },
+      {
+        name: 'Property names (left hand assignments in json/yaml/css)',
+        scope: 'support.type.property-name.css',
+        settings: {
+          foreground: syntaxColors.property,
+          fontStyle: ''
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // DATA - JSON - YAML - TOML
+      //--------------------------------------------------------------------
+
+      {
+        name: 'JSON/YAML keys, other left-hand assignments',
+        scope: [
+          'keyword.other.definition.toml',
+          'keyword.other.definition.yaml',
+          'punctuation.support.type.property-name.toml',
+          'support.type.property-name.toml',
+          'entity.name.tag.yaml',
+          'punctuation.support.type.property-name.yaml',
+          'support.type.property-name.yaml'
+        ],
+        settings: {
+          foreground: colors.AC2,
+          fontStyle: ''
+        }
+      },
+      {
+        name: 'JSON/YAML constants',
+        scope: ['constant.language.json', 'constant.language.yaml'],
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        scope: ['variable.other.alias.yaml', 'punctuation.definition.alias.yaml'],
+        settings: {
+          foreground: syntaxColors.variableReadonly,
+          fontStyle: 'underline'
+        }
+      },
+      {
+        name: 'YAML anchors',
+        scope: ['entity.name.type.anchor.yaml'],
+        settings: {
+          foreground: syntaxColors.variableReadonly,
+          fontStyle: ''
+        }
+      },
+      {
+        name: 'TOML tables / ini groups',
+        scope: ['support.type.property-name.table', 'entity.name.section.group-title.ini'],
+        settings: {
+          foreground: syntaxColors.property
+        }
+      },
+      {
+        name: 'TOML dates',
+        scope: 'constant.other.time.datetime.offset.toml',
+        settings: {
+          foreground: syntaxColors.datetime
+        }
+      },
+      {
+        name: 'YAML anchor puctuation',
+        scope: ['punctuation.definition.anchor.yaml'],
+        settings: {
+          foreground: syntaxColors.punctuation
+        }
+      },
+      {
+        name: 'YAML triple dashes',
+        scope: 'entity.other.document.begin.yaml',
+        settings: {
+          foreground: colors.AC2
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // DIFF
+      //--------------------------------------------------------------------
+
+      {
+        name: 'Markup Diff',
+        scope: 'markup.changed.diff',
+        settings: {
+          foreground: colors.WARNING
+        }
+      },
+      {
+        name: 'Diff',
+        scope: [
+          'meta.diff.header.from-file',
+          'meta.diff.header.to-file',
+          'punctuation.definition.from-file.diff',
+          'punctuation.definition.to-file.diff'
+        ],
+        settings: {
+          foreground: colors.INFO
+        }
+      },
+      {
+        name: 'Diff Inserted',
+        scope: 'markup.inserted.diff',
+        settings: {
+          foreground: colors.SUCCESS
+        }
+      },
+      {
+        name: 'Diff Deleted',
+        scope: 'markup.deleted.diff',
+        settings: {
+          foreground: colors.ERROR
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // .ENV
+      //--------------------------------------------------------------------
+
+      {
+        name: 'dotenv left-hand side assignments',
+        scope: ['variable.other.env'],
+        settings: {
+          foreground: syntaxColors.other
+        }
+      },
+      {
+        name: 'dotenv reference to existing env variable',
+        scope: ['string.quoted variable.other.env'],
+        settings: {
+          foreground: syntaxColors.other
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // GO LANG
+      //--------------------------------------------------------------------
+      {
+        name: 'Comment keywords',
+        scope: 'comment meta.annotation.go',
+        settings: {
+          foreground: syntaxColors.keyword
+        }
+      },
+      {
+        name: 'go:embed, go:build, etc.',
+        scope: 'comment meta.annotation.parameters.go',
+        settings: {
+          foreground: syntaxColors.parameter
+        }
+      },
+      {
+        name: 'Go constants (nil, true, false)',
+        scope: 'constant.language.go',
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // GRAPHQL
+      //--------------------------------------------------------------------
+
+      {
+        name: 'GraphQL variables',
+        scope: 'variable.graphql',
+        settings: {
+          foreground: syntaxColors.variableDeclaration
+        }
+      },
+      {
+        name: 'GraphQL aliases',
+        scope: 'string.unquoted.alias.graphql',
+        settings: {
+          foreground: syntaxColors.variable
+        }
+      },
+      {
+        name: 'GraphQL enum members',
+        scope: 'constant.character.enum.graphql',
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        name: 'GraphQL field in types',
+        scope: 'meta.objectvalues.graphql constant.object.key.graphql string.unquoted.graphql',
+        settings: {
+          foreground: syntaxColors.typeParameter
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // HTML
+      //--------------------------------------------------------------------
+
+      {
+        name: 'HTML tags, HTML/XML-like <tags/>',
+        scope: ['meta.tag.any.html', 'entity.name.tag'],
+        settings: {
+          foreground: syntaxColors.tag
+        }
+      },
+      {
+        scope: [
+          'punctuation.definition.tag',
+          'punctuation.definition.tag.html',
+          'punctuation.definition.tag.begin.html',
+          'punctuation.definition.tag.end.html',
+          'punctuation.separator.key-value.html'
+        ],
+        settings: {
+          foreground: syntaxColors.tagPunctuation
+        }
+      },
+      {
+        name: 'HTML/XML DOCTYPE as keyword',
+        scope: [
+          'keyword.other.doctype',
+          'meta.tag.sgml.doctype punctuation.definition.tag',
+          'meta.tag.metadata.doctype entity.name.tag',
+          'meta.tag.metadata.doctype punctuation.definition.tag'
+        ],
+        settings: {
+          foreground: syntaxColors.keyword
+        }
+      },
+
+      {
+        name: 'Special characters like &amp;',
+        scope: [
+          'text.html constant.character.entity',
+          'text.html constant.character.entity punctuation',
+          'constant.character.entity.xml',
+          'constant.character.entity.xml punctuation',
+          'constant.character.entity.js.jsx',
+          'constant.charactger.entity.js.jsx punctuation',
+          'constant.character.entity.tsx',
+          'constant.character.entity.tsx punctuation'
+        ],
+        settings: {
+          foreground: colors.WARNING
+        }
+      },
+      {
+        name: 'HTML/XML tag attribute values',
+        scope: ['entity.other.attribute-name', 'variable.other.key'],
+        settings: {
+          foreground: syntaxColors.attribute
+        }
+      },
+      {
+        name: 'Components',
+        scope: [
+          'support.class.component',
+          'support.class.component.jsx',
+          'support.class.component.tsx',
+          'support.class.component.vue'
+        ],
+        settings: {
+          foreground: syntaxColors.function
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // JAVA
+      //--------------------------------------------------------------------
+
+      {
+        name: 'Annotations',
+        scope: ['punctuation.definition.annotation', 'storage.type.annotation'],
+        settings: {
+          foreground: syntaxColors.type
+        }
+      },
+      {
+        name: 'Java enums',
+        scope: 'constant.other.enum.java',
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        name: 'Java imports',
+        scope: 'storage.modifier.import.java',
+        settings: {
+          foreground: syntaxColors.controlImport
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // JAVASCRIPT
+      //--------------------------------------------------------------------
+      {
+        scope: [
+          'meta.export variable.other.readwrite.js',
+          'meta.export variable.other.readwrite.ts',
+          'meta.export variable.other.readwrite.tsx',
+          'meta.export variable.other.readwrite.jsx'
+          // 'variable.other.constant.js',
+          // 'variable.other.constant.ts',
+        ],
+        settings: {
+          foreground: syntaxColors.variableDeclaration
+        }
+      },
+      {
+        name: 'JS/TS properties',
+        scope: ['variable.other.property.js', 'variable.other.property.ts'],
+        settings: {
+          foreground: syntaxColors.property
+        }
+      },
+      {
+        name: 'JSDoc;',
+        scope: ['variable.other.jsdoc', 'comment.block.documentation variable.other'],
+        settings: {
+          foreground: syntaxColors.other,
+          fontStyle: ''
+        }
+      },
+      {
+        name: 'JSDoc keywords',
+        scope: 'storage.type.class.jsdoc',
+        settings: {
+          foreground: syntaxColors.class
+        }
+      },
+      {
+        scope: 'support.type.object.console.js',
+        settings: {
+          foreground: syntaxColors.type
+        }
+      },
+      {
+        name: 'Node constants as keywords (module, etc.)',
+        scope: ['support.constant.node', 'support.type.object.module.js'],
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+      {
+        name: 'implements as keyword',
+        scope: 'storage.modifier.implements',
+        settings: {
+          foreground: syntaxColors.modifier
+        }
+      },
+      {
+        name: 'Builtin types',
+        scope: [
+          'constant.language.null.js',
+          'constant.language.null.ts',
+          'constant.language.undefined.js',
+          'constant.language.undefined.ts',
+          'support.type.builtin.ts'
+        ],
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        scope: 'variable.parameter.generic',
+        settings: {
+          foreground: syntaxColors.parameter
+        }
+      },
+      {
+        name: 'Arrow functions',
+        scope: ['keyword.declaration.function.arrow.js', 'storage.type.function.arrow.ts'],
+        settings: {
+          foreground: syntaxColors.function
+        }
+      },
+      {
+        name: 'Decorator punctuations',
+        scope: 'punctuation.decorator.ts',
+        settings: {
+          foreground: colors.AC1
+        }
+      },
+      {
+        name: 'Extra JS/TS keywords',
+        scope: [
+          'keyword.operator.expression.in.js',
+          'keyword.operator.expression.in.ts',
+          'keyword.operator.expression.infer.ts',
+          'keyword.operator.expression.instanceof.js',
+          'keyword.operator.expression.instanceof.ts',
+          'keyword.operator.expression.is',
+          'keyword.operator.expression.keyof.ts',
+          'keyword.operator.expression.of.js',
+          'keyword.operator.expression.of.ts',
+          'keyword.operator.expression.typeof.ts'
+        ],
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // MARKDOWN
+      //--------------------------------------------------------------------
+
+      {
+        scope: ['meta.diff', 'meta.diff.header'],
+        settings: {
+          foreground: syntaxColors.comment
+        }
+      },
+      {
+        scope: [
+          'meta.link.reference.def.restructuredtext',
+          'string.other.link.description',
+          'string.other.link.title'
+        ],
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+      {
+        scope: [
+          'heading.1.markdown punctuation.definition.heading.markdown',
+          'heading.1.markdown',
+          'heading.1.quarto punctuation.definition.heading.quarto',
+          'heading.1.quarto',
+          'markup.heading.atx.1.mdx',
+          'markup.heading.atx.1.mdx punctuation.definition.heading.mdx',
+          'markup.heading.setext.1.markdown',
+          'markup.heading.heading-0.asciidoc'
+        ],
+        settings: {
+          foreground: colors.AC1
+        }
+      },
+      {
+        scope: [
+          'heading.2.markdown punctuation.definition.heading.markdown',
+          'heading.2.markdown',
+          'heading.2.quarto punctuation.definition.heading.quarto',
+          'heading.2.quarto',
+          'markup.heading.atx.2.mdx',
+          'markup.heading.atx.2.mdx punctuation.definition.heading.mdx',
+          'markup.heading.setext.2.markdown',
+          'markup.heading.heading-1.asciidoc'
+        ],
+        settings: {
+          foreground: colors.AC2
+        }
+      },
+      {
+        scope: [
+          'heading.3.markdown punctuation.definition.heading.markdown',
+          'heading.3.markdown',
+          'heading.3.quarto punctuation.definition.heading.quarto',
+          'heading.3.quarto',
+          'markup.heading.atx.3.mdx',
+          'markup.heading.atx.3.mdx punctuation.definition.heading.mdx',
+          'markup.heading.heading-2.asciidoc'
+        ],
+        settings: {
+          foreground: ansiColors.BrightYellow
+        }
+      },
+      {
+        scope: [
+          'heading.4.markdown punctuation.definition.heading.markdown',
+          'heading.4.markdown',
+          'heading.4.quarto punctuation.definition.heading.quarto',
+          'heading.4.quarto',
+          'markup.heading.atx.4.mdx',
+          'markup.heading.atx.4.mdx punctuation.definition.heading.mdx',
+          'markup.heading.heading-3.asciidoc'
+        ],
+        settings: {
+          foreground: ansiColors.BrightGreen
+        }
+      },
+      {
+        scope: [
+          'heading.5.markdown punctuation.definition.heading.markdown',
+          'heading.5.markdown',
+          'heading.5.quarto punctuation.definition.heading.quarto',
+          'heading.5.quarto',
+          'markup.heading.atx.5.mdx',
+          'markup.heading.atx.5.mdx punctuation.definition.heading.mdx',
+          'markup.heading.heading-4.asciidoc'
+        ],
+        settings: {
+          foreground: ansiColors.BrightCyan
+        }
+      },
+      {
+        scope: [
+          'heading.6.markdown punctuation.definition.heading.markdown',
+          'heading.6.markdown',
+          'heading.6.quarto punctuation.definition.heading.quarto',
+          'heading.6.quarto',
+          'markup.heading.atx.6.mdx',
+          'markup.heading.atx.6.mdx punctuation.definition.heading.mdx',
+          'markup.heading.heading-5.asciidoc'
+        ],
+        settings: {
+          foreground: ansiColors.BrightBlue
+        }
+      },
+      {
+        scope: 'markup.bold',
+        settings: {
+          foreground: colors.WARNING,
+          fontStyle: 'bold'
+        }
+      },
+      {
+        scope: 'markup.italic',
+        settings: {
+          foreground: colors.ERROR,
+          fontStyle: 'italic'
+        }
+      },
+      {
+        scope: 'markup.strikethrough',
+        settings: {
+          foreground: colors.FG2,
+          fontStyle: 'strikethrough'
+        }
+      },
+      {
+        name: 'Markdown auto links',
+        scope: ['punctuation.definition.link', 'markup.underline.link'],
+        settings: {
+          foreground: colors.INFO,
+          fontStyle: 'underline'
+        }
+      },
+      {
+        name: 'Markdown links',
+        scope: [
+          'text.html.markdown punctuation.definition.link.title',
+          'text.html.quarto punctuation.definition.link.title',
+          'string.other.link.title.markdown',
+          'string.other.link.title.quarto',
+          'markup.link',
+          // references like
+          // > [1]: http://example.com "Example"
+          'punctuation.definition.constant.markdown',
+          'punctuation.definition.constant.quarto',
+          'constant.other.reference.link.markdown',
+          'constant.other.reference.link.quarto',
+          'markup.substitution.attribute-reference'
+        ],
+        settings: {
+          foreground: colors.INFO
+        }
+      },
+      {
+        name: 'Markdown code spans',
+        scope: [
+          'punctuation.definition.raw.markdown',
+          'punctuation.definition.raw.quarto',
+          'markup.inline.raw.string.markdown',
+          'markup.inline.raw.string.quarto',
+          'markup.raw.block.markdown',
+          'markup.raw.block.quarto'
+        ],
+        settings: {
+          foreground: colors.SUCCESS
+        }
+      },
+      {
+        name: 'Markdown triple backtick language identifier',
+        scope: 'fenced_code.block.language',
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        name: 'Markdown triple backticks',
+        scope: ['markup.fenced_code.block punctuation.definition', 'markup.raw support.asciidoc'],
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        name: 'Markdown quotes',
+        scope: ['markup.quote', 'punctuation.definition.quote.begin'],
+        settings: {
+          foreground: syntaxColors.punctuation
+        }
+      },
+      {
+        name: 'Markdown separators',
+        scope: 'meta.separator.markdown',
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+      {
+        name: 'Markdown list bullets',
+        scope: [
+          'punctuation.definition.list.begin.markdown',
+          'punctuation.definition.list.begin.quarto',
+          'markup.list.bullet'
+        ],
+        settings: {
+          foreground: syntaxColors.unit
+        }
+      },
+      {
+        name: 'Quarto headings',
+        scope: 'markup.heading.quarto',
+        settings: {
+          fontStyle: 'bold'
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // NIX
+      //--------------------------------------------------------------------
+
+      {
+        name: 'Nix attribute names',
+        scope: [
+          'entity.other.attribute-name.multipart.nix',
+          'entity.other.attribute-name.single.nix'
+        ],
+        settings: {
+          foreground: syntaxColors.attribute
+        }
+      },
+      {
+        name: 'Nix parameter names',
+        scope: 'variable.parameter.name.nix',
+        settings: {
+          foreground: syntaxColors.parameter,
+          fontStyle: ''
+        }
+      },
+      {
+        name: 'Nix interpolated parameter names',
+        scope: 'meta.embedded variable.parameter.name.nix',
+        settings: {
+          foreground: syntaxColors.parameter,
+          fontStyle: ''
+        }
+      },
+      {
+        name: 'Nix paths',
+        scope: 'string.unquoted.path.nix',
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // PHP
+      //--------------------------------------------------------------------
+
+      {
+        name: 'PHP Attributes',
+        scope: ['support.attribute.builtin'],
+        settings: {
+          foreground: syntaxColors.supportProperty
+        }
+      },
+      {
+        name: 'PHP Attributes',
+        scope: ['meta.attribute.php'],
+        settings: {
+          foreground: syntaxColors.property
+        }
+      },
+      {
+        name: 'PHP Parameters (needed for the leading dollar sign)',
+        scope: 'meta.function.parameters.php punctuation.definition.variable.php',
+        settings: {
+          foreground: syntaxColors.parameter
+        }
+      },
+      {
+        name: 'PHP Constants (null, __FILE__, etc.)',
+        scope: 'constant.language.php',
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        name: 'PHP functions',
+        scope: 'text.html.php support.function',
+        settings: {
+          foreground: syntaxColors.supportFunction
+        }
+      },
+      {
+        name: 'PHPdoc keywords',
+        scope: 'keyword.other.phpdoc.php',
+        settings: {
+          foreground: syntaxColors.keyword
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // PYTHON
+      //--------------------------------------------------------------------
+
+      {
+        name: 'Python argument functions',
+        scope: ['support.variable.magic.python'],
+        settings: {
+          foreground: syntaxColors.supportVariable
+        }
+      },
+      {
+        name: 'Python function calls',
+        scope: ['meta.function-call.arguments.python'],
+        settings: {
+          foreground: syntaxColors.parameter
+        }
+      },
+      {
+        name: 'Python double underscore functions',
+        scope: ['support.function.magic.python'],
+        settings: {
+          foreground: syntaxColors.supportFunction
+        }
+      },
+      {
+        name: 'Python `self` keyword',
+        scope: [
+          'variable.parameter.function.language.special.self.python',
+          'variable.language.special.self.python'
+        ],
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        scope: ['keyword.operator.logical.python'],
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+      {
+        name: 'python keyword flow/logical (for ... in)',
+        scope: ['keyword.control.flow.python'],
+        settings: {
+          foreground: syntaxColors.controlFlow
+        }
+      },
+      {
+        name: 'python storage type',
+        scope: 'storage.type.function.python',
+        settings: {
+          foreground: syntaxColors.function
+        }
+      },
+      {
+        name: 'python function support',
+        scope: ['support.token.decorator.python', 'meta.function.decorator.identifier.python'],
+        settings: {
+          foreground: syntaxColors.supportFunction
+        }
+      },
+      {
+        name: 'python function calls',
+        scope: ['meta.function-call.python'],
+        settings: {
+          foreground: syntaxColors.functionCall
+        }
+      },
+      {
+        name: 'python function decorators',
+        scope: ['entity.name.function.decorator.python', 'punctuation.definition.decorator.python'],
+        settings: {
+          foreground: syntaxColors.function
+        }
+      },
+      {
+        name: 'python placeholder',
+        scope: 'constant.character.format.placeholder.other.python',
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        name: 'Python exception & builtins such as exit()',
+        scope: ['support.function.builtin.python'],
+        settings: {
+          foreground: syntaxColors.supportFunction
+        }
+      },
+      {
+        name: 'Python exception',
+        scope: ['support.type.exception.python'],
+        settings: {
+          foreground: syntaxColors.supportMethod
+        }
+      },
+      {
+        name: 'entity.name.type',
+        scope: ['support.type.python'],
+        settings: {
+          foreground: syntaxColors.type
+        }
+      },
+      {
+        name: 'python constants (True/False)',
+        scope: 'constant.language.python',
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+      {
+        name: 'Arguments accessed later in the function body',
+        scope: ['meta.indexed-name.python', 'meta.item-access.python'],
+        settings: {
+          foreground: syntaxColors.attribute
+        }
+      },
+      {
+        name: 'Python f-strings/binary/unicode storage types',
+        scope: 'storage.type.string.python',
+        settings: {
+          foreground: syntaxColors.type
+        }
+      },
+      {
+        name: 'Python type hints',
+        scope: 'meta.function.parameters.python',
+        settings: {
+          foreground: syntaxColors.parameter
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // RUST
+      //--------------------------------------------------------------------
+
+      {
+        name: 'Rust attribute',
+        scope: [
+          'meta.annotation.rust',
+          'meta.annotation.rust punctuation',
+          'meta.attribute.rust',
+          'meta.attribute.rust string.quoted.single.char.rust',
+          'meta.attribute.rust string.quoted.double.rust',
+          'punctuation.definition.attribute.rust'
+        ],
+        settings: {
+          foreground: syntaxColors.attribute
+        }
+      },
+      {
+        name: 'Rust keyword',
+        scope: [
+          'entity.name.function.macro.rules.rust',
+          'storage.type.module.rust',
+          'storage.modifier.rust',
+          'storage.type.struct.rust',
+          'storage.type.enum.rust',
+          'storage.type.trait.rust',
+          'storage.type.union.rust',
+          'storage.type.impl.rust',
+          'storage.type.rust',
+          'storage.type.function.rust',
+          'storage.type.type.rust'
+        ],
+        settings: {
+          foreground: syntaxColors.storage,
+          fontStyle: ''
+        }
+      },
+      {
+        name: 'Rust u/i32, u/i64, etc.',
+        scope: 'entity.name.type.numeric.rust',
+        settings: {
+          foreground: syntaxColors.type,
+          fontStyle: ''
+        }
+      },
+      {
+        name: 'Rust generic',
+        scope: 'meta.generic.rust',
+        settings: {
+          foreground: syntaxColors.typeParameter
+        }
+      },
+      {
+        name: 'Rust impl',
+        scope: 'entity.name.impl.rust',
+        settings: {
+          foreground: syntaxColors.supportMethod
+        }
+      },
+      {
+        name: 'Rust module',
+        scope: 'entity.name.module.rust',
+        settings: {
+          foreground: syntaxColors.supportVariable
+        }
+      },
+      {
+        name: 'Rust trait',
+        scope: 'entity.name.trait.rust',
+        settings: {
+          foreground: syntaxColors.type
+        }
+      },
+      {
+        name: 'Rust struct',
+        scope: 'storage.type.source.rust',
+        settings: {
+          foreground: syntaxColors.class
+        }
+      },
+      {
+        name: 'Rust union',
+        scope: 'entity.name.union.rust',
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+      {
+        name: 'Rust enum member',
+        scope: 'meta.enum.rust storage.type.source.rust',
+        settings: {
+          foreground: syntaxColors.supportVariable
+        }
+      },
+      {
+        name: 'Rust macro',
+        scope: [
+          'support.macro.rust',
+          'meta.macro.rust support.function.rust',
+          'entity.name.function.macro.rust'
+        ],
+        settings: {
+          foreground: syntaxColors.supportFunction
+        }
+      },
+      {
+        name: 'Rust lifetime',
+        scope: ['storage.modifier.lifetime.rust', 'entity.name.type.lifetime'],
+        settings: {
+          foreground: syntaxColors.modifier
+        }
+      },
+      {
+        name: 'Rust string formatting',
+        scope: 'string.quoted.double.rust constant.other.placeholder.rust',
+        settings: {
+          foreground: colors.FG2
+        }
+      },
+      {
+        name: 'Rust return type generic',
+        scope: 'meta.function.return-type.rust meta.generic.rust storage.type.rust',
+        settings: {
+          foreground: syntaxColors.typeParameter
+        }
+      },
+      {
+        name: 'Rust function',
+        scope: 'entity.name.function.macro.rules.rust',
+        settings: {
+          foreground: syntaxColors.function,
+          fontStyle: ''
+        }
+      },
+      {
+        name: 'Rust functions',
+        scope: 'meta.function.call.rust',
+        settings: {
+          foreground: syntaxColors.functionCall
+        }
+      },
+      {
+        name: 'Rust angle brackets',
+        scope: 'punctuation.brackets.angle.rust',
+        settings: {
+          foreground: syntaxColors.operator
+        }
+      },
+      {
+        name: 'Rust constants',
+        scope: 'constant.other.caps.rust',
+        settings: {
+          foreground: syntaxColors.constant
+        }
+      },
+      {
+        name: 'Rust function parameters',
+        scope: ['meta.function.definition.rust variable.other.rust'],
+        settings: {
+          foreground: syntaxColors.parameter
+        }
+      },
+      {
+        name: 'Rust closure variables',
+        scope: 'meta.function.call.rust variable.other.rust',
+        settings: {
+          foreground: syntaxColors.variableReadonly
+        }
+      },
+      {
+        name: 'Rust self',
+        scope: 'variable.language.self.rust',
+        settings: {
+          foreground: syntaxColors.supportVariable
+        }
+      },
+      {
+        name: 'Rust metavariable names',
+        scope: [
+          'variable.other.metavariable.name.rust',
+          'meta.macro.metavariable.rust keyword.operator.macro.dollar.rust'
+        ],
+        settings: {
+          foreground: syntaxColors.variableDeclaration
+        }
+      },
+
+      //--------------------------------------------------------------------
+      // SHELL
+      //--------------------------------------------------------------------
+
+      {
+        name: 'Shell shebang',
+        scope: [
+          'comment.line.shebang',
+          'comment.line.shebang punctuation.definition.comment',
+          'comment.line.shebang',
+          'punctuation.definition.comment.shebang.shell',
+          'meta.shebang.shell'
+        ],
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        name: 'Shell shebang command',
+        scope: 'comment.line.shebang constant.language',
+        settings: {
+          foreground: syntaxColors.language
+        }
+      },
+      {
+        name: 'Shell interpolated command',
+        scope: [
+          'meta.function-call.arguments.shell punctuation.definition.variable.shell',
+          'meta.function-call.arguments.shell punctuation.section.interpolation',
+          'meta.function-call.arguments.shell punctuation.definition.variable.shell',
+          'meta.function-call.arguments.shell punctuation.section.interpolation'
+        ],
+        settings: {
+          foreground: syntaxColors.parameter
+        }
+      },
+      {
+        name: 'Shell interpolated command variable',
+        scope: 'meta.string meta.interpolation.parameter.shell variable.other.readwrite',
+        settings: {
+          foreground: syntaxColors.variableDeclaration
+        }
+      },
+      {
+        scope: [
+          'source.shell punctuation.section.interpolation',
+          'punctuation.definition.evaluation.backticks.shell'
+        ],
+        settings: {
+          foreground: syntaxColors.function
+        }
+      },
+      {
+        name: 'Shell EOF',
+        scope: 'entity.name.tag.heredoc.shell',
+        settings: {
+          foreground: colors.AC2
+        }
+      },
+      {
+        name: 'Shell quoted variable',
+        scope: 'string.quoted.double.shell variable.other.normal.shell',
+        settings: {
+          foreground: syntaxColors.variableDeclaration
+        }
+      }
+    ],
+    semanticTokenColors: {
+      namespace: syntaxColors.class, //class
+      support: syntaxColors.support,
+      type: syntaxColors.type, //type
+      'type.declaration': syntaxColors.type, //type
+      'type.defaultLibrary': syntaxColors.language, //typeParameter
+      interface: syntaxColors.type, //type
+      class: syntaxColors.class, //class
+      'class.declaration': syntaxColors.class, //class
+      'class.defaultLibrary': syntaxColors.language, //class
+      enum: syntaxColors.class, //class,
+      enumMember: colors.FG2, //FG2
+      struct: syntaxColors.class, //class,
+      property: syntaxColors.property, //property
+      'property.readonly': syntaxColors.variableProperty, //property
+      'property.declaration': syntaxColors.propertyDeclaration, //typeParameter
+      'property.defaultLibrary': syntaxColors.supportProperty, //property
+      parameter: syntaxColors.parameter, //variableProperty
+      function: syntaxColors.functionCall, //functionCall
+      'function.declaration': syntaxColors.function, //function
+      'function.defaultLibrary': syntaxColors.supportFunction, //function
+      method: syntaxColors.methodCall, //functionCall
+      'method.declaration': syntaxColors.method, //function
+      'method.defaultLibrary': syntaxColors.supportMethod, //function
+      variable: syntaxColors.variable, //variable
+      'variable.declaration': syntaxColors.variableDeclaration, //variableDeclaration
+      'variable.readonly': syntaxColors.variableReadonly, //variable
+      'variable.readonly.defaultLibrary': syntaxColors.supportVariable, //variableDeclaration
+      'variable.defaultLibrary': syntaxColors.supportVariable, //variable
+      'variable.other': syntaxColors.other, //variable
+      'variable.other.readwrite': syntaxColors.variable, //variable
+      'variable.other.constant': syntaxColors.variableDeclaration, //FG2
+      'variable.other.readonly': syntaxColors.variableReadonly, //variable
+      decorator: colors.AC1, //AC1
+      event: syntaxColors.property, // property
+      comment: syntaxColors.comment, //comment
+      string: colors.FG1, //FG1
+      keyword: syntaxColors.keyword, //keyword
+      number: syntaxColors.constant, //constant
+      operator: syntaxColors.operator, //operator
+      selfKeyword: syntaxColors.keyword, //keyword
+      boolean: syntaxColors.constant, //constant
+      // Python types
+      'class:python': syntaxColors.class, //AC1
+      'class.builtin:python': syntaxColors.language, //AC2
+      'variable.typeHint:python': syntaxColors.variableProperty, //variable
+      'function.decorator:python': colors.AC1, //AC1
+      'variable.readonly:javascript': syntaxColors.variableDeclaration, //variable
+      'variable.readonly:typescript': syntaxColors.variableDeclaration, //variable
+      'property.readonly:javascript': syntaxColors.property, //property
+      'property.readonly:typescript': syntaxColors.property, //property
+      'variable.readonly:javascriptreact': syntaxColors.variableDeclaration, //variable
+      'variable.readonly:typescriptreact': syntaxColors.variableDeclaration, //variable
+      'property.readonly:javascriptreact': syntaxColors.property, //property
+      'property.readonly:typescriptreact': syntaxColors.property, //property
+      // Scala, also dealing with constants
+      'variable.readonly:scala': syntaxColors.variableDeclaration, //variable
+      // Golang builtin readonly defaultLibrary (nil)
+      'type.defaultLibrary:go': syntaxColors.type, //AC2
+      'variable.readonly.defaultLibrary:go': syntaxColors.variableDeclaration, //AC1
+      // TOML syntax
+      tomlArrayKey: colors.AC2,
+      tomlTableKey: colors.AC2,
+      // Rust attributes
+      'builtinAttribute.attribute.library:rust': syntaxColors.language,
+      'generic.attribute:rust': syntaxColors.attribute,
+      // Nix
+      'constant.builtin.readonly:nix': syntaxColors.supportVariable,
+      // Typst
+      heading: colors.AC1,
+      'text.emph': { foreground: colors.FG1, fontStyle: 'italic' },
+      'text.strong': { foreground: colors.FG1, fontStyle: 'bold' },
+      'text.math': colors.FG2
+      // pol: syntaxColors.variable,
+    }
   };
 
-  return {
-    themeJSON: JSON.stringify(theme),
-    themeObject: theme
-  };
+  return { themeJSON: JSON.stringify(theme), themeObject: theme };
 }

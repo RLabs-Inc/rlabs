@@ -2,6 +2,14 @@ import Color from 'color';
 
 import { ColorSchemes } from '$lib/types/color';
 
+export function getAlphaColor(color: string, alpha: string): string {
+  if (color.length > 7) {
+    return color.slice(0, -2) + alpha;
+  } else {
+    return color + alpha;
+  }
+}
+
 export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): number[] {
   let result: number[];
   const goldenRatio = 0.618033988749895;

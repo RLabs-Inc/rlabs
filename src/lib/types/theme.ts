@@ -10,6 +10,26 @@ import {
 } from './color';
 import { ColorSchemes } from './color';
 
+export type TokenColor = {
+  name?: string;
+  scope: string[] | string;
+  settings: {
+    foreground?: string;
+    background?: string;
+    fontStyle?: string;
+  };
+};
+
+export type SemanticTokenColor = {
+  [key: string]: string | { foreground: string; fontStyle?: string };
+};
+
+export type TokenColors = {
+  colors: UIColors;
+  syntaxColors: SyntaxColors;
+  ansiColors: AnsiColors;
+};
+
 export const ThemeSchema = z.object({
   id: z.number(),
   name: z.string(),
