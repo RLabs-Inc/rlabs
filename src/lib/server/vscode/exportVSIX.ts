@@ -1,6 +1,6 @@
 import type { Theme } from '../../types/theme';
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import JSZip from 'jszip';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
 
