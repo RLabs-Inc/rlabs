@@ -37,27 +37,31 @@
           variant="link">Discover</Button
         >
         <Button
-          class={$page.url.pathname === '/vscode/how-to' ? 'underline' : ''}
+          class={$page.url.pathname === '/vscode-themes-community/how-to' ? 'underline' : ''}
           aria-current={$page.url.pathname === '/vscode-themes-community/how-to'}
           href="/vscode-themes-community/how-to"
           variant="link">How to</Button
         >
         <Button
-          class={$page.url.pathname === '/vscode/theme-generator' ? 'underline' : ''}
+          class={$page.url.pathname === '/vscode-themes-community/theme-generator'
+            ? 'underline'
+            : ''}
           aria-current={$page.url.pathname === '/vscode-themes-community/theme-generator'}
           href="/vscode-themes-community/theme-generator"
           variant="link">Create a theme</Button
         >
         <SignedIn>
           <Button
-            class={$page.url.pathname === '/vscode/saved-themes' ? 'underline' : ''}
+            class={$page.url.pathname === '/vscode-themes-community/saved-themes'
+              ? 'underline'
+              : ''}
             aria-current={$page.url.pathname === '/vscode-themes-community/saved-themes'}
             href="/vscode-themes-community/saved-themes"
             variant="link">Saved themes</Button
           >
         </SignedIn>
         <Button
-          class={$page.url.pathname === '/vscode/about' ? 'underline' : ''}
+          class={$page.url.pathname === '/vscode-themes-community/about' ? 'underline' : ''}
           aria-current={$page.url.pathname === '/vscode-themes-community/about'}
           href="/vscode-themes-community/about"
           variant="link">About</Button
@@ -100,20 +104,22 @@
         <div class="">
           <div class="mt-2 flex flex-col items-start justify-start gap-2">
             <Button
-              class={$page.url.pathname === '/vscode/discover' ? 'underline' : ''}
+              class={$page.url.pathname === '/vscode-themes-community/discover' ? 'underline' : ''}
               aria-current={$page.url.pathname === '/vscode-themes-community/discover'}
               href="/vscode-themes-community/discover"
               variant="link"
               onclick={() => (open = false)}>Discover</Button
             >
             <Button
-              class={$page.url.pathname === '/vscode/how-to' ? 'underline' : ''}
+              class={$page.url.pathname === '/vscode-themes-community/how-to' ? 'underline' : ''}
               aria-current={$page.url.pathname === '/vscode-themes-community/how-to'}
               href="/vscode-themes-community/how-to"
               variant="link">How to</Button
             >
             <Button
-              class={$page.url.pathname === '/vscode/theme-generator' ? 'underline' : ''}
+              class={$page.url.pathname === '/vscode-themes-community/theme-generator'
+                ? 'underline'
+                : ''}
               aria-current={$page.url.pathname === '/vscode-themes-community/theme-generator'}
               href="/vscode-themes-community/theme-generator"
               variant="link"
@@ -121,7 +127,9 @@
             >
             <SignedIn>
               <Button
-                class={$page.url.pathname === '/vscode/saved-themes' ? 'underline' : ''}
+                class={$page.url.pathname === '/vscode-themes-community/saved-themes'
+                  ? 'underline'
+                  : ''}
                 aria-current={$page.url.pathname === '/vscode-themes-community/saved-themes'}
                 href="/vscode-themes-community/saved-themes"
                 variant="link"
@@ -129,7 +137,7 @@
               >
             </SignedIn>
             <Button
-              class={$page.url.pathname === '/vscode/about' ? 'underline' : ''}
+              class={$page.url.pathname === '/vscode-themes-community/about' ? 'underline' : ''}
               aria-current={$page.url.pathname === '/vscode-themes-community/about'}
               href="/vscode-themes-community/about"
               variant="link"

@@ -53,7 +53,7 @@
     isEditing().setIsEditing(true);
     isEditLoading = true;
     selectedTheme().set(theme);
-    goto(`/vscode/theme-generator`);
+    goto(`/vscode-themes-community/theme-generator`);
     setTimeout(() => {
       isEditing().setIsEditing(false);
       isEditLoading = false;
