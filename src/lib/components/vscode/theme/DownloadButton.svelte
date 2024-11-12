@@ -2,14 +2,15 @@
   import { Download, LoaderPinwheel } from 'lucide-svelte';
 
   type Props = {
-    downloadTheme: () => Promise<void>;
+    // downloadTheme: () => Promise<void>;
+    themeId: number;
     isDownloading: boolean;
     count: number;
     fg1: string;
     ac1: string;
   };
 
-  const { downloadTheme, isDownloading, count, fg1, ac1 }: Props = $props();
+  const { themeId, isDownloading, count, fg1, ac1 }: Props = $props();
 
   let styleVars = $derived(`
     --color-foreground: ${fg1};
@@ -18,7 +19,8 @@
 </script>
 
 <div class="download-btn flex items-center gap-1 transition-colors" style={styleVars}>
-  <button class="cursor-pointer" onclick={downloadTheme} disabled={isDownloading}>
+  <input type="hidden" name="themeId" value={themeId} />
+  <button class="cursor-pointer" disabled={isDownloading} formaction="?/downloadTheme">
     {#if isDownloading}
       <LoaderPinwheel class="h-4 w-4 animate-spin" />
     {:else}

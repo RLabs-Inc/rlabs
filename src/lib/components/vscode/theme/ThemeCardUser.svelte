@@ -9,6 +9,7 @@
 
   import type { Theme } from '$lib/types/theme';
   import clsx from 'clsx';
+  import { enhance } from '$app/forms';
 
   const { theme }: { theme: Theme } = $props();
 
@@ -29,25 +30,6 @@
   let isSharing = $state(false);
   let isDeleting = $state(false);
   let isEditLoading = $state(false);
-  async function downloadThemeVSIX() {
-    isDownloading = true;
-    const vsixBuffer = await fetch(`/api/vscode/download-theme?id=${theme.id}`);
-    if (vsixBuffer) {
-      const blob = new Blob([await vsixBuffer.blob()], {
-        type: 'application/octet-stream'
-      });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${theme.name}.vsix`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-    }
-    invalidateAll();
-    isDownloading = false;
-  }
 
   async function editTheme() {
     isEditing().setIsEditing(true);
@@ -128,13 +110,39 @@
           fg1={theme.uiColors.FG1}
           ac1={theme.uiColors.AC1}
         />
-        <DownloadButton
-          count={theme.downloads ?? 0}
-          downloadTheme={downloadThemeVSIX}
-          {isDownloading}
-          fg1={theme.uiColors.FG1}
-          ac1={theme.uiColors.AC1}
-        />
+        <form
+          method="post"
+          use:enhance={() => {
+            isDownloading = true;
+            return async ({ result, update }: { result: any; update: () => void }) => {
+              const data = result.data;
+              if (data?.success) {
+                console.log('DOWNLOADING');
+                const blob = new Blob([data.vsixBuffer], {
+                  type: 'application/octet-stream'
+                });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${theme.name}.vsix`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+              }
+              invalidateAll();
+              isDownloading = false;
+            };
+          }}
+        >
+          <DownloadButton
+            count={theme.downloads || 0}
+            themeId={theme.id}
+            {isDownloading}
+            fg1={theme.uiColors.FG1}
+            ac1={theme.uiColors.AC1}
+          />
+        </form>
       </div>
       <div class="flex items-center gap-3">
         <EditButton
