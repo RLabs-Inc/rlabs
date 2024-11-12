@@ -12,9 +12,9 @@ const config = {
     // If your environment is not supported, or you settled on a specific environment, switch out the adapter.
     // See https://svelte.dev/docs/kit/adapters for more information about adapters.
     adapter: adapter({
-      runtime: 'nodejs20.x',
-      region: 'us-east-1'
-      // split: true
+      // runtime: 'nodejs20.x',
+      // region: 'us-east-1'
+      // // split: true
     })
   }
 };

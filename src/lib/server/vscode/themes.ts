@@ -4,7 +4,6 @@ import { db } from '$lib/server/db';
 import { newThemes } from '$lib/server/db/schema';
 import type { Theme } from '$lib/types/theme';
 import { parseThemeFromDB } from '$lib/utils/vscode/theme';
-import { generateVSIX } from '$lib/server/vscode/exportVSIX';
 
 export async function getPublicThemes(): Promise<Theme[]> {
   const themes = await db
@@ -87,10 +86,10 @@ export async function updateTheme(theme: Theme): Promise<Theme> {
   }
 }
 
-export async function downloadTheme(theme: Theme): Promise<Buffer> {
-  const vsixBuffer = await generateVSIX(theme);
-  return vsixBuffer;
-}
+// export async function downloadTheme(theme: Theme): Promise<Buffer> {
+//   const vsixBuffer = await generateVSIX(theme);
+//   return vsixBuffer;
+// }
 
 export async function deleteTheme(themeId: number, userId: string): Promise<void> {
   await db.delete(newThemes).where(and(eq(newThemes.id, themeId), eq(newThemes.userId, userId)));

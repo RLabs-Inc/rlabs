@@ -1,10 +1,8 @@
 import type { Actions, PageServerLoad } from './$types';
-import {
-  getThemeById,
-  getUserThemes,
-  downloadTheme,
-  updateThemeDownloads
-} from '$lib/server/vscode/themes';
+import { read } from '$app/server';
+import JSZip from 'jszip';
+import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
+import { getThemeById, getUserThemes, updateThemeDownloads } from '$lib/server/vscode/themes';
 
 export const load: PageServerLoad = async ({ locals }) => {
   const { userId } = locals.auth;
@@ -29,7 +27,54 @@ export const actions: Actions = {
       return { success: false, error: 'Theme not found' };
     }
 
-    const vsixBuffer = await downloadTheme(theme);
+    const zip = new JSZip();
+    const extensionFolder = zip.folder('extension');
+    if (!extensionFolder) {
+      return { success: false, error: 'Failed to create extension folder' };
+    }
+
+    const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
+      query: '?url',
+      import: 'default',
+      eager: true
+    });
+
+    for (const [filePath] of Object.entries(vsixTemplateFiles)) {
+      if (filePath === '/vsix-template/package.json') {
+        let jsonData = await read(filePath as string).text();
+        jsonData = jsonData.replace(/\${themeName}/g, theme.name);
+        jsonData = jsonData.replace(
+          /\${themeNameKebab}/g,
+          theme.name.toLowerCase().replace(/\s+/g, '-')
+        );
+        jsonData = jsonData.replace(/\${uiTheme}/g, theme.isDark ? 'vs-dark' : 'vs');
+        extensionFolder.file('package.json', jsonData);
+      } else if (filePath === '/vsix-template/README.md') {
+        let readme = await read(filePath as string).text();
+        readme = readme.replace(/\${themeName}/g, theme.name);
+        extensionFolder.file('README.md', readme);
+      } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
+        const imageData = await read(filePath as string).arrayBuffer();
+        extensionFolder.file('images/RLabs-Lamp.png', imageData);
+      } else if (filePath === '/vsix-template/LICENSE') {
+        const license = await read(filePath as string).text();
+        extensionFolder.file('LICENSE', license);
+      }
+    }
+
+    const { themeObject } = generateSemanticThemeJSON(
+      theme.name,
+      theme.uiColors,
+      theme.syntaxColors,
+      theme.ansiColors
+    );
+
+    const themesFolder = extensionFolder.folder('themes');
+    if (!themesFolder) {
+      return { success: false, error: 'Failed to create themes folder' };
+    }
+    themesFolder.file('theme.json', JSON.stringify(themeObject, null, 2));
+    const vsixBuffer = await zip.generateAsync({ type: 'nodebuffer' });
     await updateThemeDownloads(theme);
 
     return { vsixBuffer: vsixBuffer, success: true };

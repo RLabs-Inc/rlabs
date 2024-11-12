@@ -86,7 +86,6 @@
           return async ({ result, update }: { result: any; update: () => void }) => {
             const data = result.data;
             if (data?.success) {
-              console.log('DOWNLOADING');
               const blob = new Blob([data.vsixBuffer], {
                 type: 'application/octet-stream'
               });
