@@ -1,0 +1,37 @@
+{
+  "name": "${themeNameKebab}-theme",
+  "displayName": "${themeName}",
+  "description": "A VS Code theme generated with the tool available at [VSCode themes community](https://vscode-themes-community.vercel.app) using sacred geometry principles made by RLabs Inc.",
+  "version": "1.0.0",
+  "publisher": "RLabs Inc.",
+  "icon": "images/RLabs-Lamp.png",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "${themeName}",
+        "uiTheme": "${uiTheme}",
+        "path": "./themes/theme.json"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RLabs-Inc/vscode-themes-community"
+  },
+  "keywords": [
+    "theme",
+    "dark theme",
+    "sacred geometry",
+    "color harmony",
+    "theme generator",
+    "themes community"
+  ],
+  "author": "RLabs Inc.",
+  "license": "MIT"
+}
