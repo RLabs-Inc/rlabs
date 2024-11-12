@@ -13,8 +13,8 @@ const config = {
     // See https://svelte.dev/docs/kit/adapters for more information about adapters.
     adapter: adapter({
       runtime: 'nodejs20.x',
-      region: 'us-east-1',
-      split: true
+      region: 'us-east-1'
+      // split: true
     })
   }
 };
