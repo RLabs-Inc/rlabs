@@ -1,8 +1,13 @@
 import type { Actions, PageServerLoad } from './$types';
-import { read } from '$app/server';
 import JSZip from 'jszip';
 import { getPublicThemes, getThemeById, updateThemeDownloads } from '$lib/server/vscode/themes';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
+
+const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
+  query: '?raw',
+  import: 'default',
+  eager: true
+});
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.auth.userId) {
@@ -32,15 +37,9 @@ export const actions: Actions = {
       return { success: false, error: 'Failed to create extension folder' };
     }
 
-    const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
-      query: '?url',
-      import: 'default',
-      eager: true
-    });
-
-    for (const [filePath] of Object.entries(vsixTemplateFiles)) {
+    for (const [filePath, fileData] of Object.entries(vsixTemplateFiles)) {
       if (filePath === '/vsix-template/package.json') {
-        let jsonData = await read(filePath as string).text();
+        let jsonData = fileData;
         jsonData = jsonData.replace(/\${themeName}/g, theme.name);
         jsonData = jsonData.replace(
           /\${themeNameKebab}/g,
@@ -49,14 +48,15 @@ export const actions: Actions = {
         jsonData = jsonData.replace(/\${uiTheme}/g, theme.isDark ? 'vs-dark' : 'vs');
         extensionFolder.file('package.json', jsonData);
       } else if (filePath === '/vsix-template/README.md') {
-        let readme = await read(filePath as string).text();
+        let readme = fileData;
         readme = readme.replace(/\${themeName}/g, theme.name);
         extensionFolder.file('README.md', readme);
       } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
-        const imageData = await read(filePath as string).arrayBuffer();
+        const imageData = fileData;
         extensionFolder.file('images/RLabs-Lamp.png', imageData);
       } else if (filePath === '/vsix-template/LICENSE') {
-        const license = await read(filePath as string).text();
+        let license = fileData;
+        license = license.replace(/\${year}/g, new Date().getFullYear());
         extensionFolder.file('LICENSE', license);
       }
     }

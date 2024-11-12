@@ -26,7 +26,6 @@
     "@tailwindcss/typography": "^0.5.15",
     "@types/color": "^4.2.0",
     "@types/eslint": "^9.6.1",
-    "@vercel/node": "^3.2.24",
     "autoprefixer": "^10.4.20",
     "bits-ui": "^1.0.0-next.49",
     "clsx": "^2.1.1",
