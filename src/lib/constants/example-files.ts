@@ -5,86 +5,348 @@ export const exampleFiles = [
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
     language: 'typescript',
     displayName: 'Typescript',
-    snippet: `import Color from 'color';
-    
-import type { VSCodeTheme } from '../../types/theme';
-import type { UIColors, SyntaxColors, AnsiColors } from '../../types/colors';
+    snippet: `// Advanced TypeScript API Client with Authentication and Rate Limiting
+import type { RequestConfig, ResponseType, ApiResponse } from './types';
+import { RateLimiter } from './utils/rate-limiter';
+import { AuthManager } from './services/auth';
 
-export function generateSemanticThemeJSON(
-  name: string = 'Generated Color Theme',
-  colors: UIColors,
-  syntaxColors: SyntaxColors,
-  ansiColors: AnsiColors,
-): { themeJSON: string; themeObject: VSCodeTheme } {
-  const getAC1Foreground = () => {
-    if (Color(colors.BG1).isDark()) {
-      return Color(colors.AC1).isDark() ? colors.FG1 : colors.FG3;
-    } else {
-      return Color(colors.AC1).isDark() ? colors.FG3 : colors.FG1;
-    }
-  };
-  const getAC2Foreground = () => {
-    if (Color(colors.BG1).isDark()) {
-      return Color(colors.AC2).isDark() ? colors.FG1 : colors.FG3;
-    } else {
-      return Color(colors.AC2).isDark() ? colors.FG3 : colors.FG1;
-    }
-  };
-  const getINFOForeground = () => {
-    if (Color(colors.BG1).isDark()) {
-      return Color(colors.INFO).isDark() ? colors.FG1 : colors.FG3;
-    } else {
-      return Color(colors.INFO).isDark() ? colors.FG3 : colors.FG1;
-    }
-  };
-  const getWARNINGForeground = () => {
-    if (Color(colors.BG1).isDark()) {
-      return Color(colors.WARNING).isDark() ? colors.FG1 : colors.FG3;
-    } else {
-      return Color(colors.WARNING).isDark() ? colors.FG3 : colors.FG1;
-    }
-  };
-  const getERRORForeground = () => {
-    if (Color(colors.BG1).isDark()) {
-      return Color(colors.ERROR).isDark() ? colors.FG1 : colors.FG3;
-    } else {
-      return Color(colors.ERROR).isDark() ? colors.FG3 : colors.FG1;
-    }
-  };
-
-  const theme = {
-    name: name,
-    type: Color(colors.BG1).isDark() ? ('dark' as 'dark' | 'light') : ('light' as 'dark' | 'light'),
-    semanticClass: 'theme.rlabs',
-    semanticHighlighting: true,
-    colors: {
-      // # Integrated Terminal Colors
-      'terminal.background': colors.BG1,
-      'terminal.foreground': colors.FG1,
-      'terminal.border': colors.BORDER,
-      'terminal.ansiBrightBlack': ansiColors.BrightBlack,
-      'terminal.ansiBrightRed': ansiColors.BrightRed,
-      'terminal.ansiBrightGreen': ansiColors.BrightGreen,
-      'terminal.ansiBrightYellow': ansiColors.BrightYellow,
-      'terminal.ansiBrightBlue': ansiColors.BrightBlue,
-      'terminal.ansiBrightMagenta': ansiColors.BrightMagenta,
-      'terminal.ansiBrightCyan': ansiColors.BrightCyan,
-      'terminal.ansiBrightWhite': ansiColors.BrightWhite,
-      'terminal.ansiBlack': ansiColors.Black,
-      'terminal.ansiRed': ansiColors.Red,
-      'terminal.ansiGreen': ansiColors.Green,
-      'terminal.ansiYellow': ansiColors.Yellow,
-      'terminal.ansiBlue': ansiColors.Blue,
-      'terminal.ansiMagenta': ansiColors.Magenta,
-      'terminal.ansiCyan': ansiColors.Cyan,
-      'terminal.ansiWhite': ansiColors.White,
-      'terminal.selectionBackground': colors.selection,
-      // "terminal.selectionForeground": colors.FG1,
-      'terminal.inactiveSelectionBackground': colors.selection,
-    }
-  }  
+interface RetryConfig {
+  maxRetries: number;
+  backoffFactor: number;
+  statusCodesToRetry: number[];
 }
-console.log(reverseArray(numbers)) // Output: [5, 4, 3, 2, 1]
+
+@injectable()
+export class EnhancedApiClient implements IApiClient {
+  private static instance: EnhancedApiClient;
+  readonly #rateLimiter: RateLimiter;
+  readonly #authManager: AuthManager;
+
+  constructor(
+    @inject('CONFIG') protected config: ApiConfig,
+    @inject('LOGGER') private logger: Logger
+  ) {
+    this.#rateLimiter = new RateLimiter(config.rateLimit);
+    this.#authManager = new AuthManager(config.auth);
+  }
+
+  public static getInstance(config?: Partial<ApiConfig>): EnhancedApiClient {
+    if (!EnhancedApiClient.instance) {
+      EnhancedApiClient.instance = new EnhancedApiClient(config);
+    }
+    return EnhancedApiClient.instance;
+  }
+
+  @memoize()
+  @logMethod()
+  public async request<T extends ResponseType>(
+    endpoint: string,
+    options: RequestConfig = {},
+    retryConfig?: Partial<RetryConfig>
+  ): Promise<ApiResponse<T>> {
+    try {
+      await this.#rateLimiter.acquireToken();
+      const authHeaders = await this.#authManager.getAuthHeaders();
+      
+      const response = await this.executeRequest<T>(endpoint, {
+        ...options,
+        headers: { ...options.headers, ...authHeaders }
+      });
+
+      if (!response.ok && this.shouldRetry(response.status, retryConfig)) {
+        return this.handleRetry<T>(endpoint, options, retryConfig);
+      }
+
+      return this.processResponse<T>(response);
+    } catch (error) {
+      this.logger.error(\`API Request failed: \${error.message}\`, {
+        endpoint,
+        options: this.sanitizeOptions(options)
+      });
+      throw new ApiError(\`Request failed: \${error.message}\`, error.code);
+    }
+  }
+
+  private async executeRequest<T>(endpoint: string, config: RequestConfig): Promise<Response> {
+    const baseUrl = this.config.environment === 'production' 
+      ? 'https://api.production.com/v2'
+      : 'https://api.staging.com/v2';
+
+    return fetch(\`\${baseUrl}\${endpoint}\`, {
+      ...config,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Client-Version': '2.0.0',
+        ...config.headers
+      }
+    });
+  }
+
+  private shouldRetry(
+    statusCode: number, 
+    config?: Partial<RetryConfig>
+  ): boolean {
+    const defaultRetryConfig: RetryConfig = {
+      maxRetries: 3,
+      backoffFactor: 1.5,
+      statusCodesToRetry: [408, 429, 500, 502, 503, 504]
+    };
+
+    const retryConfig = { ...defaultRetryConfig, ...config };
+    return retryConfig.statusCodesToRetry.includes(statusCode);
+  }
+
+  private sanitizeOptions(options: RequestConfig): Partial<RequestConfig> {
+    const { headers, ...rest } = options;
+    return {
+      ...rest,
+      headers: headers ? {
+        ...headers,
+        Authorization: headers.Authorization ? '[REDACTED]' : undefined
+      } : undefined
+    };
+  }
+}
+
+// Usage example
+const apiClient = EnhancedApiClient.getInstance({
+  environment: 'production',
+  rateLimit: { requestsPerMinute: 100 },
+  auth: {
+    clientId: process.env.API_CLIENT_ID,
+    clientSecret: process.env.API_CLIENT_SECRET
+  }
+});
+
+const userData = await apiClient.request<UserResponse>('/users/profile', {
+  method: 'GET',
+  cache: 'no-cache'
+});\`import { type NextApiRequest, type NextApiResponse } from 'next';
+import { z } from 'zod';
+import { prisma } from '@/lib/prisma';
+import { rateLimit } from '@/lib/rate-limit';
+import { validateToken } from '@/lib/auth';
+import type { 
+  ApiResponse, 
+  UserProfile, 
+  ErrorResponse 
+} from '@/types/api';
+
+const limiter = rateLimit({
+  interval: 60 * 1000, // 1 minute
+  uniqueTokenPerInterval: 500
+});
+
+// Request validation schema
+const UpdateProfileSchema = z.object({
+  displayName: z.string().min(2).max(50),
+  bio: z.string().max(160).optional(),
+  socialLinks: z.array(z.object({
+    platform: z.enum(['twitter', 'github', 'linkedin']),
+    url: z.string().url()
+  })).max(3)
+});
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ApiResponse<UserProfile> | ErrorResponse>
+) {
+  if (req.method !== 'PUT') {
+    return res.status(405).json({ 
+      error: 'Method not allowed',
+      code: 'METHOD_NOT_ALLOWED' 
+    });
+  }
+
+  try {
+    // Rate limiting
+    await limiter.check(res, 10, 'UPDATE_PROFILE');
+
+    // Auth validation
+    const user = await validateToken(req);
+    if (!user) {
+      return res.status(401).json({ 
+        error: 'Unauthorized',
+        code: 'UNAUTHORIZED' 
+      });
+    }
+
+    // Input validation
+    const result = UpdateProfileSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({
+        error: 'Invalid request body',
+        code: 'INVALID_INPUT',
+        details: result.error.issues
+      });
+    }
+
+    // Update profile in database
+    const updatedProfile = await prisma.userProfile.update({
+      where: { userId: user.id },
+      data: {
+        displayName: result.data.displayName,
+        bio: result.data.bio,
+        socialLinks: {
+          deleteMany: {},
+          create: result.data.socialLinks
+        },
+        updatedAt: new Date()
+      },
+      include: {
+        socialLinks: true,
+        preferences: true
+      }
+    });
+
+    // Cache invalidation
+    await Promise.all([
+      redis.del(\`user:profile:\${user.id}\`),
+      redis.del(\`user:social:\${user.id}\`)
+    ]);
+
+    return res.status(200).json({
+      data: updatedProfile,
+      message: 'Profile updated successfully'
+    });
+
+  } catch (error) {
+    console.error('[API] Profile update error:', error);
+
+
+  /**
+ * @fileoverview E-commerce API service with caching, rate limiting, and error handling
+ * @author John Doe <john@example.com>
+ * @see {@link https://api-docs.example.com|API Documentation}
+ */
+
+import type { Product, CartItem, OrderDetails, PaymentIntent } from './types';
+import { Redis } from 'ioredis';
+import { RateLimiter } from './utils/rate-limiter';
+import { validatePaymentIntent } from './utils/validation';
+import { CACHE_TTL, MAX_RETRIES } from './constants';
+
+interface CheckoutOptions {
+  readonly cartId: string;
+  readonly customerId?: string;
+  paymentMethod: 'card' | 'paypal' | 'crypto';
+  metadata?: Record<string, unknown>;
+}
+
+type CacheKey = \`cart:\${string}\` | \`order:\${string}\`;
+
+@injectable()
+export class ECommerceService implements IECommerceProvider {
+  readonly #redis: Redis;
+  readonly #rateLimiter: RateLimiter;
+  static #instance: ECommerceService;
+
+  constructor(
+    @inject('DATABASE') private db: Database,
+    @inject('LOGGER') private logger: Logger,
+    @inject('STRIPE') private stripe: StripeClient
+  ) {
+    this.#redis = new Redis(process.env.REDIS_URL);
+    this.#rateLimiter = new RateLimiter({ maxRequests: 100 });
+  }
+
+  public static getInstance(): ECommerceService {
+    if (!ECommerceService.#instance) {
+      ECommerceService.#instance = new ECommerceService();
+    }
+    return ECommerceService.#instance;
+  }
+
+  @memoize()
+  @logMethod()
+  public async checkout(
+    options: CheckoutOptions
+  ): Promise<Result<OrderDetails, CheckoutError>> {
+    try {
+      await this.#rateLimiter.acquireToken();
+      
+      const cartItems = await this.getCartItems(options.cartId);
+      if (!cartItems?.length) {
+        throw new CheckoutError('Cart is empty', 'EMPTY_CART');
+      }
+
+      const total = cartItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
+      const paymentIntent = await this.createPaymentIntent({
+        amount: total,
+        currency: 'usd',
+        paymentMethod: options.paymentMethod,
+        metadata: {
+          cartId: options.cartId,
+          ...options.metadata
+        }
+      });
+
+      if (paymentIntent instanceof Error) {
+        console.error(\`Payment failed: \${paymentIntent.message}\`);
+        throw new CheckoutError(
+          'Payment processing failed',
+          'PAYMENT_FAILED'
+        );
+      }
+
+      const order = await this.db.transaction(async (trx) => {
+        const [orderId] = await trx('orders').insert({
+          customer_id: options.customerId,
+          payment_intent_id: paymentIntent.id,
+          total_amount: total,
+          status: 'pending'
+        });
+
+        await trx('order_items').insert(
+          cartItems.map((item) => ({
+            order_id: orderId,
+            product_id: item.productId,
+            quantity: item.quantity,
+            price: item.price
+          }))
+        );
+
+        return orderId;
+      });
+
+      await Promise.all([
+        this.#redis.del(\`cart:\${options.cartId}\`),
+        this.#redis.set(
+          \`order:\${order}\`,
+          JSON.stringify({ status: 'pending' }),
+          'EX',
+          CACHE_TTL
+        )
+      ]);
+
+      return Ok({
+        orderId: order,
+        paymentIntentId: paymentIntent.id,
+        total,
+        status: 'pending'
+      });
+
+    } catch (error) {
+      this.logger.error('[Checkout] Failed:', {
+        error: error.message,
+        cartId: options.cartId
+      });
+
+      if (error instanceof CheckoutError) {
+        return Err(error);
+      }
+
+      return Err(new CheckoutError(
+        'Checkout process failed',
+        'INTERNAL_ERROR'
+      ));
+    }
+  }
+}
     `
   },
   {
@@ -93,59 +355,137 @@ console.log(reverseArray(numbers)) // Output: [5, 4, 3, 2, 1]
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg',
     language: 'javascript',
     displayName: 'Javascript',
-    snippet: `
-    // Async function to fetch user data
-async function fetchUserData(userId) {
+    snippet: `// StateManager.js
+const createStateManager = (initialState = {}) => {
+  const subscribers = new Set();
+  const dependencyMap = new WeakMap();
+  let currentEffect = null;
+  
+  const state = new Proxy(initialState, {
+    get(target, property) {
+      if (currentEffect) {
+        if (!dependencyMap.has(target)) {
+          dependencyMap.set(target, new Map());
+        }
+        const deps = dependencyMap.get(target);
+        if (!deps.has(property)) {
+          deps.set(property, new Set());
+        }
+        deps.get(property).add(currentEffect);
+      }
+      return target[property];
+    },
+    
+    set(target, property, value) {
+      if (target[property] === value) return true;
+      target[property] = value;
+      
+      const deps = dependencyMap.get(target);
+      if (deps?.has(property)) {
+        const effects = deps.get(property);
+        effects.forEach(effect => {
+          if (subscribers.has(effect)) {
+            queueMicrotask(() => effect());
+          }
+        });
+      }
+      return true;
+    }
+  });
+
+  const watch = (deps, callback) => {
+    const effect = () => {
+      currentEffect = effect;
+      try {
+        callback(deps.map(dep => state[dep]));
+      } finally {
+        currentEffect = null;
+      }
+    };
+    
+    subscribers.add(effect);
+    effect();
+    
+    return () => {
+      subscribers.delete(effect);
+      for (const [target, depsMap] of dependencyMap) {
+        for (const [_, effects] of depsMap) {
+          effects.delete(effect);
+        }
+      }
+    };
+  };
+
+  const computed = (getter) => {
+    let value;
+    let dirty = true;
+    
+    const effect = () => {
+      if (!dirty) return value;
+      currentEffect = computedEffect;
+      try {
+        value = getter();
+        dirty = false;
+        return value;
+      } finally {
+        currentEffect = null;
+      }
+    };
+    
+    const computedEffect = () => {
+      dirty = true;
+      subscribers.forEach(subscriber => {
+        if (dependencyMap.get(state)?.get('computed')?.has(subscriber)) {
+          subscriber();
+        }
+      });
+    };
+    
+    subscribers.add(effect);
+    return () => effect();
+  };
+
+  return { state, watch, computed };
+};
+
+// Usage example
+const { state, watch, computed } = createStateManager({
+  count: 0,
+  multiplier: 2,
+  items: ['apple', 'banana']
+});
+
+// Computed value
+const doubledCount = computed(() => state.count * state.multiplier);
+
+// Watch for changes
+const unsubscribe = watch(['count', 'multiplier'], ([count, multiplier]) => {
+  console.log(\`Count: \${count}, Multiplier: \${multiplier}\`);
+  console.log(\`Doubled count: \${doubledCount()}\`);
+});
+
+// Event handler
+const handleIncrement = () => {
+  state.count++;
+};
+
+// Async data fetching
+async function fetchItems() {
   try {
-    const response = await fetch(\`https://api.example.com/users/\${userId}\`)
-    const data = await response.json()
-    return data
+    const response = await fetch('https://api.example.com/items');
+    const data = await response.json();
+    state.items = data;
   } catch (error) {
-    console.error('Error fetching user data:', error)
+    console.error('Failed to fetch items:', error);
   }
 }
 
-// Higher-order function
-const withLogging = (fn) => {
-  return (...args) => {
-    console.log(\`Calling function with arguments: \${args}\`)
-    const result = fn(...args)
-    console.log(\`Function result: \${result}\`)
-    return result
-  }
-}
+// Cleanup
+window.addEventListener('beforeunload', () => {
+  unsubscribe();
+});
 
-// Example usage
-const add = (a, b) => a + b
-const loggedAdd = withLogging(add)
-
-console.log(loggedAdd(5, 3))
-
-// Class with getter and setter
-class Circle {
-  constructor(radius) {
-    this._radius = radius
-  }
-
-  get diameter() {
-    return this._radius * 2
-  }
-
-  set diameter(value) {
-    this._radius = value / 2
-  }
-
-  get area() {
-    return Math.PI * this._radius ** 2
-  }
-}
-
-const circle = new Circle(5)
-console.log(circle.diameter) // Output: 10
-circle.diameter = 14
-console.log(circle.radius) // Output: 7
-
-    `
+export { createStateManager };`
   },
   {
     name: 'html.html',
@@ -153,65 +493,90 @@ console.log(circle.radius) // Output: 7
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg',
     language: 'html',
     displayName: 'HTML',
-    snippet: `
-<!DOCTYPE html>
+    snippet: `<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Awesome Webpage</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script src="script.js" defer></script>
-  </head>
-  <body>
-    <header>
-      <h1>Welcome to My Awesome Webpage</h1>
-      <nav>
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-    </header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Product card component with dynamic features">
+    <title>Product Card Component</title>
+    <link rel="stylesheet" href="./styles/product-card.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+</head>
+<body>
+    <main class="container">
+        <article class="product-card" itemscope itemtype="https://schema.org/Product">
+            <div class="product-card__image-container">
+                <img src="/images/product-1.jpg" 
+                     alt="Premium Wireless Headphones" 
+                     loading="lazy"
+                     width="400"
+                     height="400"
+                     itemprop="image">
+                <span class="product-card__badge" aria-label="New Release">New</span>
+            </div>
 
-    <main>
-      <section id="home">
-        <h2>Home</h2>
-        <p>Welcome to our website! We're glad you're here.</p>
-      </section>
+            <div class="product-card__content">
+                <header>
+                    <h1 class="product-card__title" itemprop="name">Premium Wireless Headphones</h1>
+                    <data class="product-card__price" value="299.99" itemprop="price">$299.99</data>
+                </header>
 
-      <section id="about">
-        <h2>About Us</h2>
-        <p>
-          We are a team of passionate individuals dedicated to creating awesome
-          web experiences.
-        </p>
-      </section>
+                <p class="product-card__description" itemprop="description">
+                    Experience crystal-clear sound with our premium wireless headphones,
+                    featuring active noise cancellation &amp; 30-hour battery life.
+                </p>
 
-      <section id="contact">
-        <h2>Contact Us</h2>
-        <form>
-          <label for="name">Name:</label>
-          <input type="text" id="name" name="name" required />
+                <form class="product-card__form" action="/api/cart" method="POST">
+                    <fieldset class="product-card__options">
+                        <legend>Available Colors</legend>
+                        <div class="product-card__color-options">
+                            <input type="radio" 
+                                   name="color" 
+                                   id="color-black" 
+                                   value="black" 
+                                   checked>
+                            <label for="color-black">Midnight Black</label>
 
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required />
+                            <input type="radio" 
+                                   name="color" 
+                                   id="color-white" 
+                                   value="white">
+                            <label for="color-white">Pearl White</label>
+                        </div>
+                    </fieldset>
 
-          <label for="message">Message:</label>
-          <textarea id="message" name="message" required></textarea>
+                    <div class="product-card__quantity">
+                        <label for="quantity">Quantity:</label>
+                        <select name="quantity" id="quantity" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
 
-          <button type="submit">Send</button>
-        </form>
-      </section>
+                    <button type="submit" 
+                            class="product-card__add-to-cart"
+                            aria-label="Add Premium Wireless Headphones to cart">
+                        Add to Cart
+                    </button>
+                </form>
+
+                <footer class="product-card__footer">
+                    <dl class="product-card__details">
+                        <dt>Availability:</dt>
+                        <dd>In Stock</dd>
+                        <dt>Shipping:</dt>
+                        <dd>Free 2-day shipping</dd>
+                    </dl>
+                </footer>
+            </div>
+        </article>
     </main>
 
-    <footer>
-      <p>&copy; 2023 My Awesome Webpage. All rights reserved.</p>
-    </footer>
-  </body>
+    <script src="./js/product-card.js" defer></script>
+</body>
 </html>
-
     `
   },
   {
@@ -220,109 +585,182 @@ console.log(circle.radius) // Output: 7
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg',
     language: 'css',
     displayName: 'CSS',
-    snippet: `
-/* Variables */
+    snippet: `/* Product Card Component Styles */
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 :root {
-  --primary-color: #3498db;
-  --secondary-color: #2ecc71;
-  --text-color: #333;
-  --background-color: #f4f4f4;
+  --card-radius: 12px;
+  --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --card-background: #ffffff;
+  --card-hover-transform: translateY(-4px);
+  
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --border-color: #e5e7eb;
 }
 
-/* Global Styles */
-body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  color: var(--text-color);
-  background-color: var(--background-color);
+/* Base Card Styles */
+.product-card {
+  position: relative;
+  background-color: var(--card-background);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
-/* Header Styles */
-header {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 1rem;
+.product-card:hover {
+  transform: var(--card-hover-transform);
 }
 
-/* Navigation Styles */
-nav ul {
+.product-card:focus-within {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Image Container */
+.product-card__image-container {
+  position: relative;
+  padding-bottom: calc(4 / 3 * 100%);
+}
+
+.product-card__image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease;
+}
+
+.product-card__image-container img:hover {
+  transform: scale(1.05);
+}
+
+/* Content Area */
+.product-card__content {
+  padding: 1.5rem;
+}
+
+.product-card__title {
+  margin: 0 0 0.5rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.product-card__price {
   display: flex;
-  list-style-type: none;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-nav ul li {
-  margin-right: 1rem;
+.product-card__price::before {
+  content: '$';
 }
 
-nav ul li a {
-  color: white;
-  text-decoration: none;
-}
-
-/* Main Content Styles */
-main {
-  padding: 2rem;
-}
-
-section {
-  margin-bottom: 2rem;
-}
-
-h1,
-h2 {
-  color: var(--primary-color);
-}
-
-/* Form Styles */
-form {
+/* Form Elements */
+.product-card__form {
   display: grid;
   gap: 1rem;
 }
 
-input,
-textarea {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.product-card__options {
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
-button {
-  background-color: var(--secondary-color);
-  color: white;
+.product-card__options legend {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.product-card__color-options {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.product-card__color-options input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.product-card__color-options label {
   padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.product-card__color-options input[type="radio"]:checked + label {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.product-card__color-options input[type="radio"]:focus + label {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Quantity Selector */
+.product-card__quantity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.product-card__quantity select {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
   cursor: pointer;
 }
 
-button:hover {
-  opacity: 0.9;
-}
-
-/* Footer Styles */
-footer {
+/* Add to Cart Button */
+.product-card__add-to-cart {
+  padding: 0.75rem 1.5rem;
   background-color: var(--primary-color);
   color: white;
-  text-align: center;
-  padding: 1rem;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 200ms ease;
 }
 
-/* Media Query for Responsive Design */
-@media (max-width: 768px) {
-  nav ul {
-    flex-direction: column;
-  }
-
-  nav ul li {
-    margin-bottom: 0.5rem;
-  }
+.product-card__add-to-cart:hover {
+  background-color: var(--primary-hover);
 }
 
-    `
+.product-card__add-to-cart:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .product-card__image-container img {
+    transition: none;
+  }
+} 
+  `
   },
   {
     name: 'scss.scss',
@@ -330,124 +768,177 @@ footer {
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sass/sass-original.svg',
     language: 'scss',
     displayName: 'SCSS',
-    snippet: `
-// Variables
-$primary-color: #3498db;
-$secondary-color: #2ecc71;
-$text-color: #333;
-$background-color: #f4f4f4;
+    snippet: `@use 'sass:math';
+@use 'sass:color';
+@import '../styles/variables';
+@import '../styles/mixins';
 
-// Mixins
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+// Custom properties for theming
+:root {
+  --product-card-radius: 0.75rem;
+  --product-card-shadow: #{$shadow-lg};
+  --product-card-hover-transform: translateY(-4px);
 }
 
-@mixin button-styles($bg-color, $text-color) {
-  background-color: $bg-color;
-  color: $text-color;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
+// Mixins for responsive design
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &::before {
+    content: '';
+    display: block;
+    padding-bottom: math.div($height, $width) * 100%;
+  }
+}
+
+// Animation keyframes
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.product-card {
+  $self: &;
+  position: relative;
+  background-color: var(--color-background);
+  border-radius: var(--product-card-radius);
+  box-shadow: var(--product-card-shadow);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  @include respond-to('medium') {
+    max-width: calc(50% - #{$spacing-md});
+  }
 
   &:hover {
-    opacity: 0.9;
+    transform: var(--product-card-hover-transform);
+    
+    #{$self}__badge {
+      animation: fadeIn 0.2s ease-out forwards;
+    }
   }
-}
 
-// Global Styles
-body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  color: $text-color;
-  background-color: $background-color;
-}
+  // Image container with aspect ratio
+  &__image-container {
+    @include aspect-ratio(4, 5);
+    overflow: hidden;
+    border-radius: var(--product-card-radius) var(--product-card-radius) 0 0;
 
-// Header Styles
-header {
-  background-color: $primary-color;
-  color: white;
-  padding: 1rem;
+    img {
+      @include absolute-fill;
+      object-fit: cover;
+      transition: transform 0.3s ease;
 
-  nav {
-    ul {
-      display: flex;
-      list-style-type: none;
-
-      li {
-        margin-right: 1rem;
-
-        a {
-          color: white;
-          text-decoration: none;
-        }
+      &:hover {
+        transform: scale(1.05);
       }
     }
   }
-}
 
-// Main Content Styles
-main {
-  padding: 2rem;
+  // Product information
+  &__content {
+    padding: $spacing-lg;
+    display: grid;
+    gap: $spacing-sm;
+  }
 
-  section {
-    margin-bottom: 2rem;
+  &__title {
+    @include typography('heading-sm');
+    color: var(--color-text-primary);
+    margin: 0;
+  }
 
-    h1,
-    h2 {
-      color: $primary-color;
+  &__price {
+    display: flex;
+    align-items: baseline;
+    gap: $spacing-xs;
+
+    &--current {
+      @include typography('price-lg');
+      color: var(--color-text-primary);
+    }
+
+    &--original {
+      @include typography('price-sm');
+      color: var(--color-text-secondary);
+      text-decoration: line-through;
     }
   }
-}
 
-// Form Styles
-form {
-  display: grid;
-  gap: 1rem;
-
-  input,
-  textarea {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+  // Badge styling
+  &__badge {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    padding: $spacing-xs $spacing-sm;
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border-radius: $radius-sm;
+    opacity: 0;
+    transform: scale(0.95);
+    z-index: 1;
   }
 
-  button {
-    @include button-styles($secondary-color, white);
+  // Out of stock overlay
+  &__out-of-stock {
+    @include absolute-fill;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba($color-black, 0.5);
+    color: var(--color-white);
+    font-weight: $font-weight-semibold;
+    backdrop-filter: blur(4px);
   }
-}
 
-// Footer Styles
-footer {
-  @include flex-center;
-  background-color: $primary-color;
-  color: white;
-  padding: 1rem;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
+  // Size selector
+  &__sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
 
-// Media Query for Responsive Design
-@media (max-width: 768px) {
-  header {
-    nav {
-      ul {
-        flex-direction: column;
+    button {
+      @include reset-button;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-sm;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      transition: all 0.2s ease;
 
-        li {
-          margin-bottom: 0.5rem;
-        }
+      &[data-selected="true"] {
+        background-color: var(--color-primary);
+        color: var(--color-white);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
     }
   }
-}
 
-    `
+  // Quantity selector
+  &__quantity {
+    display: inline-flex;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-sm;
+
+    button {
+      @include reset-button;
+      padding: $spacing-xs $spacing-sm;
+      color: var(--color-text-secondary);
+
+      &:hover:not(:disabled) {
+        color: var(--color-text-primary);
+      }
+    }
+
+    span {
+      padding: $spacing-xs $spacing-sm;
+      min-width: 3ch;
+      text-align: center;
+      color: var(--color-text-primary);
+    }
+  }
+}`
   },
   {
     name: 'vue.vue',
@@ -455,99 +946,274 @@ footer {
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg',
     language: 'vue',
     displayName: 'Vue',
-    snippet: `
+    snippet: `<script setup lang="ts">
+import { ref, computed, onMounted, watch, type Ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useThemeStore } from '@/stores/theme'
+import type { DataPoint, ChartConfig, ThemeMode } from '@/types'
+import BaseChart from '@/components/BaseChart.vue'
+import DataTable from '@/components/DataTable.vue'
+import { formatDate, aggregateData } from '@/utils/data'
+
+interface Props {
+  initialData?: DataPoint[]
+  chartType?: 'line' | 'bar' | 'scatter'
+  refreshInterval?: number
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  initialData: () => [],
+  chartType: 'line',
+  refreshInterval: 30000
+})
+
+const emit = defineEmits<{
+  (e: 'dataUpdated', data: DataPoint[]): void
+  (e: 'error', message: string): void
+}>()
+
+// State
+const chartData: Ref<DataPoint[]> = ref(props.initialData)
+const isLoading = ref(false)
+const error = ref<string | null>(null)
+const chartRef = ref<InstanceType<typeof BaseChart> | null>(null)
+
+// Store
+const themeStore = useThemeStore()
+const { currentTheme } = storeToRefs(themeStore)
+
+// Router
+const router = useRouter()
+const route = useRoute()
+
+// Computed
+const chartConfig = computed<ChartConfig>(() => ({
+  type: props.chartType,
+  data: aggregateData(chartData.value),
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    theme: currentTheme.value === 'dark' ? 'dark' : 'light',
+    animations: {
+      tension: {
+        duration: 1000,
+        easing: 'easeInOutCubic',
+      }
+    },
+    plugins: {
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+      },
+      legend: {
+        position: 'top',
+      }
+    }
+  }
+}))
+
+const tableData = computed(() => 
+  chartData.value.map(point => ({
+    ...point,
+    timestamp: formatDate(point.timestamp),
+    value: point.value.toFixed(2)
+  }))
+)
+
+// Methods
+async function fetchData() {
+  try {
+    isLoading.value = true
+    error.value = null
+    
+    const response = await fetch(\`/api/data?type=\${props.chartType}\`)
+    if (!response.ok) throw new Error('Failed to fetch data')
+    
+    const data: DataPoint[] = await response.json()
+    chartData.value = data
+    emit('dataUpdated', data)
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Unknown error'
+    emit('error', error.value)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Lifecycle & Watchers
+onMounted(() => {
+  fetchData()
+  const interval = setInterval(fetchData, props.refreshInterval)
+  onUnmounted(() => clearInterval(interval))
+})
+
+watch(() => props.chartType, () => {
+  router.push({ 
+    query: { ...route.query, type: props.chartType }
+  })
+  fetchData()
+})
+
+// Template refs
+defineExpose({
+  refresh: fetchData,
+  chartInstance: chartRef
+})
+</script>
+
 <template>
-  <div class="todo-app">
-    <h1>{{ title }}</h1>
-    <input
-      v-model="newTodo"
-      @keyup.enter="addTodo"
-      placeholder="Add a new todo"
-    />
-    <ul>
-      <li v-for="(todo, index) in todos" :key="index">
-        <span :class="{ completed: todo.completed }">{{ todo.text }}</span>
-        <button @click="toggleTodo(index)">Toggle</button>
-        <button @click="removeTodo(index)">Remove</button>
-      </li>
-    </ul>
-    <p>Completed: {{ completedCount }} / {{ todos.length }}</p>
+  <div class="data-visualization" :class="{ 'theme-dark': currentTheme === 'dark' }">
+    <header class="visualization-header">
+      <h2>{{ $t('dataVisualization.title') }}</h2>
+      <div class="controls">
+        <select v-model="props.chartType">
+          <option value="line">{{ $t('charts.line') }}</option>
+          <option value="bar">{{ $t('charts.bar') }}</option>
+          <option value="scatter">{{ $t('charts.scatter') }}</option>
+        </select>
+        <button 
+          @click="fetchData" 
+          :disabled="isLoading"
+          class="refresh-btn"
+        >
+          <i class="fas fa-sync" :class="{ 'fa-spin': isLoading }" />
+          {{ $t('actions.refresh') }}
+        </button>
+      </div>
+    </header>
+
+    <div class="visualization-content">
+      <Transition name="fade" mode="out-in">
+        <div v-if="error" class="error-message">
+          <i class="fas fa-exclamation-triangle" />
+          {{ error }}
+        </div>
+        <div v-else class="chart-container">
+          <BaseChart
+            ref="chartRef"
+            v-bind="chartConfig"
+            @chart:click="handleChartClick"
+          />
+        </div>
+      </Transition>
+
+      <DataTable 
+        :data="tableData"
+        :loading="isLoading"
+        :page-size="10"
+        class="data-table"
+      />
+    </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TodoApp',
-  data() {
-    return {
-      title: 'My Todo App',
-      newTodo: '',
-      todos: [
-        { text: 'Learn Vue', completed: false },
-        { text: 'Build a todo app', completed: true },
-        { text: 'Master Vue', completed: false },
-      ],
+<style lang="scss" scoped>
+.data-visualization {
+  --header-height: 4rem;
+  --padding: 1.5rem;
+  --border-radius: 0.5rem;
+  
+  display: grid;
+  grid-template-rows: var(--header-height) 1fr;
+  gap: var(--padding);
+  height: 100%;
+  background: var(--bg-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  
+  &.theme-dark {
+    --bg-color: var(--color-gray-900);
+    --text-color: var(--color-gray-100);
+    --border-color: var(--color-gray-700);
+    
+    .visualization-header {
+      background: var(--color-gray-800);
     }
-  },
-  computed: {
-    completedCount() {
-      return this.todos.filter((todo) => todo.completed).length
-    },
-  },
-  methods: {
-    addTodo() {
-      if (this.newTodo.trim()) {
-        this.todos.push({ text: this.newTodo, completed: false })
-        this.newTodo = ''
+  }
+  
+  .visualization-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--padding);
+    background: var(--color-gray-100);
+    border-bottom: 1px solid var(--border-color);
+    
+    .controls {
+      display: flex;
+      gap: 1rem;
+      
+      select {
+        min-width: 120px;
       }
-    },
-    toggleTodo(index) {
-      this.todos[index].completed = !this.todos[index].completed
-    },
-    removeTodo(index) {
-      this.todos.splice(index, 1)
-    },
-  },
-}
-</script>
-
-<style scoped>
-.todo-app {
-  font-family: Arial, sans-serif;
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-input {
-  width: 100%;
-  padding: 5px;
-  margin-bottom: 10px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 0;
+    }
+  }
+  
+  .visualization-content {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: var(--padding);
+    padding: var(--padding);
+    overflow: auto;
+    
+    .chart-container {
+      position: relative;
+      height: 100%;
+      min-height: 300px;
+    }
+    
+    .data-table {
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+    }
+  }
+  
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    color: var(--color-error);
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    border-radius: var(--border-radius);
+  }
 }
 
-.completed {
-  text-decoration: line-through;
-  color: #888;
+// Transitions
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
 
-button {
-  margin-left: 5px;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
-</style>
 
-    `
+// Responsive
+@media (max-width: 768px) {
+  .data-visualization {
+    --padding: 1rem;
+    
+    .visualization-header {
+      flex-direction: column;
+      gap: 1rem;
+      height: auto;
+      padding: var(--padding);
+      
+      .controls {
+        width: 100%;
+        
+        select {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+</style>`
   },
   {
     name: 'vue-html.vue',
@@ -600,100 +1266,275 @@ button {
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg',
     language: 'svelte',
     displayName: 'Svelte',
-    snippet: `
-<script>
-	let count = 0;
-	let name = 'World';
-	let todos = [
-	  { id: 1, text: 'Learn Svelte', done: true },
-	  { id: 2, text: 'Build an app', done: false }
-	];
+    snippet: `<script lang="ts">
+  import { onMount, createEventDispatcher, tick } from 'svelte';
+  import { fade, slide, scale } from 'svelte/transition';
+  import { quintOut } from 'svelte/easing';
+  import { writable, derived } from 'svelte/store';
+  import type { Task, TaskPriority, TaskStatus } from '$lib/types';
   
-	function handleClick() {
-	  count += 1;
-	}
+  // Props
+  export let initialTasks: Task[] = [];
+  export let showCompleted = false;
+  export let theme: 'light' | 'dark' = 'light';
   
-	function addTodo() {
-	  todos = [...todos, { id: todos.length + 1, text: 'New todo', done: false }];
-	}
+  // Types
+  type FilterOption = 'all' | 'active' | 'completed';
+  type SortOption = 'priority' | 'dueDate' | 'title';
   
-	function toggleTodo(id) {
-	  todos = todos.map(todo => 
-		todo.id === id ? { ...todo, done: !todo.done } : todo
-	  );
-	}
+  // Stores
+  const tasks = writable<Task[]>(initialTasks);
+  const filterBy = writable<FilterOption>('all');
+  const sortBy = writable<SortOption>('priority');
   
-	$: exclamation = '!'.repeat(count);
-	$: greeting = 'Hello ' + name + ' ' + exclamation;
-	$: completedTodos = todos.filter(todo => todo.done).length;
-  </script>
-  
-  <main>
-	<h1>{greeting}</h1>
-	
-	<input bind:value={name}>
-	
-	<button on:click={handleClick}>
-	  Clicked {count} {count === 1 ? 'time' : 'times'}
-	</button>
-  
-	<h2>Todo List</h2>
-	<button on:click={addTodo}>Add Todo</button>
-	<ul>
-	  {#each todos as todo (todo.id)}
-		<li class:done={todo.done}>
-		  <input
-			type="checkbox"
-			checked={todo.done}
-			on:change={() => toggleTodo(todo.id)}
-		  >
-		  {todo.text}
-		</li>
-	  {/each}
-	</ul>
-  
-	<p>{completedTodos} out of {todos.length} todos completed</p>
-  </main>
-  
-  <style>
-	main {
-	  font-family: Arial, sans-serif;
-	  max-width: 800px;
-	  margin: 0 auto;
-	  padding: 20px;
-	}
-  
-	h1 {
-	  color: #ff3e00;
-	}
-  
-	input {
-	  margin-bottom: 10px;
-	}
-  
-	button {
-	  background-color: #ff3e00;
-	  color: white;
-	  border: none;
-	  padding: 5px 10px;
-	  cursor: pointer;
-	}
-  
-	ul {
-	  list-style-type: none;
-	  padding: 0;
-	}
-  
-	li {
-	  margin-bottom: 5px;
-	}
-  
-	.done {
-	  text-decoration: line-through;
-	  color: #888;
-	}
-  </style>
-    `
+  // Derived stores
+  const filteredTasks = derived(
+    [tasks, filterBy, sortBy],
+    ([$tasks, $filterBy, $sortBy]) => {
+      let filtered = [...$tasks];
+      
+      // Apply filters
+      if ($filterBy !== 'all') {
+        filtered = filtered.filter(task => 
+          $filterBy === 'completed' ? task.completed : !task.completed
+        );
+      }
+      
+      // Apply sorting
+      filtered.sort((a, b) => {
+        switch ($sortBy) {
+          case 'priority':
+            return b.priority - a.priority;
+          case 'dueDate':
+            return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+          default:
+            return a.title.localeCompare(b.title);
+        }
+      });
+      
+      return filtered;
+    }
+  );
+
+  // Event dispatcher
+  const dispatch = createEventDispatcher<{
+    taskUpdate: { task: Task; action: 'add' | 'update' | 'delete' };
+    filterChange: FilterOption;
+  }>();
+
+  // Methods
+  async function handleAddTask(event: CustomEvent<Omit<Task, 'id'>>) {
+    const newTask: Task = {
+      id: crypto.randomUUID(),
+      ...event.detail,
+      createdAt: new Date().toISOString()
+    };
+    
+    tasks.update(t => [...t, newTask]);
+    await tick();
+    dispatch('taskUpdate', { task: newTask, action: 'add' });
+  }
+
+  function handleDragStart(event: DragEvent, task: Task) {
+    if (!event.dataTransfer) return;
+    event.dataTransfer.setData('text/plain', task.id);
+    event.dataTransfer.effectAllowed = 'move';
+  }
+
+  let dragTarget: HTMLElement | null = null;
+
+  $: tasksByStatus = $filteredTasks.reduce((acc, task) => {
+    const status = task.status || 'todo';
+    acc[status] = [...(acc[status] || []), task];
+    return acc;
+  }, {} as Record<TaskStatus, Task[]>);
+</script>
+
+<div 
+  class="kanban-board"
+  class:dark={theme === 'dark'}
+  role="application"
+  aria-label="Task Management Board"
+>
+  <header>
+    <h1>Task Management</h1>
+    <div class="controls">
+      <select bind:value={$filterBy} on:change={() => dispatch('filterChange', $filterBy)}>
+        <option value="all">All Tasks</option>
+        <option value="active">Active</option>
+        <option value="completed">Completed</option>
+      </select>
+      
+      <select bind:value={$sortBy}>
+        <option value="priority">Priority</option>
+        <option value="dueDate">Due Date</option>
+        <option value="title">Title</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="board-columns">
+    {#each Object.entries(tasksByStatus) as [status, statusTasks]}
+      <div
+        class="column"
+        data-status={status}
+        on:dragover|preventDefault
+        on:drop|preventDefault={e => handleDrop(e, status)}
+      >
+        <h2>{status}</h2>
+        
+        {#each statusTasks as task (task.id)}
+          <div
+            class="task-card"
+            class:high-priority={task.priority >= 8}
+            class:completed={task.completed}
+            draggable="true"
+            on:dragstart={e => handleDragStart(e, task)}
+            in:fade={{ duration: 300 }}
+            out:slide={{ duration: 300, easing: quintOut }}
+            animate:flip={{ duration: 300 }}
+          >
+            <div class="task-header">
+              <h3>{task.title}</h3>
+              <span class="priority" style="--priority: {task.priority}">
+                {task.priority}
+              </span>
+            </div>
+            
+            <p>{task.description}</p>
+            
+            {#if task.dueDate}
+              <time datetime={task.dueDate}>
+                Due: {new Date(task.dueDate).toLocaleDateString()}
+              </time>
+            {/if}
+            
+            <div class="task-footer">
+              <button
+                on:click={() => toggleTaskCompletion(task)}
+                aria-label={task.completed ? 'Mark as incomplete' : 'Mark as complete'}
+              >
+                {#if task.completed}
+                  <span class="check" transition:scale>✓</span>
+                {:else}
+                  <span class="circle"></span>
+                {/if}
+              </button>
+              
+              <button
+                on:click={() => deleteTask(task.id)}
+                class="delete"
+                aria-label="Delete task"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        {/each}
+      </div>
+    {/each}
+  </div>
+</div>
+
+<style lang="scss">
+  .kanban-board {
+    --column-width: 300px;
+    --column-gap: 1rem;
+    --card-padding: 1rem;
+    
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+    background: var(--bg-color, #f5f5f5);
+    color: var(--text-color, #333);
+    
+    &.dark {
+      --bg-color: #1a1a1a;
+      --text-color: #fff;
+      --card-bg: #2d2d2d;
+      --card-border: #404040;
+    }
+    
+    header {
+      padding: 1rem;
+      background: var(--primary-color, #2196f3);
+      color: white;
+      
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        
+        select {
+          padding: 0.5rem;
+          border-radius: 4px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          
+          &:focus {
+            outline: 2px solid rgba(255, 255, 255, 0.5);
+          }
+        }
+      }
+    }
+    
+    .board-columns {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: var(--column-width);
+      gap: var(--column-gap);
+      padding: var(--column-gap);
+      overflow-x: auto;
+      
+      .column {
+        background: var(--column-bg, rgba(0, 0, 0, 0.05));
+        border-radius: 8px;
+        padding: var(--card-padding);
+        
+        h2 {
+          margin: 0 0 1rem;
+          text-transform: uppercase;
+          font-size: 0.875rem;
+          letter-spacing: 0.05em;
+          color: var(--text-color-secondary, #666);
+        }
+      }
+    }
+    
+    .task-card {
+      background: var(--card-bg, white);
+      border: 1px solid var(--card-border, #e0e0e0);
+      border-radius: 6px;
+      padding: var(--card-padding);
+      margin-bottom: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      
+      &.high-priority {
+        border-left: 3px solid var(--error-color, #f44336);
+      }
+      
+      &.completed {
+        opacity: 0.7;
+        text-decoration: line-through;
+      }
+      
+      .priority {
+        --size: 24px;
+        width: var(--size);
+        height: var(--size);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: hsl(calc(120deg - (var(--priority) * 12deg)), 70%, 60%);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: bold;
+      }
+    }
+  }
+</style>`
   },
   {
     name: 'react.tsx',
@@ -701,91 +1542,145 @@ button {
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
     language: 'tsx',
     displayName: 'React',
-    snippet: `
-import React, { useState, useEffect } from 'react'
+    snippet: `import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { Product, CartItem } from '@/types/shop';
+import { formatCurrency } from '@/utils/currency';
 
-interface Todo {
-  id: number
-  text: string
-  completed: boolean
+interface ProductCardProps {
+  product: Product;
+  onAddToCart: (item: CartItem) => void;
+  inStock?: boolean;
 }
 
-const TodoApp: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([])
-  const [newTodo, setNewTodo] = useState('')
+export const ProductCard: React.FC<ProductCardProps> = ({ 
+  product, 
+  onAddToCart,
+  inStock = true 
+}) => {
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
 
-  useEffect(() => {
-    const storedTodos = localStorage.getItem('todos')
-    if (storedTodos) {
-      setTodos(JSON.parse(storedTodos))
-    }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos))
-  }, [todos])
-
-  const addTodo = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (newTodo.trim()) {
-      setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }])
-      setNewTodo('')
-    }
-  }
-
-  const toggleTodo = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    )
-  }
-
-  const removeTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id))
-  }
+  const handleAddToCart = () => {
+    if (!selectedSize) return;
+    
+    onAddToCart({
+      productId: product.id,
+      size: selectedSize,
+      quantity,
+      price: product.price
+    });
+  };
 
   return (
-    <div className="todo-app">
-      <h1>Todo App</h1>
-      <form onSubmit={addTodo}>
-        <input
-          type="text"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Add a new todo"
+    <motion.div
+      className="relative flex flex-col rounded-lg shadow-lg overflow-hidden bg-white"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+    >
+      <div className="relative pb-[125%]">
+        <img
+          src={product.imageUrl}
+          alt={product.name}
+          className="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
         />
-        <button type="submit">Add</button>
-      </form>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleTodo(todo.id)}
-            />
-            <span
-              style={{
-                textDecoration: todo.completed ? 'line-through' : 'none',
-              }}
-            >
-              {todo.text}
-            </span>
-            <button onClick={() => removeTodo(todo.id)}>Remove</button>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <p>Total todos: {todos.length}</p>
-        <p>Completed todos: {todos.filter((todo) => todo.completed).length}</p>
+        {!inStock && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <span className="text-white text-lg font-semibold">Out of Stock</span>
+          </div>
+        )}
       </div>
-    </div>
-  )
-}
 
-export default TodoApp
+      <div className="p-4 flex-1 flex flex-col">
+        <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
+        <p className="mt-1 text-sm text-gray-500">{product.description}</p>
+        
+        <div className="mt-4 flex items-center justify-between">
+          <span className="text-xl font-bold text-gray-900">
+            {formatCurrency(product.price)}
+          </span>
+          {product.compareAtPrice && (
+            <span className="text-sm text-gray-500 line-through">
+              {formatCurrency(product.compareAtPrice)}
+            </span>
+          )}
+        </div>
 
+        <div className="mt-4 space-y-3">
+          <div className="flex flex-wrap gap-2">
+            {product.sizes.map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                className={\`px-3 py-1 rounded-md text-sm font-medium \${
+                  selectedSize === size
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                }\`}
+                type="button"
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center border rounded-md">
+              <button
+                type="button"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="px-3 py-1 text-gray-600 hover:text-gray-800"
+                aria-label="Decrease quantity"
+              >
+                &minus;
+              </button>
+              <span className="px-3 py-1 text-gray-800">{quantity}</span>
+              <button
+                type="button"
+                onClick={() => setQuantity(quantity + 1)}
+                className="px-3 py-1 text-gray-600 hover:text-gray-800"
+                aria-label="Increase quantity"
+              >
+                &#43;
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={!inStock || !selectedSize}
+            className={\`w-full py-2 px-4 rounded-md font-medium text-white \${
+              !inStock || !selectedSize
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700'
+            }\`}
+          >
+            {!inStock ? 'Out of Stock' : 'Add to Cart'}
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isHovered && product.badge && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md"
+          >
+            {product.badge}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
     `
   },
   {
@@ -794,106 +1689,163 @@ export default TodoApp
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ruby/ruby-original.svg',
     language: 'ruby',
     displayName: 'Ruby',
-    snippet: `
-    # A simple Ruby program demonstrating various features
+    snippet: `# frozen_string_literal: true
 
-# Class definition
-class Person
-	attr_accessor :name, :age
-  
-	def initialize(name, age)
-	  @name = name
-	  @age = age
-	end
-  
-	def introduce
-	  puts "Hello, my name is #{@name} and I'm #{@age} years old."
-	end
-  
-	def self.create_from_hash(hash)
-	  new(hash[:name], hash[:age])
-	end
+require 'singleton'
+require 'forwardable'
+require 'logger'
+require 'json'
+
+module ApiBuilder
+  class ValidationError < StandardError; end
+  class ConfigurationError < StandardError; end
+
+  # DSL for building REST API endpoints with middleware support
+  class Router
+    include Singleton
+    extend Forwardable
+
+    def_delegators :@middleware_chain, :use, :build
+
+    attr_reader :routes, :logger
+
+    def initialize
+      @routes = {}
+      @middleware_chain = MiddlewareChain.new
+      @logger = Logger.new($stdout)
+      setup_default_middleware
+    end
+
+    class << self
+      def define(&block)
+        instance.instance_eval(&block)
+      end
+
+      def draw(&block)
+        instance.instance_eval(&block)
+      end
+    end
+
+    %i[get post put patch delete].each do |http_method|
+      define_method(http_method) do |path, **options, &block|
+        register_route(http_method, path, options, block)
+      end
+    end
+
+    def namespace(path, &block)
+      current_namespace = @current_namespace
+      @current_namespace = current_namespace ? File.join(current_namespace, path) : path
+      instance_eval(&block)
+    ensure
+      @current_namespace = current_namespace
+    end
+
+    private
+
+    def setup_default_middleware
+      use Middleware::RequestLogger
+      use Middleware::JsonParser
+      use Middleware::Authentication
+      use Middleware::RateLimiter
+    end
+
+    def register_route(method, path, options, handler)
+      full_path = @current_namespace ? File.join(@current_namespace, path) : path
+      route_key = "#{method.upcase} #{full_path}"
+
+      @routes[route_key] = Route.new(
+        method: method,
+        path: full_path,
+        handler: handler,
+        options: options
+      )
+
+      logger.info "Registered route: #{route_key}"
+    end
   end
-  
-  # Module definition
-  module Greetable
-	def greet
-	  puts "Hello, #{@name}!"
-	end
+
+  class Route
+    attr_reader :method, :path, :handler, :options
+
+    def initialize(method:, path:, handler:, options: {})
+      @method = method
+      @path = path
+      @handler = handler
+      @options = default_options.merge(options)
+      validate!
+    end
+
+    def call(env)
+      Context.new(env, options).tap do |ctx|
+        begin
+          handler.call(ctx)
+        rescue => e
+          handle_error(ctx, e)
+        end
+      end
+    end
+
+    private
+
+    def default_options
+      {
+        auth_required: true,
+        rate_limit: true,
+        cors: true
+      }
+    end
+
+    def validate!
+      raise ValidationError, "Invalid path: #{path}" unless valid_path?
+      raise ValidationError, "Handler must be callable" unless handler.respond_to?(:call)
+    end
+
+    def valid_path?
+      path.start_with?('/') && !path.include?('?')
+    end
+
+    def handle_error(ctx, error)
+      ctx.status = case error
+                  when ValidationError then 400
+                  when AuthenticationError then 401
+                  when RateLimitExceeded then 429
+                  else 500
+                  end
+      
+      ctx.json(
+        error: {
+          type: error.class.name,
+          message: error.message
+        }
+      )
+    end
   end
-  
-  # Class inheritance and module inclusion
-  class Employee < Person
-	include Greetable
-  
-	attr_accessor :position
-  
-	def initialize(name, age, position)
-	  super(name, age)
-	  @position = position
-	end
-  
-	def introduce
-	  super
-	  puts "I work as a #{@position}."
-	end
+
+  # Example usage:
+  Router.define do
+    namespace '/api/v1' do
+      get '/users', auth_required: true do |ctx|
+        users = UserRepository.all
+        ctx.json(users: users)
+      end
+
+      post '/users', rate_limit: true do |ctx|
+        user = UserRepository.create(ctx.params)
+        ctx.status = 201
+        ctx.json(user: user)
+      end
+
+      namespace '/admin' do
+        before_action :require_admin
+
+        get '/stats' do |ctx|
+          stats = StatsCollector.gather
+          ctx.json(stats: stats)
+        end
+      end
+    end
   end
-  
-  # Create instances
-  person = Person.new("Alice", 30)
-  employee = Employee.new("Bob", 35, "Developer")
-  
-  # Method calls
-  person.introduce
-  employee.introduce
-  employee.greet
-  
-  # Array and iteration
-  people = [
-	{ name: "Charlie", age: 25 },
-	{ name: "David", age: 40 },
-	{ name: "Eve", age: 22 }
-  ]
-  
-  people.each do |person_hash|
-	person = Person.create_from_hash(person_hash)
-	person.introduce
-  end
-  
-  # Hash manipulation
-  scores = { alice: 95, bob: 80, charlie: 90 }
-  high_scores = scores.select { |name, score| score >= 90 }
-  puts "High scores: #{high_scores}"
-  
-  # Exception handling
-  def divide(a, b)
-	begin
-	  result = a / b
-	rescue ZeroDivisionError => e
-	  puts "Error: #{e.message}"
-	  result = nil
-	ensure
-	  puts "Division attempt completed."
-	end
-	result
-  end
-  
-  puts divide(10, 2)
-  puts divide(10, 0)
-  
-  # File I/O
-  File.open("example.txt", "w") do |file|
-	file.puts "This is a sample text."
-	file.puts "Written by Ruby."
-  end
-  
-  content = File.read("example.txt")
-  puts "File content:"
-  puts content
-  
-  # Remove the file
-  File.delete("example.txt")
-    `
+end`
   },
   {
     name: 'php.php',
@@ -1023,149 +1975,157 @@ echo "Current date and time: " . $date->format('Y-m-d H:i:s') . "\n";
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg',
     language: 'go',
     displayName: 'Go',
-    snippet: `
-package main
+    snippet: `package ecs
 
 import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"sync"
-	"time"
+    "fmt"
+    "sync"
+    "time"
+
+    "github.com/google/uuid"
 )
 
-// Person struct
-type Person struct {
-	Name string
-	Age  int
+//go:generate stringer -type=ComponentType
+type ComponentType int
+
+const (
+    TransformComponent ComponentType = iota
+    PhysicsComponent
+    RenderComponent
+    CollisionComponent
+    AIComponent
+)
+
+// Component represents a basic game object component
+type Component interface {
+    Type() ComponentType
+    EntityID() uuid.UUID
 }
 
-// Introduce method for Person
-func (p Person) Introduce() {
-	fmt.Printf("Hello, my name is %s and I'm %d years old.", p.Name, p.Age)
+// Transform holds position, rotation, and scale data
+type Transform struct {
+    entityID uuid.UUID
+    Position Vector3
+    Rotation Quaternion
+    Scale    Vector3
+    Parent   *Transform
+    Children []*Transform
+    dirty    bool
+    mutex    sync.RWMutex
 }
 
-// Employee struct embedding Person
-type Employee struct {
-	Person
-	Position string
+func (t *Transform) Type() ComponentType { return TransformComponent }
+func (t *Transform) EntityID() uuid.UUID { return t.entityID }
+
+// UpdateWorldMatrix recalculates the world transformation matrix
+func (t *Transform) UpdateWorldMatrix() Matrix4 {
+    t.mutex.Lock()
+    defer t.mutex.Unlock()
+
+    if !t.dirty && t.Parent == nil {
+        return Matrix4Identity()
+    }
+
+    matrix := NewMatrix4FromTRS(t.Position, t.Rotation, t.Scale)
+    if t.Parent != nil {
+        parentMatrix := t.Parent.UpdateWorldMatrix()
+        matrix = parentMatrix.Multiply(matrix)
+    }
+
+    t.dirty = false
+    return matrix
 }
 
-// Introduce method for Employee
-func (e Employee) Introduce() {
-	e.Person.Introduce()
-	fmt.Printf("I work as a %s.", e.Position)
+// World represents the game world and manages all entities
+type World struct {
+    entities    map[uuid.UUID]map[ComponentType]Component
+    systems     []System
+    entityLock  sync.RWMutex
+    systemLock  sync.RWMutex
+    deltaTime   float32
+    lastUpdate  time.Time
 }
 
-// Greeter interface
-type Greeter interface {
-	Greet()
+// NewWorld creates a new game world instance
+func NewWorld() *World {
+    return &World{
+        entities:   make(map[uuid.UUID]map[ComponentType]Component),
+        systems:    make([]System, 0),
+        lastUpdate: time.Now(),
+    }
 }
 
-// Greet method for Employee
-func (e Employee) Greet() {
-	fmt.Printf("Hello, %s!", e.Name)
+// AddEntity creates a new entity and returns its ID
+func (w *World) AddEntity() uuid.UUID {
+    w.entityLock.Lock()
+    defer w.entityLock.Unlock()
+
+    id := uuid.New()
+    w.entities[id] = make(map[ComponentType]Component)
+    return id
 }
 
-func main() {
-	// Create instances
-	person := Person{Name: "Alice", Age: 30}
-	employee := Employee{Person: Person{Name: "Bob", Age: 35}, Position: "Developer"}
+// AddComponent adds a component to an entity
+func (w *World) AddComponent(entityID uuid.UUID, component Component) error {
+    w.entityLock.Lock()
+    defer w.entityLock.Unlock()
 
-	// Method calls
-	person.Introduce()
-	employee.Introduce()
-	employee.Greet()
+    if _, exists := w.entities[entityID]; !exists {
+        return fmt.Errorf("entity %v does not exist", entityID)
+    }
 
-	// Slice and iteration
-	people := []Person{
-		{Name: "Charlie", Age: 25},
-		{Name: "David", Age: 40},
-		{Name: "Eve", Age: 22},
-	}
-
-	for _, p := range people {
-		p.Introduce()
-	}
-
-	// Map manipulation
-	scores := map[string]int{"alice": 95, "bob": 80, "charlie": 90}
-	highScores := make(map[string]int)
-	for name, score := range scores {
-		if score >= 90 {
-			highScores[name] = score
-		}
-	}
-	fmt.Printf("High scores: %v\n", highScores)
-
-	// Goroutine and channel
-	ch := make(chan int)
-	go func() {
-		for i := 0; i < 5; i++ {
-			ch <- i
-			time.Sleep(time.Millisecond * 100)
-		}
-		close(ch)
-	}()
-
-	for num := range ch {
-		fmt.Printf("Received: %d", num)
-	}
-
-	// Error handling
-	result, err := divide(10, 2)
-	if err != nil {
-		fmt.Println("Error:", err)
-	} else {
-		fmt.Printf("Result: %f", result)
-	}
-
-	result, err = divide(10, 0)
-	if err != nil {
-		fmt.Println("Error:", err)
-	} else {
-		fmt.Printf("Result: %f", result)
-	}
-
-	// File I/O
-	data := []byte("This is a sample text.\nWritten by Go.")
-	err = ioutil.WriteFile("example.txt", data, 0644)
-	if err != nil {
-		fmt.Println("Error writing file:", err)
-		return
-	}
-
-	content, err := ioutil.ReadFile("example.txt")
-	if err != nil {
-		fmt.Println("Error reading file:", err)
-		return
-	}
-	fmt.Printf("File content:\n%s\n", content)
-
-	// Remove the file
-	os.Remove("example.txt")
-
-	// WaitGroup for concurrency
-	var wg sync.WaitGroup
-	for i := 0; i < 3; i++ {
-		wg.Add(1)
-		go func(id int) {
-			defer wg.Done()
-			fmt.Printf("Goroutine %d starting", id)
-			time.Sleep(time.Second)
-			fmt.Printf("Goroutine %d finished", id)
-		}(i)
-	}
-	wg.Wait()
+    w.entities[entityID][component.Type()] = component
+    return nil
 }
 
-func divide(a, b float64) (float64, error) {
-	if b == 0 {
-		return 0, fmt.Errorf("division by zero")
-	}
-	return a / b, nil
+// Update updates all systems in the world
+func (w *World) Update() {
+    currentTime := time.Now()
+    w.deltaTime = float32(currentTime.Sub(w.lastUpdate).Seconds())
+    w.lastUpdate = currentTime
+
+    w.systemLock.RLock()
+    defer w.systemLock.RUnlock()
+
+    for _, system := range w.systems {
+        system.Update(w)
+    }
 }
-    `
+
+// Query returns all entities that have the specified component types
+func (w *World) Query(types ...ComponentType) []uuid.UUID {
+    w.entityLock.RLock()
+    defer w.entityLock.RUnlock()
+
+    var matches []uuid.UUID
+    for entityID, components := range w.entities {
+        hasAll := true
+        for _, t := range types {
+            if _, has := components[t]; !has {
+                hasAll = false
+                break
+            }
+        }
+        if hasAll {
+            matches = append(matches, entityID)
+        }
+    }
+    return matches
+}
+
+// GetComponent returns a specific component for an entity
+func (w *World) GetComponent(entityID uuid.UUID, componentType ComponentType) (Component, error) {
+    w.entityLock.RLock()
+    defer w.entityLock.RUnlock()
+
+    if components, exists := w.entities[entityID]; exists {
+        if component, has := components[componentType]; has {
+            return component, nil
+        }
+        return nil, fmt.Errorf("entity %v does not have component type %v", entityID, componentType)
+    }
+    return nil, fmt.Errorf("entity %v does not exist", entityID)
+}`
   },
   {
     name: 'java.java',
@@ -1310,120 +2270,146 @@ import java.util.*;
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg',
     language: 'csharp',
     displayName: 'C#',
-    snippet: `
-using System;
+    snippet: `using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using System.IO;
+using Microsoft.Extensions.Logging;
 
-class Person
+namespace Trading.Infrastructure.Cache
 {
-    public string Name { get; set; }
-    public int Age { get; set; }
-
-    public Person(string name, int age)
+    /// <summary>
+    /// Provides a thread-safe, distributed caching mechanism with support for 
+    /// automatic expiration and custom eviction policies.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the cache key.</typeparam>
+    /// <typeparam name="TValue">The type of the cached value.</typeparam>
+    public sealed class DistributedCache<TKey, TValue> : IDisposable where TKey : notnull
     {
-        Name = name;
-        Age = age;
-    }
+        private readonly ILogger<DistributedCache<TKey, TValue>> _logger;
+        private readonly ConcurrentDictionary<TKey, CacheEntry<TValue>> _cache;
+        private readonly CancellationTokenSource _cleanupTokenSource;
+        private readonly Task _cleanupTask;
+        private readonly TimeSpan _defaultExpiration;
+        private readonly int _maxSize;
 
-    public virtual void Introduce()
-    {
-        Console.WriteLine($"Hello, my name is {Name} and I'm {Age} years old.");
-    }
-}
-
-interface IGreetable
-{
-    void Greet();
-}
-
-class Employee : Person, IGreetable
-{
-    public string Position { get; set; }
-
-    public Employee(string name, int age, string position) : base(name, age)
-    {
-        Position = position;
-    }
-
-    public override void Introduce()
-    {
-        base.Introduce();
-        Console.WriteLine($"I work as a {Position}.");
-    }
-
-    public void Greet()
-    {
-        Console.WriteLine($"Hello, {Name}!");
-    }
-}
-
-class Program
-{
-    static async Task Main(string[] args)
-    {
-        var person = new Person("Alice", 30);
-        var employee = new Employee("Bob", 35, "Developer");
-
-        person.Introduce();
-        employee.Introduce();
-        employee.Greet();
-
-        var people = new List<Dictionary<string, object>>
+        public DistributedCache(
+            ILogger<DistributedCache<TKey, TValue>> logger,
+            TimeSpan? defaultExpiration = null,
+            int maxSize = 1000)
         {
-            new Dictionary<string, object> { { "name", "Charlie" }, { "age", 25 } },
-            new Dictionary<string, object> { { "name", "David" }, { "age", 40 } },
-            new Dictionary<string, object> { { "name", "Eve" }, { "age", 22 } }
-        };
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _cache = new ConcurrentDictionary<TKey, CacheEntry<TValue>>();
+            _cleanupTokenSource = new CancellationTokenSource();
+            _defaultExpiration = defaultExpiration ?? TimeSpan.FromHours(1);
+            _maxSize = maxSize;
 
-        people.Select(data => new Person((string)data["name"], (int)data["age"]))
-              .ToList()
-              .ForEach(p => p.Introduce());
-
-        var scores = new Dictionary<string, int> { { "alice", 95 }, { "bob", 80 }, { "charlie", 90 } };
-        var highScores = scores.Where(pair => pair.Value >= 90)
-                               .ToDictionary(pair => pair.Key, pair => pair.Value);
-        Console.WriteLine($"High scores: {string.Join(", ", highScores)}");
-
-        try
-        {
-            var result = await FetchDataAsync();
-            Console.WriteLine($"Fetched data: {result}");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error: {e.Message}");
+            _cleanupTask = Task.Run(async () => await CleanupLoop(_cleanupTokenSource.Token));
         }
 
-        await foreach (var number in GenerateSequenceAsync())
+        public async Task<TValue?> GetOrAddAsync(
+            TKey key,
+            Func<Task<TValue>> valueFactory,
+            TimeSpan? expiration = null)
         {
-            Console.WriteLine(number);
+            if (_cache.TryGetValue(key, out var entry) && !entry.IsExpired)
+            {
+                _logger.LogDebug("Cache hit for key: {Key}", key);
+                return entry.Value;
+            }
+
+            _logger.LogDebug("Cache miss for key: {Key}", key);
+            var value = await valueFactory();
+            await SetAsync(key, value, expiration);
+            return value;
         }
 
-        await File.WriteAllTextAsync("example.txt", "Hello, C#!");
-        var content = await File.ReadAllTextAsync("example.txt");
-        Console.WriteLine($"File content: {content}");
-        File.Delete("example.txt");
-    }
-
-    static async Task<string> FetchDataAsync()
-    {
-        await Task.Delay(2000);
-        return "Some data";
-    }
-
-    static async IAsyncEnumerable<int> GenerateSequenceAsync()
-    {
-        for (int i = 1; i <= 5; i++)
+        public async Task SetAsync(TKey key, TValue value, TimeSpan? expiration = null)
         {
-            yield return i;
-            await Task.Delay(500);
+            var entry = new CacheEntry<TValue>
+            {
+                Value = value,
+                ExpiresAt = DateTimeOffset.UtcNow.Add(expiration ?? _defaultExpiration)
+            };
+
+            if (_cache.Count >= _maxSize)
+            {
+                await EvictOldestEntryAsync();
+            }
+
+            _cache.AddOrUpdate(key, entry, (_, _) => entry);
+            _logger.LogDebug("Added/updated cache entry for key: {Key}", key);
+        }
+
+        private async Task CleanupLoop(CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                try
+                {
+                    var expiredKeys = _cache
+                        .Where(kvp => kvp.Value.IsExpired)
+                        .Select(kvp => kvp.Key)
+                        .ToList();
+
+                    foreach (var key in expiredKeys)
+                    {
+                        _cache.TryRemove(key, out _);
+                        _logger.LogDebug("Removed expired cache entry for key: {Key}", key);
+                    }
+
+                    await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error during cache cleanup");
+                }
+            }
+        }
+
+        private async Task EvictOldestEntryAsync()
+        {
+            var oldestEntry = _cache
+                .OrderBy(kvp => kvp.Value.ExpiresAt)
+                .FirstOrDefault();
+
+            if (oldestEntry.Key != null)
+            {
+                _cache.TryRemove(oldestEntry.Key, out _);
+                _logger.LogDebug("Evicted oldest cache entry for key: {Key}", oldestEntry.Key);
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            _cleanupTokenSource.Cancel();
+            try
+            {
+                _cleanupTask.Wait(TimeSpan.FromSeconds(5));
+            }
+            catch (AggregateException ex) when (ex.InnerException is OperationCanceledException)
+            {
+                // Expected when canceling the cleanup task
+            }
+            _cleanupTokenSource.Dispose();
         }
     }
-}
-    `
+
+    public class CacheEntry<T>
+    {
+        public required T Value { get; init; }
+        public required DateTimeOffset ExpiresAt { get; init; }
+        public bool IsExpired => DateTimeOffset.UtcNow >= ExpiresAt;
+    }
+}`
   },
   {
     name: 'python.py',
@@ -1431,87 +2417,194 @@ class Program
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
     language: 'python',
     displayName: 'Python',
-    snippet: `
+    snippet: `from __future__ import annotations
+from typing import TypeVar, Generic, Optional, Dict, List, Tuple, AsyncIterator
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
 import asyncio
-import aiofiles
-from typing import Dict, List
+import logging
+import functools
+from abc import ABC, abstractmethod
 
-class Person:
-    def __init__(self, name: str, age: int):
-        self.name = name
-        self.age = age
+T = TypeVar('T')
+K = TypeVar('K')
+V = TypeVar('V')
 
-    def introduce(self):
-        print(f"Hello, my name is {self.name} and I'm {self.age} years old.")
+logger = logging.getLogger(__name__)
 
-    @classmethod
-    def from_dict(cls, data: Dict[str, object]):
-        return cls(data['name'], data['age'])
+class CacheException(Exception):
+    """Base exception for cache-related errors."""
+    pass
 
-class Employee(Person):
-    def __init__(self, name: str, age: int, position: str):
-        super().__init__(name, age)
-        self.position = position
+class InvalidKeyError(CacheException):
+    """Raised when a cache key is invalid."""
+    pass
 
-    def introduce(self):
-        super().introduce()
-        print(f"I work as a {self.position}.")
+@dataclass
+class CacheStats:
+    hits: int = 0
+    misses: int = 0
+    evictions: int = 0
+    total_items: int = 0
+    last_eviction: Optional[datetime] = None
 
-    def greet(self):
-        print(f"Hello, {self.name}!")
+    @property
+    def hit_rate(self) -> float:
+        total = self.hits + self.misses
+        return self.hits / total if total > 0 else 0.0
 
-async def fetch_data():
-    await asyncio.sleep(2)
-    return "Some data"
+class CachePolicy(ABC):
+    @abstractmethod
+    async def should_evict(self, key: K, value: V) -> bool:
+        """Determine if an item should be evicted."""
+        pass
 
-async def generate_sequence():
-    for i in range(1, 6):
-        yield i
-        await asyncio.sleep(0.5)
+class TTLPolicy(CachePolicy, Generic[K, V]):
+    def __init__(self, ttl_seconds: int) -> None:
+        self.ttl_seconds = ttl_seconds
+        self._access_times: Dict[K, datetime] = {}
 
-async def main():
-    person = Person("Alice", 30)
-    employee = Employee("Bob", 35, "Developer")
+    async def should_evict(self, key: K, value: V) -> bool:
+        last_access = self._access_times.get(key)
+        if last_access is None:
+            return False
+        
+        now = datetime.now(timezone.utc)
+        return (now - last_access).total_seconds() > self.ttl_seconds
 
-    person.introduce()
-    employee.introduce()
-    employee.greet()
+    def update_access(self, key: K) -> None:
+        self._access_times[key] = datetime.now(timezone.utc)
 
-    people = [
-        {"name": "Charlie", "age": 25},
-        {"name": "David", "age": 40},
-        {"name": "Eve", "age": 22}
-    ]
+class DistributedCache(Generic[K, V]):
+    def __init__(
+        self,
+        max_size: int = 1000,
+        policy: Optional[CachePolicy[K, V]] = None
+    ) -> None:
+        self._cache: Dict[K, V] = {}
+        self._max_size = max_size
+        self._policy = policy or TTLPolicy(ttl_seconds=3600)
+        self._stats = CacheStats()
+        self._lock = asyncio.Lock()
+        self._background_task: Optional[asyncio.Task] = None
 
-    for person_data in people:
-        Person.from_dict(person_data).introduce()
+    @property
+    def stats(self) -> CacheStats:
+        return self._stats
 
-    scores = {"alice": 95, "bob": 80, "charlie": 90}
-    high_scores = {name: score for name, score in scores.items() if score >= 90}
-    print(f"High scores: {high_scores}")
+    async def __aenter__(self) -> DistributedCache[K, V]:
+        self._background_task = asyncio.create_task(self._maintenance_loop())
+        return self
 
-    try:
-        result = await fetch_data()
-        print(f"Fetched data: {result}")
-    except Exception as e:
-        print(f"Error: {e}")
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        if self._background_task:
+            self._background_task.cancel()
+            try:
+                await self._background_task
+            except asyncio.CancelledError:
+                pass
 
-    async for number in generate_sequence():
-        print(number)
+    def __len__(self) -> int:
+        return len(self._cache)
 
-    async with aiofiles.open("example.txt", mode='w') as file:
-        await file.write("Hello, Python!")
-    
-    async with aiofiles.open("example.txt", mode='r') as file:
-        content = await file.read()
-        print(f"File content: {content}")
+    async def _maintenance_loop(self) -> None:
+        while True:
+            try:
+                await self._evict_expired()
+                await asyncio.sleep(60)  # Run maintenance every minute
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.error(f"Error in maintenance loop: {e}", exc_info=True)
+                await asyncio.sleep(5)  # Back off on error
 
-    import os
-    os.remove("example.txt")
+    async def _evict_expired(self) -> None:
+        async with self._lock:
+            keys_to_evict = []
+            for key, value in self._cache.items():
+                if await self._policy.should_evict(key, value):
+                    keys_to_evict.append(key)
+            
+            for key in keys_to_evict:
+                del self._cache[key]
+                self._stats.evictions += 1
+                self._stats.total_items -= 1
+                self._stats.last_eviction = datetime.now(timezone.utc)
 
-if __name__ == "__main__":
-    asyncio.run(main())
-    `
+    async def get(self, key: K) -> Optional[V]:
+        if not isinstance(key, (str, int, float, bool)):
+            raise InvalidKeyError(f"Invalid key type: {type(key)}")
+
+        async with self._lock:
+            if key in self._cache:
+                self._stats.hits += 1
+                if isinstance(self._policy, TTLPolicy):
+                    self._policy.update_access(key)
+                return self._cache[key]
+            
+            self._stats.misses += 1
+            return None
+
+    async def put(self, key: K, value: V) -> None:
+        async with self._lock:
+            if len(self._cache) >= self._max_size:
+                # Evict oldest item if we're at capacity
+                oldest_key = min(
+                    self._cache.keys(),
+                    key=lambda k: self._policy._access_times.get(k, datetime.min.replace(tzinfo=timezone.utc))
+                    if isinstance(self._policy, TTLPolicy) else 0
+                )
+                del self._cache[oldest_key]
+                self._stats.evictions += 1
+                self._stats.total_items -= 1
+                self._stats.last_eviction = datetime.now(timezone.utc)
+
+            self._cache[key] = value
+            self._stats.total_items += 1
+            if isinstance(self._policy, TTLPolicy):
+                self._policy.update_access(key)
+
+    async def items(self) -> AsyncIterator[Tuple[K, V]]:
+        async with self._lock:
+            for key, value in self._cache.items():
+                if not await self._policy.should_evict(key, value):
+                    yield key, value
+
+def cache_decorator(
+    ttl_seconds: int = 3600,
+    max_size: int = 1000
+) -> callable:
+    def decorator(func):
+        cache = DistributedCache(max_size=max_size, policy=TTLPolicy(ttl_seconds))
+        
+        @functools.wraps(func)
+        async def wrapper(*args, **kwargs):
+            # Create a cache key from the function arguments
+            key = f"{func.__name__}:{hash(str(args) + str(kwargs))}"
+            
+            # Try to get the cached result
+            result = await cache.get(key)
+            if result is not None:
+                return result
+            
+            # Compute and cache the result
+            result = await func(*args, **kwargs)
+            await cache.put(key, result)
+            return result
+            
+        return wrapper
+    return decorator
+
+# Example usage
+@cache_decorator(ttl_seconds=300, max_size=100)
+async def fetch_user_data(user_id: int) -> Dict[str, any]:
+    # Simulate API call
+    await asyncio.sleep(1)
+    return {
+        "id": user_id,
+        "name": f"User {user_id}",
+        "last_active": datetime.now(timezone.utc)
+    }`
   },
   {
     name: 'rust.rs',
@@ -1519,109 +2612,157 @@ if __name__ == "__main__":
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg',
     language: 'rust',
     displayName: 'Rust',
-    snippet: `
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::{Write, Read};
-use std::thread;
-use std::time::Duration;
+    snippet: `#![allow(unused_imports)]
+#![feature(generic_associated_types)]
 
-struct Person {
+use std::{
+    collections::{HashMap, HashSet},
+    sync::{Arc, Mutex},
+    time::{Duration, SystemTime},
+};
+
+use serde::{Deserialize, Serialize};
+use tokio::sync::RwLock;
+use uuid::Uuid;
+
+/// Represents the status of an order in the e-commerce system
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum OrderStatus {
+    Pending,
+    Confirmed,
+    Processing,
+    Shipped,
+    Delivered,
+    Cancelled,
+}
+
+/// Configuration for the inventory management system
+#[derive(Debug, Serialize, Deserialize)]
+pub struct InventoryConfig {
+    pub low_stock_threshold: u32,
+    pub reorder_point: u32,
+    pub max_stock_level: u32,
+}
+
+/// Represents a product in the e-commerce system
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Product {
+    id: Uuid,
     name: String,
-    age: u32,
+    description: Option<String>,
+    price: Decimal,
+    stock: i32,
+    categories: HashSet<String>,
+    attributes: HashMap<String, String>,
+    created_at: SystemTime,
+    updated_at: SystemTime,
 }
 
-impl Person {
-    fn new(name: String, age: u32) -> Self {
-        Person { name, age }
-    }
-
-    fn introduce(&self) {
-        println!("Hello, my name is {} and I'm {} years old.", self.name, self.age);
-    }
-}
-
-struct Employee {
-    person: Person,
-    position: String,
-}
-
-impl Employee {
-    fn new(name: String, age: u32, position: String) -> Self {
-        Employee {
-            person: Person::new(name, age),
-            position,
+impl Product {
+    pub fn new<S: Into<String>>(name: S, price: Decimal) -> Self {
+        let now = SystemTime::now();
+        Self {
+            id: Uuid::new_v4(),
+            name: name.into(),
+            description: None,
+            price,
+            stock: 0,
+            categories: HashSet::new(),
+            attributes: HashMap::new(),
+            created_at: now,
+            updated_at: now,
         }
     }
 
-    fn introduce(&self) {
-        self.person.introduce();
-        println!("I work as a {}.", self.position);
+    pub fn with_stock(mut self, stock: i32) -> Self {
+        self.stock = stock;
+        self
     }
 
-    fn greet(&self) {
-        println!("Hello, {}!", self.person.name);
+    pub fn add_category<S: Into<String>>(&mut self, category: S) -> bool {
+        self.categories.insert(category.into())
+    }
+
+    pub fn set_attribute<K, V>(&mut self, key: K, value: V) -> Option<String>
+    where
+        K: Into<String>,
+        V: Into<String>,
+    {
+        self.attributes.insert(key.into(), value.into())
     }
 }
 
-fn main() -> std::io::Result<()> {
-    let person = Person::new(String::from("Alice"), 30);
-    let employee = Employee::new(String::from("Bob"), 35, String::from("Developer"));
+/// Trait for inventory management operations
+#[async_trait::async_trait]
+pub trait InventoryManager: Send + Sync + 'static {
+    type Error: std::error::Error + Send + Sync + 'static;
 
-    person.introduce();
-    employee.introduce();
-    employee.greet();
+    async fn get_stock_level(&self, product_id: Uuid) -> Result<i32, Self::Error>;
+    async fn update_stock(&self, product_id: Uuid, quantity: i32) -> Result<(), Self::Error>;
+    async fn reserve_stock(&self, product_id: Uuid, quantity: i32) -> Result<bool, Self::Error>;
+}
 
-    let people = vec![
-        HashMap::from([("name", "Charlie"), ("age", "25")]),
-        HashMap::from([("name", "David"), ("age", "40")]),
-        HashMap::from([("name", "Eve"), ("age", "22")]),
-    ];
+/// Implementation of the inventory manager using a database
+pub struct DatabaseInventoryManager<DB> {
+    db: Arc<DB>,
+    config: Arc<InventoryConfig>,
+    cache: Arc<RwLock<HashMap<Uuid, i32>>>,
+}
 
-    for person_data in people {
-        let person = Person::new(
-            person_data["name"].to_string(),
-            person_data["age"].parse().unwrap(),
-        );
-        person.introduce();
-    }
-
-    let mut scores = HashMap::new();
-    scores.insert("alice", 95);
-    scores.insert("bob", 80);
-    scores.insert("charlie", 90);
-
-    let high_scores: HashMap<_, _> = scores.into_iter()
-        .filter(|&(_, score)| score >= 90)
-        .collect();
-    println!("High scores: {:?}", high_scores);
-
-    let handle = thread::spawn(|| {
-        for i in 1..6 {
-            println!("Thread: number {}", i);
-            thread::sleep(Duration::from_millis(500));
+impl<DB> DatabaseInventoryManager<DB>
+where
+    DB: Database + Send + Sync + 'static,
+{
+    pub fn new(db: DB, config: InventoryConfig) -> Self {
+        Self {
+            db: Arc::new(db),
+            config: Arc::new(config),
+            cache: Arc::new(RwLock::new(HashMap::new())),
         }
-    });
-
-    for i in 1..6 {
-        println!("Main: number {}", i);
-        thread::sleep(Duration::from_millis(300));
     }
 
-    handle.join().unwrap();
-
-    let mut file = File::create("example.txt")?;
-    file.write_all(b"Hello, Rust!")?;
-
-    let mut content = String::new();
-    File::open("example.txt")?.read_to_string(&mut content)?;
-    println!("File content: {}", content);
-
-    std::fs::remove_file("example.txt")?;
-
-    Ok(())
+    async fn refresh_cache(&self, product_id: Uuid) -> Result<(), DB::Error> {
+        let stock = self.db.get_product_stock(product_id).await?;
+        let mut cache = self.cache.write().await;
+        cache.insert(product_id, stock);
+        Ok(())
+    }
 }
-    `
+
+#[async_trait::async_trait]
+impl<DB> InventoryManager for DatabaseInventoryManager<DB>
+where
+    DB: Database + Send + Sync + 'static,
+{
+    type Error = DB::Error;
+
+    async fn get_stock_level(&self, product_id: Uuid) -> Result<i32, Self::Error> {
+        let cache = self.cache.read().await;
+        match cache.get(&product_id) {
+            Some(&stock) => Ok(stock),
+            None => {
+                drop(cache);
+                self.refresh_cache(product_id).await?;
+                Ok(self.cache.read().await.get(&product_id).copied().unwrap_or(0))
+            }
+        }
+    }
+
+    async fn update_stock(&self, product_id: Uuid, quantity: i32) -> Result<(), Self::Error> {
+        self.db.update_product_stock(product_id, quantity).await?;
+        self.refresh_cache(product_id).await
+    }
+
+    async fn reserve_stock(&self, product_id: Uuid, quantity: i32) -> Result<bool, Self::Error> {
+        let current_stock = self.get_stock_level(product_id).await?;
+        if current_stock >= quantity {
+            self.update_stock(product_id, current_stock - quantity).await?;
+            Ok(true)
+        } else {
+            Ok(false)
+        }
+    }
+}`
   },
   {
     name: 'swift.swift',
@@ -1629,106 +2770,163 @@ fn main() -> std::io::Result<()> {
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swift/swift-original.svg',
     language: 'swift',
     displayName: 'Swift',
-    snippet: `
-import Foundation
+    snippet: `import Foundation
+import Combine
+import SwiftUI
 
-class Person {
-    let name: String
-    let age: Int
+// MARK: - Product Domain Models
+@frozen public enum ProductCategory: String, Codable, CaseIterable {
+    case electronics = "Electronics"
+    case clothing = "Clothing"
+    case books = "Books"
+    case homeAndGarden = "Home & Garden"
     
-    init(name: String, age: Int) {
-        self.name = name
-        self.age = age
-    }
-    
-    func introduce() {
-        print("Hello, my name is (name) and I'm (age) years old.")
-    }
-}
-
-protocol Greetable {
-    func greet()
-}
-
-class Employee: Person, Greetable {
-    let position: String
-    
-    init(name: String, age: Int, position: String) {
-        self.position = position
-        super.init(name: name, age: age)
-    }
-    
-    override func introduce() {
-        super.introduce()
-        print("I work as a (position).")
-    }
-    
-    func greet() {
-        print("Hello, (name)!")
-    }
-}
-
-// Main execution
-let person = Person(name: "Alice", age: 30)
-let employee = Employee(name: "Bob", age: 35, position: "Developer")
-
-person.introduce()
-employee.introduce()
-employee.greet()
-
-let people = [
-    ["name": "Charlie", "age": 25],
-    ["name": "David", "age": 40],
-    ["name": "Eve", "age": 22]
-]
-
-people.map { Person(name: $0["name"] as! String, age: $0["age"] as! Int) }
-      .forEach { $0.introduce() }
-
-let scores = ["alice": 95, "bob": 80, "charlie": 90]
-let highScores = scores.filter { $0.value >= 90 }
-print("High scores: (highScores)")
-
-// Asynchronous operations
-func fetchData() async throws -> String {
-    try await Task.sleep(nanoseconds: 2_000_000_000)
-    return "Some data"
-}
-
-func generateSequence() async -> AsyncStream<Int> {
-    AsyncStream { continuation in
-        Task {
-            for i in 1...5 {
-                continuation.yield(i)
-                try? await Task.sleep(nanoseconds: 500_000_000)
-            }
-            continuation.finish()
+    var taxRate: Decimal {
+        switch self {
+        case .electronics: return 0.08
+        case .clothing: return 0.05
+        case .books: return 0.0
+        case .homeAndGarden: return 0.06
         }
     }
 }
 
-Task {
-    do {
-        let result = try await fetchData()
-        print("Fetched data: (result)")
-    } catch {
-        print("Error: (error)")
-    }
+public protocol InventoryManaging: AnyObject {
+    associatedtype Error: Swift.Error
     
-    for await number in await generateSequence() {
-        print(number)
-    }
-    
-    let fileURL = URL(fileURLWithPath: "example.txt")
-    try "Hello, Swift!".write(to: fileURL, atomically: true, encoding: .utf8)
-    let content = try String(contentsOf: fileURL, encoding: .utf8)
-    print("File content: (content)")
-    try FileManager.default.removeItem(at: fileURL)
+    func getStockLevel(for productId: UUID) async throws -> Int
+    func updateStock(productId: UUID, quantity: Int) async throws
+    func reserveStock(productId: UUID, quantity: Int) async throws -> Bool
 }
 
-// Keep the program running to allow async tasks to complete
-RunLoop.main.run(until: Date(timeIntervalSinceNow: 5))
-    `
+actor InventoryManager: InventoryManaging {
+    typealias Error = InventoryError
+    
+    private let database: Database
+    private let cache: NSCache<NSString, NSNumber>
+    private var lowStockPublisher: PassthroughSubject<UUID, Never>
+    
+    init(database: Database) {
+        self.database = database
+        self.cache = NSCache<NSString, NSNumber>()
+        self.lowStockPublisher = PassthroughSubject<UUID, Never>()
+    }
+    
+    func getStockLevel(for productId: UUID) async throws -> Int {
+        if let cached = cache.object(forKey: productId.uuidString as NSString) {
+            return cached.intValue
+        }
+        
+        let stock = try await database.getProductStock(productId: productId)
+        cache.setObject(NSNumber(value: stock), forKey: productId.uuidString as NSString)
+        return stock
+    }
+    
+    @discardableResult
+    func updateStock(productId: UUID, quantity: Int) async throws -> Int {
+        guard quantity >= 0 else {
+            throw InventoryError.invalidQuantity(quantity)
+        }
+        
+        let newStock = try await database.updateProductStock(
+            productId: productId,
+            quantity: quantity
+        )
+        
+        cache.setObject(NSNumber(value: newStock), forKey: productId.uuidString as NSString)
+        
+        if newStock < Constants.lowStockThreshold {
+            lowStockPublisher.send(productId)
+        }
+        
+        return newStock
+    }
+    
+    func reserveStock(productId: UUID, quantity: Int) async throws -> Bool {
+        guard quantity > 0 else {
+            throw InventoryError.invalidQuantity(quantity)
+        }
+        
+        let currentStock = try await getStockLevel(for: productId)
+        guard currentStock >= quantity else { return false }
+        
+        try await updateStock(productId: productId, quantity: currentStock - quantity)
+        return true
+    }
+}
+
+// MARK: - View Models
+@MainActor final class ProductViewModel: ObservableObject {
+    @Published private(set) var product: Product
+    @Published private(set) var stockLevel: Int?
+    @Published private(set) var isLoading = false
+    @Published private(set) var error: Error?
+    
+    private let inventoryManager: any InventoryManaging
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(product: Product, inventoryManager: any InventoryManaging) {
+        self.product = product
+        self.inventoryManager = inventoryManager
+        
+        Task { await loadStockLevel() }
+    }
+    
+    func loadStockLevel() async {
+        isLoading = true
+        defer { isLoading = false }
+        
+        do {
+            stockLevel = try await inventoryManager.getStockLevel(for: product.id)
+        } catch {
+            self.error = error
+        }
+    }
+}
+
+// MARK: - Views
+struct ProductDetailView: View {
+    @StateObject private var viewModel: ProductViewModel
+    @Environment(\\.colorScheme) private var colorScheme
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                AsyncImage(url: viewModel.product.imageURL) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(maxHeight: 300)
+                
+                Group {
+                    Text(viewModel.product.name)
+                        .font(.title)
+                        .fontWeight(.bold)
+                    
+                    Text(viewModel.product.formattedPrice)
+                        .font(.title2)
+                        .foregroundColor(.accentColor)
+                    
+                    if let stockLevel = viewModel.stockLevel {
+                        StockLevelView(level: stockLevel)
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+        .navigationTitle("Product Details")
+        .alert("Error", isPresented: .constant(viewModel.error != nil)) {
+            Button("OK") {
+                viewModel.error = nil
+            }
+        } message: {
+            Text(viewModel.error?.localizedDescription ?? "")
+        }
+    }
+} `
   },
   {
     name: 'cpp.cpp',
@@ -1736,107 +2934,119 @@ RunLoop.main.run(until: Date(timeIntervalSinceNow: 5))
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg',
     language: 'cpp',
     displayName: 'C++',
-    snippet: `
-#include <iostream>
-#include <vector>
-#include <map>
-#include <algorithm>
-#include <memory>
-#include <thread>
-#include <chrono>
-#include <fstream>
+    snippet: `#include <memory>
+#include <variant>
+#include <optional>
+#include <string_view>
+#include <unordered_map>
 
-class Person {
-protected:
-    std::string name;
-    int age;
+namespace trading::engine {
 
-public:
-    Person(std::string name, int age) : name(std::move(name)), age(age) {}
-
-    virtual void introduce() const {
-        std::cout << "Hello, my name is " << name << " and I'm " << age << " years old." << std::endl;
-    }
-};
-
-class Employee : public Person {
+template<typename T>
+class ThreadSafeOrderBook {
 private:
-    std::string position;
-
-public:
-    Employee(std::string name, int age, std::string position)
-        : Person(std::move(name), age), position(std::move(position)) {}
-
-    void introduce() const override {
-        Person::introduce();
-        std::cout << "I work as a " << position << "." << std::endl;
-    }
-
-    void greet() const {
-        std::cout << "Hello, " << name << "!" << std::endl;
-    }
-};
-
-int main() {
-    auto person = std::make_unique<Person>("Alice", 30);
-    auto employee = std::make_unique<Employee>("Bob", 35, "Developer");
-
-    person->introduce();
-    employee->introduce();
-    employee->greet();
-
-    std::vector<std::map<std::string, std::string>> people = {
-        {{"name", "Charlie"}, {"age", "25"}},
-        {{"name", "David"}, {"age", "40"}},
-        {{"name", "Eve"}, {"age", "22"}}
+    struct OrderInfo {
+        std::string_view client_id;
+        double price;
+        size_t quantity;
+        std::chrono::system_clock::time_point timestamp;
+        bool is_buy;
     };
 
-    for (const auto& person_data : people) {
-        Person(person_data.at("name"), std::stoi(person_data.at("age"))).introduce();
-    }
-
-    std::map<std::string, int> scores = {{"alice", 95}, {"bob", 80}, {"charlie", 90}};
-    std::map<std::string, int> high_scores;
-
-    std::copy_if(scores.begin(), scores.end(), 
-                 std::inserter(high_scores, high_scores.end()),
-                 [](const auto& pair) { return pair.second >= 90; });
-
-    std::cout << "High scores: ";
-    for (const auto& [name, score] : high_scores) {
-        std::cout << name << ": " << score << ", ";
-    }
-    std::cout << std::endl;
-
-    std::thread worker([]() {
-        for (int i = 1; i <= 5; ++i) {
-            std::cout << "Thread: number " << i << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    using OrderId = uint64_t;
+    using OrderPtr = std::shared_ptr<OrderInfo>;
+    
+    struct OrderComparator {
+        bool operator()(const OrderPtr& lhs, const OrderPtr& rhs) const {
+            return lhs->price < rhs->price || 
+                   (lhs->price == rhs->price && 
+                    lhs->timestamp < rhs->timestamp);
         }
-    });
+    };
 
-    for (int i = 1; i <= 5; ++i) {
-        std::cout << "Main: number " << i << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+    mutable std::shared_mutex book_mutex;
+    std::map<OrderId, OrderPtr> orders;
+    std::multiset<OrderPtr, OrderComparator> buy_orders;
+    std::multiset<OrderPtr, OrderComparator> sell_orders;
+
+public:
+    extern "C++" OrderId submit_order(
+        std::string_view client_id,
+        double price,
+        size_t quantity,
+        bool is_buy
+    ) {
+        auto order = std::make_shared<OrderInfo>(
+            OrderInfo{client_id, price, quantity, 
+                     std::chrono::system_clock::now(), is_buy}
+        );
+
+        std::unique_lock<std::shared_mutex> lock(book_mutex);
+        OrderId order_id = generate_order_id();
+        orders[order_id] = order;
+        
+        if (is_buy) {
+            buy_orders.insert(order);
+            match_buy_order(order);
+        } else {
+            sell_orders.insert(order);
+            match_sell_order(order);
+        }
+
+        return order_id;
     }
 
-    worker.join();
+    std::optional<T> cancel_order(OrderId order_id) {
+        std::unique_lock<std::shared_mutex> lock(book_mutex);
+        auto it = orders.find(order_id);
+        if (it == orders.end()) return std::nullopt;
 
-    std::ofstream file("example.txt");
-    file << "Hello, C++!";
-    file.close();
+        auto order = it->second;
+        if (order->is_buy) {
+            buy_orders.erase(order);
+        } else {
+            sell_orders.erase(order);
+        }
+        
+        orders.erase(it);
+        return T{order->price, order->quantity};
+    }
 
-    std::ifstream input_file("example.txt");
-    std::string content;
-    std::getline(input_file, content);
-    std::cout << "File content: " << content << std::endl;
-    input_file.close();
+private:
+    void match_buy_order(const OrderPtr& buy_order) {
+        auto sell_it = sell_orders.begin();
+        while (sell_it != sell_orders.end() && 
+               (*sell_it)->price <= buy_order->price) {
+            // Match logic here
+            execute_trade(buy_order, *sell_it);
+            sell_it = sell_orders.erase(sell_it);
+        }
+    }
 
-    std::remove("example.txt");
+    void match_sell_order(const OrderPtr& sell_order) {
+        auto buy_it = buy_orders.rbegin();
+        while (buy_it != buy_orders.rend() && 
+               (*buy_it)->price >= sell_order->price) {
+            // Match logic here
+            execute_trade(*buy_it, sell_order);
+            buy_it = std::make_reverse_iterator(
+                buy_orders.erase(std::next(buy_it).base())
+            );
+        }
+    }
 
-    return 0;
-}
-    `
+    void execute_trade(const OrderPtr& buy_order, 
+                      const OrderPtr& sell_order) {
+        // Trade execution logic
+    }
+
+    static OrderId generate_order_id() {
+        static std::atomic<OrderId> next_id{1};
+        return next_id++;
+    }
+};
+
+} // namespace trading::engine`
   },
   {
     name: 'c.c',
@@ -1844,104 +3054,140 @@ int main() {
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg',
     language: 'c',
     displayName: 'C',
-    snippet: `
-#include <stdio.h>
+    snippet: `#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <errno.h>
 #include <pthread.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
-#define MAX_NAME 50
+#define MAX_BUFFER_SIZE 4096
+#define ERROR_CHECK(x) do { \
+    if (!(x)) { \
+        fprintf(stderr, "Error at %s:%d\n", __FILE__, __LINE__); \
+        exit(EXIT_FAILURE); \
+    } \
+} while (0)
 
 typedef struct {
-    char name[MAX_NAME];
-    int age;
-} Person;
-
-void introduce(const Person* person) {
-    printf("Hello, my name is %s and I'm %d years old.", person->name, person->age);
-}
+    size_t size;
+    size_t capacity;
+    pthread_mutex_t lock;
+    void* data;
+} SharedMemoryBuffer;
 
 typedef struct {
-    Person person;
-    char position[MAX_NAME];
-} Employee;
+    char* key;
+    void* value;
+    size_t value_size;
+} CacheEntry;
 
-void employee_introduce(const Employee* employee) {
-    introduce(&employee->person);
-    printf("I work as a %s.", employee->position);
+extern void memory_barrier(void);
+
+static SharedMemoryBuffer* create_shared_buffer(size_t initial_capacity) {
+    SharedMemoryBuffer* buffer = mmap(
+        NULL,
+        sizeof(SharedMemoryBuffer) + initial_capacity,
+        PROT_READ | PROT_WRITE,
+        MAP_SHARED | MAP_ANONYMOUS,
+        -1,
+        0
+    );
+    
+    if (buffer == MAP_FAILED) {
+        perror("mmap failed");
+        return NULL;
+    }
+
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
+    pthread_mutex_init(&buffer->lock, &attr);
+    pthread_mutexattr_destroy(&attr);
+
+    buffer->size = 0;
+    buffer->capacity = initial_capacity;
+    buffer->data = (void*)(buffer + 1);
+
+    return buffer;
 }
 
-void employee_greet(const Employee* employee) {
-    printf("Hello, %s!\n", employee->person.name);
-}
+static int resize_buffer(SharedMemoryBuffer* buffer, size_t new_capacity) {
+    void* new_mapping = mremap(
+        buffer,
+        sizeof(SharedMemoryBuffer) + buffer->capacity,
+        sizeof(SharedMemoryBuffer) + new_capacity,
+        MREMAP_MAYMOVE
+    );
 
-void* thread_function(void* arg) {
-    for (int i = 1; i <= 5; i++) {
-        printf("Thread: number %d", i);
-        usleep(500000);  // Sleep for 500ms
-    }
-    return NULL;
-}
-
-int main() {
-    Person person = {"Alice", 30};
-    Employee employee = {{"Bob", 35}, "Developer"};
-
-    introduce(&person);
-    employee_introduce(&employee);
-    employee_greet(&employee);
-
-    Person people[] = {
-        {"Charlie", 25},
-        {"David", 40},
-        {"Eve", 22}
-    };
-
-    for (int i = 0; i < sizeof(people) / sizeof(Person); i++) {
-        introduce(&people[i]);
+    if (new_mapping == MAP_FAILED) {
+        return -1;
     }
 
-    // Note: C doesn't have built-in hash maps, so we'll use a simple array for scores
-    int scores[] = {95, 80, 90};
-    char* names[] = {"alice", "bob", "charlie"};
-    printf("High scores: ");
-    for (int i = 0; i < sizeof(scores) / sizeof(int); i++) {
-        if (scores[i] >= 90) {
-            printf("%s: %d, ", names[i], scores[i]);
-        }
-    }
-    printf("\n");
-
-    pthread_t thread_id;
-    pthread_create(&thread_id, NULL, thread_function, NULL);
-
-    for (int i = 1; i <= 5; i++) {
-        printf("Main: number %d", i);
-        usleep(300000);  // Sleep for 300ms
-    }
-
-    pthread_join(thread_id, NULL);
-
-    FILE* file = fopen("example.txt", "w");
-    if (file != NULL) {
-        fprintf(file, "Hello, C!");
-        fclose(file);
-
-        file = fopen("example.txt", "r");
-        if (file != NULL) {
-            char content[100];
-            fgets(content, sizeof(content), file);
-            printf("File content: %s", content);
-            fclose(file);
-        }
-
-        remove("example.txt");
-    }
-
+    buffer = new_mapping;
+    buffer->capacity = new_capacity;
+    buffer->data = (void*)(buffer + 1);
     return 0;
 }
-    `
+
+void* allocate_from_buffer(SharedMemoryBuffer* buffer, size_t size) {
+    pthread_mutex_lock(&buffer->lock);
+
+    if (buffer->size + size > buffer->capacity) {
+        size_t new_capacity = buffer->capacity * 2;
+        while (buffer->size + size > new_capacity) {
+            new_capacity *= 2;
+        }
+        
+        if (resize_buffer(buffer, new_capacity) != 0) {
+            pthread_mutex_unlock(&buffer->lock);
+            return NULL;
+        }
+    }
+
+    void* ptr = (char*)buffer->data + buffer->size;
+    buffer->size += size;
+    
+    memory_barrier();
+    pthread_mutex_unlock(&buffer->lock);
+    
+    return ptr;
+}
+
+int main(void) {
+    SharedMemoryBuffer* buffer = create_shared_buffer(MAX_BUFFER_SIZE);
+    ERROR_CHECK(buffer != NULL);
+
+    pid_t pid = fork();
+    ERROR_CHECK(pid != -1);
+
+    if (pid == 0) {
+        // Child process
+        CacheEntry* entry = allocate_from_buffer(buffer, sizeof(CacheEntry));
+        ERROR_CHECK(entry != NULL);
+
+        entry->key = "example_key";
+        entry->value = "example_value";
+        entry->value_size = strlen(entry->value) + 1;
+
+        exit(EXIT_SUCCESS);
+    } else {
+        // Parent process
+        int status;
+        waitpid(pid, &status, 0);
+        
+        if (WIFEXITED(status) && WEXITSTATUS(status) == EXIT_SUCCESS) {
+            CacheEntry* entry = buffer->data;
+            printf("Key: %s, Value: %s\n", entry->key, (char*)entry->value);
+        }
+
+        munmap(buffer, sizeof(SharedMemoryBuffer) + buffer->capacity);
+    }
+
+    return EXIT_SUCCESS;
+}`
   },
   {
     name: 'lua.lua',
@@ -1949,132 +3195,125 @@ int main() {
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/lua/lua-original.svg',
     language: 'lua',
     displayName: 'Lua',
-    snippet: `
--- Define the Person class
-Person = {}
-Person.__index = Person
+    snippet: `-- Neovim Plugin: Advanced Buffer Manager
+local api = vim.api
+local fn = vim.fn
+local cmd = vim.cmd
+local opt = vim.opt
 
-function Person:new(name, age)
-    local self = setmetatable({}, Person)
-    self.name = name
-    self.age = age
-    return self
-end
-
-function Person:introduce()
-    print(string.format("Hello, my name is %s and I'm %d years old.", self.name, self.age))
-end
-
--- Define the Employee class that inherits from Person
-Employee = {}
-Employee.__index = Employee
-setmetatable(Employee, {__index = Person})
-
-function Employee:new(name, age, position)
-    local self = setmetatable(Person:new(name, age), Employee)
-    self.position = position
-    return self
-end
-
-function Employee:introduce()
-    Person.introduce(self)
-    print(string.format("I work as a %s.", self.position))
-end
-
-function Employee:greet()
-    print(string.format("Hello, %s!", self.name))
-end
-
--- Create instances and call methods
-local person = Person:new("Alice", 30)
-local employee = Employee:new("Bob", 35, "Developer")
-
-person:introduce()
-employee:introduce()
-employee:greet()
-
--- Create a list of people and introduce them
-local people = {
-    {name = "Charlie", age = 25},
-    {name = "David", age = 40},
-    {name = "Eve", age = 22}
+---@class BufferConfig
+---@field auto_hide boolean
+---@field pinned_buffers table<number, boolean>
+---@field excluded_filetypes string[]
+---@field sort_mode "mru" | "name" | "directory"
+local default_config = {
+    auto_hide = true,
+    pinned_buffers = {},
+    excluded_filetypes = { "NvimTree", "qf", "help" },
+    sort_mode = "mru"
 }
 
-for _, person_data in ipairs(people) do
-    local person = Person:new(person_data.name, person_data.age)
-    person:introduce()
+---@class BufferManager
+---@field private config BufferConfig
+---@field private mru_list number[]
+---@field private is_visible boolean
+local BufferManager = {}
+BufferManager.__index = BufferManager
+
+function BufferManager.new(user_config)
+    local self = setmetatable({}, BufferManager)
+    self.config = vim.tbl_deep_extend("force", default_config, user_config or {})
+    self.mru_list = {}
+    self.is_visible = false
+    return self
 end
 
--- Demonstrate table manipulation (Lua's equivalent of a hash map)
-local scores = {alice = 95, bob = 80, charlie = 90}
-local high_scores = {}
+function BufferManager:setup()
+    -- Create autocommands for buffer tracking
+    local augroup = api.nvim_create_augroup("BufferManager", { clear = true })
+    
+    api.nvim_create_autocmd("BufEnter", {
+        group = augroup,
+        callback = function(args)
+            self:update_mru(args.buf)
+        end
+    })
 
-for name, score in pairs(scores) do
-    if score >= 90 then
-        high_scores[name] = score
+    api.nvim_create_autocmd("BufDelete", {
+        group = augroup,
+        callback = function(args)
+            self:remove_from_mru(args.buf)
+        end
+    })
+
+    -- Register buffer management commands
+    api.nvim_create_user_command("BufferToggle", function()
+        self:toggle_visibility()
+    end, {})
+
+    api.nvim_create_user_command("BufferPin", function()
+        self:pin_current_buffer()
+    end, {})
+end
+
+function BufferManager:update_mru(bufnr)
+    -- Remove buffer from current position
+    self.mru_list = vim.tbl_filter(function(buf)
+        return buf ~= bufnr
+    end, self.mru_list)
+    
+    -- Add to front if it's a valid buffer
+    if api.nvim_buf_is_valid(bufnr) and self:is_manageable_buffer(bufnr) then
+        table.insert(self.mru_list, 1, bufnr)
     end
 end
 
-print("High scores:")
-for name, score in pairs(high_scores) do
-    print(string.format("%s: %d", name, score))
+function BufferManager:is_manageable_buffer(bufnr)
+    local ft = api.nvim_buf_get_option(bufnr, "filetype")
+    return not vim.tbl_contains(self.config.excluded_filetypes, ft)
 end
 
--- File I/O
-local file = io.open("example.txt", "w")
-if file then
-    file:write("Hello, Lua!")
-    file:close()
-
-    file = io.open("example.txt", "r")
-    if file then
-        local content = file:read("*all")
-        print("File content: " .. content)
-        file:close()
+function BufferManager:create_buffer_list()
+    local buffers = {}
+    
+    for _, bufnr in ipairs(self:get_sorted_buffers()) do
+        if api.nvim_buf_is_valid(bufnr) then
+            local name = api.nvim_buf_get_name(bufnr)
+            local modified = api.nvim_buf_get_option(bufnr, "modified")
+            local icon = self.config.pinned_buffers[bufnr] and "📌" or " "
+            
+            table.insert(buffers, {
+                id = bufnr,
+                name = fn.fnamemodify(name, ":t"),
+                path = fn.fnamemodify(name, ":~:."),
+                modified = modified,
+                icon = icon
+            })
+        end
     end
-
-    os.remove("example.txt")
+    
+    return buffers
 end
 
--- Coroutines for pseudo-concurrency
-local function count_to_five()
-    for i = 1, 5 do
-        print("Coroutine: number " .. i)
-        coroutine.yield()
+function BufferManager:get_sorted_buffers()
+    if self.config.sort_mode == "mru" then
+        return self.mru_list
     end
+    
+    local buffers = vim.tbl_filter(function(bufnr)
+        return api.nvim_buf_is_valid(bufnr) and self:is_manageable_buffer(bufnr)
+    end, api.nvim_list_bufs())
+    
+    if self.config.sort_mode == "name" then
+        table.sort(buffers, function(a, b)
+            return api.nvim_buf_get_name(a) < api.nvim_buf_get_name(b)
+        end)
+    end
+    
+    return buffers
 end
 
-local co = coroutine.create(count_to_five)
-
-for i = 1, 5 do
-    print("Main: number " .. i)
-    coroutine.resume(co)
-end
-
--- Metatables and operator overloading
-local Point = {}
-Point.__index = Point
-
-function Point:new(x, y)
-    return setmetatable({x = x, y = y}, Point)
-end
-
-function Point:__add(other)
-    return Point:new(self.x + other.x, self.y + other.y)
-end
-
-function Point:__tostring()
-    return string.format("Point(%d, %d)", self.x, self.y)
-end
-
-local p1 = Point:new(1, 2)
-local p2 = Point:new(3, 4)
-local p3 = p1 + p2
-
-print(p1)  -- Output: Point(1, 2)
-print(p2)  -- Output: Point(3, 4)
-print(p3)  -- Output: Point(4, 6)
-    `
+return BufferManager`
   },
   {
     name: 'sql.sql',
@@ -2178,6 +3417,151 @@ DELIMITER ;
 -- This INSERT will fail due to the trigger
 INSERT INTO employees (id, name, age, department_id, salary)
 VALUES (6, 'Young Employee', 16, 1, 30000.00);
+
+-- Advanced SQL Example: E-commerce Analytics System
+
+-- Create a materialized view for real-time sales analytics
+CREATE MATERIALIZED VIEW sales_analytics
+REFRESH ON COMMIT
+AS
+WITH daily_sales AS (
+    SELECT 
+        DATE_TRUNC('day', o.created_at) AS sale_date,
+        p.category_id,
+        p.supplier_id,
+        SUM(oi.quantity) AS units_sold,
+        SUM(oi.quantity * oi.unit_price) AS gross_revenue,
+        SUM(oi.quantity * oi.unit_price * (1 - COALESCE(oi.discount, 0))) AS net_revenue
+    FROM orders o
+    INNER JOIN order_items oi ON o.order_id = oi.order_id
+    INNER JOIN products p ON oi.product_id = p.product_id
+    WHERE o.status = 'completed'
+    GROUP BY DATE_TRUNC('day', o.created_at), p.category_id, p.supplier_id
+),
+supplier_metrics AS (
+    SELECT 
+        s.supplier_id,
+        s.supplier_name,
+        COUNT(DISTINCT p.product_id) AS active_products,
+        AVG(p.stock_level) AS avg_stock_level,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY p.price) AS median_price
+    FROM suppliers s
+    LEFT JOIN products p ON s.supplier_id = p.supplier_id
+    WHERE p.status = 'active'
+    GROUP BY s.supplier_id, s.supplier_name
+)
+SELECT 
+    ds.sale_date,
+    c.category_name,
+    sm.supplier_name,
+    ds.units_sold,
+    ds.gross_revenue,
+    ds.net_revenue,
+    ROUND(((ds.gross_revenue - ds.net_revenue) / NULLIF(ds.gross_revenue, 0)) * 100, 2) AS discount_percentage,
+    sm.active_products,
+    sm.avg_stock_level,
+    sm.median_price,
+    LAG(ds.net_revenue) OVER (
+        PARTITION BY c.category_id, sm.supplier_id 
+        ORDER BY ds.sale_date
+    ) AS prev_day_revenue,
+    ROUND(
+        (ds.net_revenue - LAG(ds.net_revenue) OVER (
+            PARTITION BY c.category_id, sm.supplier_id 
+            ORDER BY ds.sale_date
+        )) / NULLIF(LAG(ds.net_revenue) OVER (
+            PARTITION BY c.category_id, sm.supplier_id 
+            ORDER BY ds.sale_date
+        ), 0) * 100,
+        2
+    ) AS revenue_growth_percent
+FROM daily_sales ds
+INNER JOIN categories c ON ds.category_id = c.category_id
+INNER JOIN supplier_metrics sm ON ds.supplier_id = sm.supplier_id;
+
+-- Create an index to optimize the materialized view refresh
+CREATE INDEX idx_sales_analytics_composite 
+ON sales_analytics (sale_date, category_name, supplier_name);
+
+-- Create a function to analyze customer purchasing patterns
+CREATE OR REPLACE FUNCTION analyze_customer_patterns(
+    p_start_date DATE,
+    p_end_date DATE,
+    p_min_purchases INTEGER DEFAULT 3
+)
+RETURNS TABLE (
+    customer_id INTEGER,
+    customer_name TEXT,
+    total_purchases NUMERIC,
+    avg_order_value NUMERIC,
+    favorite_category TEXT,
+    purchase_frequency INTERVAL,
+    churn_risk_score NUMERIC
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    WITH customer_purchases AS (
+        SELECT 
+            c.customer_id,
+            c.customer_name,
+            COUNT(DISTINCT o.order_id) as purchase_count,
+            AVG(o.total_amount) as avg_purchase,
+            MAX(o.created_at) - MIN(o.created_at) as customer_lifetime,
+            MAX(o.created_at) as last_purchase_date,
+            MODE() WITHIN GROUP (ORDER BY cat.category_name) as top_category
+        FROM customers c
+        INNER JOIN orders o ON c.customer_id = o.customer_id
+        INNER JOIN order_items oi ON o.order_id = oi.order_id
+        INNER JOIN products p ON oi.product_id = p.product_id
+        INNER JOIN categories cat ON p.category_id = cat.category_id
+        WHERE o.created_at BETWEEN p_start_date AND p_end_date
+        GROUP BY c.customer_id, c.customer_name
+        HAVING COUNT(DISTINCT o.order_id) >= p_min_purchases
+    )
+    SELECT 
+        cp.customer_id,
+        cp.customer_name,
+        cp.purchase_count,
+        cp.avg_purchase,
+        cp.top_category,
+        cp.customer_lifetime / cp.purchase_count as avg_time_between_purchases,
+        CASE 
+            WHEN NOW() - cp.last_purchase_date > (cp.customer_lifetime / cp.purchase_count) * 2 THEN 0.8
+            WHEN cp.purchase_count < 5 THEN 0.6
+            WHEN cp.avg_purchase < (SELECT AVG(total_amount) FROM orders) THEN 0.4
+            ELSE 0.2
+        END as churn_probability
+    FROM customer_purchases cp
+    ORDER BY churn_probability DESC;
+END;
+$$;
+
+-- Create a trigger to maintain audit logs
+CREATE OR REPLACE FUNCTION audit_changes()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO audit_log (
+        table_name,
+        action,
+        record_id,
+        old_data,
+        new_data,
+        changed_by,
+        changed_at
+    ) VALUES (
+        TG_TABLE_NAME,
+        TG_OP,
+        COALESCE(NEW.id, OLD.id),
+        CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN row_to_json(OLD) ELSE NULL END,
+        CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN row_to_json(NEW) ELSE NULL END,
+        current_user,
+        current_timestamp
+    );
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
     `
   },
   {
@@ -2187,6 +3571,100 @@ VALUES (6, 'Young Employee', 16, 1, 30000.00);
     language: 'yaml',
     displayName: 'YAML',
     snippet: `
+# E-commerce Platform Configuration
+---
+version: 2.0.0
+last_updated: 2024-03-20T15:30:00Z
+environment: &env_config
+  name: production
+  region: us-west-2
+  debug: false
+
+# System-wide defaults
+defaults: &default_settings
+  currency: USD
+  date_format: "YYYY-MM-DD"
+  timezone: "UTC"
+  cache_ttl: 3600
+
+# Database configurations
+databases:
+  primary: &primary_db
+    host: postgres-primary.internal
+    port: 5432
+    database: ecommerce
+    pool:
+      min_connections: 5
+      max_connections: 20
+      idle_timeout: 10000
+    replicas:
+      - <<: *primary_db
+        host: postgres-replica-1.internal
+        readonly: true
+      - <<: *primary_db
+        host: postgres-replica-2.internal
+        readonly: true
+
+# Product catalog settings
+catalog:
+  categories: &product_categories
+    electronics:
+      name: Electronics
+      tax_rate: 0.08
+      shipping_rules:
+        domestic:
+          service: express
+          estimated_days: 2-3
+        international:
+          service: priority
+          estimated_days: 5-7
+    clothing:
+      name: Clothing
+      tax_rate: 0.05
+      size_chart: &size_chart
+        units: ["XS", "S", "M", "L", "XL"]
+        measurements:
+          chest: [86, 91, 96, 101, 106]
+          waist: [71, 76, 81, 86, 91]
+          hips: [89, 94, 99, 104, 109]
+
+# Notification service configuration
+notifications:
+  providers:
+    email:
+      service: sendgrid
+      settings: &email_config
+        api_key: \${SENDGRID_API_KEY}
+        from_email: noreply@example.com
+        templates:
+          order_confirmation: d-123456789
+          shipping_update: d-987654321
+    sms:
+      service: twilio
+      settings:
+        account_sid: \${TWILIO_ACCOUNT_SID}
+        auth_token: \${TWILIO_AUTH_TOKEN}
+        from_number: "+1234567890"
+
+# Feature flags and experiments
+features:
+  recommendations:
+    enabled: true
+    algorithm: collaborative-filtering
+    weights: &algo_weights
+      purchase_history: 0.5
+      browsing_history: 0.3
+      similar_items: 0.2
+  a_b_tests:
+    checkout_flow:
+      enabled: true
+      variants:
+        - name: control
+          weight: 0.5
+        - name: new_design
+          weight: 0.5
+
+
 # Company Configuration
 company:
   name: Acme Corporation
@@ -2316,87 +3794,184 @@ description: |
     `
   },
   {
+    name: 'toml.toml',
+    isFolder: false,
+    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/toml/toml-original.svg',
+    language: 'toml',
+    displayName: 'TOML',
+    snippet: `# E-commerce Platform Configuration
+title = "E-commerce Platform Settings"
+version = "2.0.0"
+last_updated = 2024-03-20T15:30:00Z
+
+# System-wide configuration
+[system]
+environment = "production"
+debug = false
+maintenance_mode = false
+maintenance_window = { start = "00:00:00", duration = "2h" }
+
+# Database configuration
+[database]
+driver = "postgresql"
+host = "postgres.internal"
+port = 5432
+name = "ecommerce"
+max_connections = 100
+connection_timeout = "30s"
+
+[[database.replicas]]
+host = "postgres-replica-1.internal"
+port = 5432
+readonly = true
+weight = 0.5
+
+[[database.replicas]]
+host = "postgres-replica-2.internal"
+port = 5432
+readonly = true
+weight = 0.5
+
+# Cache configuration
+[cache]
+driver = "redis"
+ttl = "1h"
+prefix = "ecom:"
+
+[[cache.clusters]]
+hosts = [
+    "redis-0.internal:6379",
+    "redis-1.internal:6379",
+    "redis-2.internal:6379"
+]
+password = "\${REDIS_PASSWORD}"
+database = 0
+
+# Product catalog settings
+[catalog]
+default_currency = "USD"
+price_precision = 2
+enable_variants = true
+enable_digital_products = true
+
+[catalog.categories.electronics]
+name = "Electronics"
+tax_rate = 0.08
+shipping_rules = { domestic = "express", international = "priority" }
+estimated_delivery = { domestic = "2-3d", international = "5-7d" }
+
+[catalog.categories.clothing]
+name = "Clothing"
+tax_rate = 0.05
+requires_size_chart = true
+
+# Authentication configuration
+[auth]
+jwt_expiry = "24h"
+refresh_token_expiry = "30d"
+max_login_attempts = 5
+lockout_duration = "15m"
+
+[auth.providers]
+enable_google = true
+enable_facebook = true
+enable_apple = true
+
+[auth.providers.google]
+client_id = "\${GOOGLE_CLIENT_ID}"
+client_secret = "\${GOOGLE_CLIENT_SECRET}"
+callback_url = "https://api.example.com/auth/google/callback"
+
+# Search engine configuration
+[search]
+engine = "elasticsearch"
+index_prefix = "ecom_"
+min_score = 0.5
+timeout = "5s"
+
+[[search.analyzers]]
+name = "product_name"
+type = "custom"
+tokenizer = "standard"
+filters = ["lowercase", "asciifolding", "word_delimiter"]
+
+[[search.analyzers]]
+name = "product_sku"
+type = "custom"
+tokenizer = "keyword"
+filters = ["lowercase", "trim"]
+
+# Monitoring and metrics
+[monitoring]
+enable_apm = true
+sample_rate = 0.1
+log_retention = "30d"
+
+[monitoring.alerts]
+cpu_threshold = 80.0
+memory_threshold = 85.0
+disk_threshold = 90.0
+
+# Feature flags and experiments
+[features]
+enable_recommendations = true
+enable_reviews = true
+enable_wishlists = true
+
+[features.ab_tests]
+new_checkout_flow = { enabled = true, sample_size = 0.5 }
+product_layout = { enabled = true, variants = ["grid", "list"] }
+  `
+  },
+  {
     name: 'json.json',
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/json/json-original.svg',
     language: 'json',
     displayName: 'JSON',
-    snippet: `
-{
-  "company": {
-    "name": "TechInnovate Solutions",
-    "founded": 2010,
-    "headquarters": {
-      "city": "San Francisco",
-      "state": "California",
-      "country": "USA"
-    },
-    "employees": 500,
-    "public": false
-  },
-  "products": [
-    {
-      "id": "P001",
-      "name": "AI Assistant",
-      "version": "2.5.0",
-      "releaseDate": "2023-03-15",
-      "features": [
-        "Natural Language Processing",
-        "Machine Learning Integration",
-        "Multi-platform Support"
-      ],
-      "pricing": {
-        "basic": 9.99,
-        "pro": 29.99,
-        "enterprise": "Custom"
-      }
-    },
-    {
-      "id": "P002",
-      "name": "Cloud Storage Solution",
-      "version": "1.8.2",
-      "releaseDate": "2023-01-10",
-      "features": [
-        "End-to-end Encryption",
-        "Automatic Syncing",
-        "Collaborative Editing"
-      ],
-      "pricing": {
-        "personal": 4.99,
-        "business": 14.99,
-        "enterprise": 49.99
+    snippet: `{
+  "name": "Product Catalog",
+  "version": "2.0.0",
+  "description": "E-commerce product configuration",
+  "categories": {
+    "electronics": {
+      "name": "Electronics",
+      "tax_rate": 0.08,
+      "featured": true,
+      "subcategories": {
+        "audio": {
+          "name": "Audio Equipment",
+          "products": {
+            "headphones": {
+              "name": "Premium Wireless Headphones",
+              "sku": "HDPH-001",
+              "price": 299.99,
+              "stock": 150,
+              "specifications": {
+                "battery": "30 hours",
+                "connectivity": ["Bluetooth 5.0", "3.5mm jack"],
+                "features": {
+                  "noise_cancellation": true,
+                  "water_resistant": true,
+                  "foldable": true
+                }
+              }
+            }
+          }
+        }
       }
     }
-  ],
-  "partners": ["Microsoft", "Amazon Web Services", "Google Cloud Platform"],
-  "financials": {
-    "revenue": {
-      "2021": 5000000,
-      "2022": 7500000,
-      "2023": 10000000
-    },
-    "expenses": {
-      "2021": 4000000,
-      "2022": 5500000,
-      "2023": 7000000
-    }
   },
-  "future_plans": {
-    "expansion": ["Europe", "Asia"],
-    "new_products": [
-      "Quantum Computing Solutions",
-      "Augmented Reality Workspace"
-    ],
-    "hiring_goals": {
-      "engineers": 50,
-      "sales": 30,
-      "support": 20
+  "settings": {
+    "currency": "USD",
+    "tax_included": false,
+    "inventory_threshold": 10,
+    "notifications": {
+      "low_stock": true,
+      "order_confirmation": true
     }
-  },
-  "certifications": ["ISO 27001", "SOC 2", "GDPR Compliant"]
-}
-
-    `
+  }
+}`
   },
   {
     name: 'bash.sh',
@@ -2404,94 +3979,192 @@ description: |
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg',
     language: 'bash',
     displayName: 'Bash',
-    snippet: `
-#!/bin/bash
+    snippet: `#!/bin/bash
 
-# Function to check if a command exists
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
+# Security Audit and Monitoring Tool
+# Author: Security Team
+# Version: 1.0.0
+
+set -euo pipefail
+IFS=$'\n\t'
+
+# Configuration
+readonly LOG_DIR="/var/log/security-audit"
+readonly REPORT_DIR="/var/reports/security"
+readonly BACKUP_DIR="/var/backups/security"
+readonly CONFIG_FILE="\${HOME}/.config/security-audit.conf"
+readonly SLACK_WEBHOOK_URL="\${SLACK_WEBHOOK:-}"
+
+# Color definitions
+declare -r RED='\\033[0;31m'
+declare -r GREEN='\\033[0;32m'
+declare -r YELLOW='\\033[1;33m'
+declare -r BLUE='\\033[0;34m'
+declare -r NC='\\033[0m' # No Color
+
+# Log levels
+declare -r LOG_INFO="INFO"
+declare -r LOG_WARN="WARN"
+declare -r LOG_ERROR="ERROR"
+
+# Function to handle script termination
+cleanup() {
+    local exit_code=$?
+    log "$LOG_INFO" "Cleaning up temporary files..."
+    rm -f /tmp/security-scan-*
+    exit \${exit_code}
 }
 
-# Function to install a package
-install_package() {
-    if command_exists apt-get; then
-        sudo apt-get update && sudo apt-get install -y "$1"
-    elif command_exists yum; then
-        sudo yum install -y "$1"
-    elif command_exists brew; then
-        brew install "$1"
-    else
-        echo "Unable to install package. No supported package manager found."
+trap cleanup EXIT
+trap 'trap - EXIT; cleanup; exit -1' INT TERM
+
+# Logging function
+log() {
+    local level=$1
+    local message=$2
+    local timestamp
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    
+    case \${level} in
+        "$LOG_INFO")  local color=$GREEN ;;
+        "$LOG_WARN")  local color=$YELLOW ;;
+        "$LOG_ERROR") local color=$RED ;;
+        *)           local color=$NC ;;
+    esac
+
+    echo -e "\${color}[\${timestamp}] [\${level}] \${message}\${NC}" | tee -a "\${LOG_DIR}/audit.log"
+}
+
+# Function to check for root privileges
+check_root() {
+    if [[ \${EUID} -ne 0 ]]; then
+        log "$LOG_ERROR" "This script must be run as root"
         exit 1
     fi
 }
 
-# Check and install required packages
-required_packages=("git" "docker" "python3")
-for package in "'"; do
-    if ! command_exists "$package"; then
-        echo "Installing $package..."
-        install_package "$package"
+# Function to scan for known vulnerabilities
+scan_vulnerabilities() {
+    local target=$1
+    local scan_output
+    
+    log "$LOG_INFO" "Starting vulnerability scan for \${target}"
+
+    if command -v nmap &> /dev/null; then
+        scan_output=$(nmap -sV --script vuln "$target" 2>&1)
+        echo "\${scan_output}" > "\${REPORT_DIR}/vuln_scan_\\$(date +%Y%m%d).txt"
     else
-        echo "$package is already installed."
+        log "$LOG_ERROR" "nmap is not installed"
+        return 1
     fi
-done
+}
 
-# Clone a repository
-repo_url="https://github.com/example/repo.git"
-repo_name=$(basename "$repo_url" .git)
-if [ ! -d "$repo_name" ]; then
-    git clone "$repo_url"
-    cd "$repo_name" || exit
-else
-    echo "Repository already exists. Updating..."
-    cd "$repo_name" || exit
-    git pull
-fi
-
-# Create a backup of configuration files
-backup_dir="$HOME/config_backup_$(date +%Y%m%d_%H%M%S)"
-mkdir -p "$backup_dir"
-config_files=(".bashrc" ".vimrc" ".gitconfig")
-for file in "''"; do
-    if [ -f "$HOME/$file" ]; then
-        cp "$HOME/$file" "$backup_dir/"
-        echo "Backed up $file"
-    fi
-done
-
-# Build and run a Docker container
-if command_exists docker; then
-    docker build -t myapp .
-    docker run -d -p 8080:80 --name myapp_container myapp
-else
-    echo "Docker is not installed. Skipping container build and run."
-fi
-
-# Process log files
-log_dir="/var/log"
-if [ -d "$log_dir" ]; then
-    echo "Processing log files..."
-    find "$log_dir" -name "*.log" -type f -mtime -7 | while read -r log_file; do
-        echo "Analyzing $log_file"
-        grep "ERROR" "$log_file" | tail -n 10
+# Function to monitor system logs for suspicious activity
+monitor_logs() {
+    local patterns=(
+        "Failed password for .* from"
+        "Invalid user .* from"
+        "POSSIBLE BREAK-IN ATTEMPT"
+        "Connection closed by authenticating user"
+    )
+    
+    log "$LOG_INFO" "Starting log monitoring..."
+    
+    for pattern in "\${patterns[@]}"; do
+        grep -E "\${pattern}" /var/log/auth.log | while read -r line; do
+            local ip
+            ip=$(echo "\${line}" | grep -oE "\b([0-9]{1,3}\\.){3}[0-9]{1,3}\b")
+            if [[ -n \${ip} ]]; then
+                check_ip "\${ip}"
+            fi
+        done
     done
-else
-    echo "Log directory not found."
-fi
+}
 
-# Monitor system resources
-echo "System Resource Usage:"
-echo "CPU Usage: $(top -bn1 | grep "Cpu(s)" | sed "s/.*, *([0-9.]*)%* id./" | awk '{print 100 - $1"%"}')"
-echo "Memory Usage: $(free -m | awk 'NR==2{printf "%.2f%%", $3*100/$2 }')"
-echo "Disk Usage: $(df -h / | awk 'NR==2{print $5}')"
+# Function to check IP reputation
+check_ip() {
+    local ip=$1
+    local api_key="\${ABUSEIPDB_API_KEY:-}"
+    
+    if [[ -z \${api_key} ]]; then
+        log "$LOG_WARN" "AbuseIPDB API key not configured"
+        return
+    }
+    
+    local response
+    response=$(curl -s -G https://api.abuseipdb.com/api/v2/check \
+        --data-urlencode "ipAddress=\${ip}" \
+        -H "Key: \${api_key}" \
+        -H "Accept: application/json")
+    
+    local abuse_score
+    abuse_score=$(echo "\${response}" | jq -r '.data.abuseConfidenceScore')
+    
+    if [[ \${abuse_score} -gt 80 ]]; then
+        log "$LOG_ERROR" "High-risk IP detected: \${ip} (Score: \${abuse_score})"
+        block_ip "\${ip}"
+    fi
+}
 
-# Cleanup old files
-cleanup_dir="$HOME/Downloads"
-find "$cleanup_dir" -type f -mtime +30 -delete
+# Function to block malicious IPs
+block_ip() {
+    local ip=$1
+    
+    if ! iptables -C INPUT -s "$ip" -j DROP 2>/dev/null; then
+        iptables -A INPUT -s "$ip" -j DROP
+        log "$LOG_INFO" "Blocked malicious IP: \${ip}"
+        
+        # Send notification if Slack webhook is configured
+        if [[ -n \${SLACK_WEBHOOK_URL:-} ]]; then
+            notify_slack "🚫 Blocked malicious IP: \${ip}"
+        fi
+    fi
+}
 
-echo "Script execution completed."
-    `
+# Function to send Slack notifications
+notify_slack() {
+    local message=$1
+    
+    curl -s -X POST -H 'Content-type: application/json' \
+        --data "{\\"text\\":\\"\${message}\\"}" \
+        "\${SLACK_WEBHOOK_URL}"
+}
+
+# Main function
+main() {
+    check_root
+    
+    # Create necessary directories
+    mkdir -p "$LOG_DIR" "$REPORT_DIR" "$BACKUP_DIR"
+    
+    # Load configuration if exists
+    if [[ -f $CONFIG_FILE ]]; then
+        source "$CONFIG_FILE"
+    fi
+    
+    # Start monitoring in background
+    monitor_logs &
+    
+    # Perform initial vulnerability scan
+    local targets=()
+    if [[ -n \${SCAN_TARGETS:-} ]]; then
+        IFS=',' read -ra targets <<< "\${SCAN_TARGETS}"
+    else
+        # Default to scanning localhost
+        targets=("localhost")
+    fi
+    
+    for target in "\${targets[@]}"; do
+        scan_vulnerabilities "\${target}"
+    done
+    
+    # Keep script running
+    while true; do
+        sleep 60
+    done
+}
+
+main "$@"`
   },
   {
     name: 'markdown.md',
@@ -2499,7 +4172,91 @@ echo "Script execution completed."
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/markdown/markdown-original.svg',
     language: 'markdown',
     displayName: 'Markdown',
-    snippet: `
+    snippet: `# E-commerce Platform Documentation
+> Last updated: 2024-03-20
+
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Architecture](#architecture)
+3. [API Reference](#api-reference)
+
+## Introduction
+This document describes the **E-commerce Platform** architecture and implementation details. The platform is built using a _microservices architecture_ with ~~monolithic~~ distributed components.
+
+### Key Features
+* **High Availability**
+  - Multi-region deployment
+  - Automatic failover
+  - Load balancing
+* **Scalability**
+  - Horizontal scaling
+  - Auto-scaling groups
+  - Elastic resources
+
+#### Technology Stack
+| Component | Technology | Version |
+|-----------|------------|---------|
+| Frontend | React | 18.2.0 |
+| Backend | Node.js | 20.11.1 |
+| Database | PostgreSQL | 16.2 |
+
+##### Infrastructure Components
+1. **API Gateway**
+   \`\`\`typescript
+   interface GatewayConfig {
+     port: number;
+     rateLimits: {
+       window: string;
+       max: number;
+     };
+   }
+   \`\`\`
+
+###### Security Considerations
+* Authentication using [JWT](https://jwt.io)
+* Rate limiting: \`10 requests/second\`
+* [OWASP Top 10](https://owasp.org/Top10) compliance
+
+### Code Examples
+rust
+#[derive(Debug, Serialize)]
+pub struct Product {
+id: Uuid,
+name: String,
+price: Decimal,
+stock: i32,
+}
+impl Product {
+pub fn new(name: String, price: Decimal) -> Self {
+Self {
+id: Uuid::new_v4(),
+name,
+price,
+stock: 0,
+}
+}
+}
+### API Endpoints
+The following endpoints are available:
+http
+GET /api/v1/products
+POST /api/v1/products
+PUT /api/v1/products/:id
+DELETE /api/v1/products/:id
+
+### Configuration
+Use the following environment variables:
+
+yaml
+DATABASE_URL: postgresql://user:pass@localhost:5432/db
+REDIS_URL: redis://localhost:6379
+JWT_SECRET: your-secret-key
+
+---
+
+> **Note**: For more information, please refer to the [official documentation](https://docs.example.com).
+
+
 # Project Documentation
 
 ## Table of Contents
