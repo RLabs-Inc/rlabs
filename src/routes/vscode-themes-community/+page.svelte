@@ -37,6 +37,14 @@
   };
 </script>
 
+<svelte:head>
+  <title>VSCode Themes Community</title>
+  <meta
+    name="description"
+    content="Create, share and discover new VSCode themes using our visual studio code theme generator based on both color theory and sacred geometry patterns to create aesthesic color themes."
+  />
+</svelte:head>
+
 <section
   class="flex min-h-[calc(100vh-2rem)] w-full flex-col items-center"
   style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, 'aa')}; transition-property: all; transition-duration: 200ms;`}

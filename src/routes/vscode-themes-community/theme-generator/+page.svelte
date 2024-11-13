@@ -33,6 +33,14 @@
   });
 </script>
 
+<svelte:head>
+  <title>VSCode Theme Generator</title>
+  <meta
+    name="description"
+    content="Create, share and discover new VSCode themes using our visual studio code theme generator based on both color theory and sacred geometry patterns to create aesthesic color themes."
+  />
+</svelte:head>
+
 <section class="min-h-[calc(100vh-2rem)]">
   <div class="flex flex-col items-center justify-center px-5 pt-20">
     <div class="flex w-full flex-wrap gap-5 lg:flex-nowrap">

@@ -24,6 +24,11 @@
   });
 </script>
 
+<svelte:head>
+  <title>Saved Themes</title>
+  <meta name="description" content="Save your favorite VSCode themes." />
+</svelte:head>
+
 {#if data.themes.length === 0}
   <div class="flex min-h-[calc(100vh-2rem)] items-center justify-center">
     <h1 class="text-3xl font-black drop-shadow-md md:text-6xl">No themes saved</h1>

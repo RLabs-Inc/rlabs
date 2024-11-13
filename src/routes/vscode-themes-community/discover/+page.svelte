@@ -39,6 +39,14 @@
   };
 </script>
 
+<svelte:head>
+  <title>Discover new VSCode themes</title>
+  <meta
+    name="description"
+    content="Discover new VSCode themes, download themes in VSIX format ready to install in vscode or even publish to the marketplace."
+  />
+</svelte:head>
+
 <section
   class="flex min-h-[calc(100vh-2rem)] w-full flex-col items-center"
   style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, 'aa')}; transition-property: all; transition-duration: 200ms;`}
