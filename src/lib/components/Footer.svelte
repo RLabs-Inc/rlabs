@@ -10,7 +10,7 @@
     <img src="/images/RLabs-Lamp.png" alt="RLabs" class="w-4" />
     <div class="w-full border-t border-border"></div>
   </div>
-  <div class="-mt-[0.5rem] flex w-full items-center justify-around gap-1 px-7 py-0 md:justify-end">
+  <div class="-mt-[0.5rem] flex w-full items-center justify-between gap-1 px-7 py-0 md:justify-end">
     <!-- <div class="h-4 w-4"></div> -->
 
     <Button href="https://github.com/RLabs-Inc/rlabs" target="_blank" variant="link" size="icon">
