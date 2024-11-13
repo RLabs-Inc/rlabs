@@ -10,6 +10,13 @@
     PUBLIC_CLERK_SIGN_UP_URL
   } from '$env/static/public';
 
+  import { injectAnalytics } from '@vercel/analytics/sveltekit';
+  import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
+  import { dev } from '$app/environment';
+
+  injectAnalytics({ mode: dev ? 'development' : 'production' });
+  injectSpeedInsights({ mode: dev ? 'development' : 'production' });
+
   let { children }: { children: Snippet } = $props();
 </script>
 

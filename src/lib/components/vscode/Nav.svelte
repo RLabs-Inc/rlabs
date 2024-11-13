@@ -60,12 +60,12 @@
             variant="link">Saved themes</Button
           >
         </SignedIn>
-        <Button
+        <!-- <Button
           class={$page.url.pathname === '/vscode-themes-community/about' ? 'underline' : ''}
           aria-current={$page.url.pathname === '/vscode-themes-community/about'}
           href="/vscode-themes-community/about"
           variant="link">About</Button
-        >
+        > -->
         <SignedOut>
           <Button href="/auth/sign-in" variant="link">Login</Button>
         </SignedOut>
@@ -136,13 +136,13 @@
                 onclick={() => (open = false)}>Saved themes</Button
               >
             </SignedIn>
-            <Button
+            <!-- <Button
               class={$page.url.pathname === '/vscode-themes-community/about' ? 'underline' : ''}
               aria-current={$page.url.pathname === '/vscode-themes-community/about'}
               href="/vscode-themes-community/about"
               variant="link"
               onclick={() => (open = false)}>About</Button
-            >
+            > -->
             <SignedOut>
               <Button href="/auth/sign-in" variant="link" onclick={() => (open = false)}
                 >Login</Button

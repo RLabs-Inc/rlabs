@@ -6,6 +6,7 @@
   import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import type { Theme } from '$lib/types/theme';
   import { randomInteger } from '$lib/utils/vscode/math';
+  import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
 
   const { data }: { data: { themes: Theme[] } } = $props();
   const selectedTheme = getSelectedTheme();
@@ -38,7 +39,7 @@
 
 <section
   class="flex min-h-[calc(100vh-2rem)] w-full flex-col items-center"
-  style={`background: ${selectedTheme().theme?.uiColors.BG1.slice(0, -2) + 'aa'}; transition-property: all; transition-duration: 200ms;`}
+  style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, 'aa')}; transition-property: all; transition-duration: 200ms;`}
 >
   <h1
     class="lg:pt:48 px-5 pt-20 text-center text-3xl font-black drop-shadow-md md:pt-40 md:text-6xl xl:pt-52"
