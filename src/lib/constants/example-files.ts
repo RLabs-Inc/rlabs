@@ -217,7 +217,7 @@ export default async function handler(
     console.error('[API] Profile update error:', error);
 
 
-  /**
+/**
  * @fileoverview E-commerce API service with caching, rate limiting, and error handling
  * @author John Doe <john@example.com>
  * @see {@link https://api-docs.example.com|API Documentation}
@@ -1219,51 +1219,6 @@ defineExpose({
 </style>`
   },
   {
-    name: 'vue-html.vue',
-    isFolder: false,
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg',
-    language: 'vue-html',
-    displayName: 'Vue HTML',
-    snippet: `
-<template>
-  <div class="user-profile">
-    <h1>{{ user.name }}'s Profile</h1>
-    <div v-if="user.avatar" class="avatar">
-      <img :src="user.avatar" :alt="user.name + 's avatar'
-    </div>
-    <div class="user-info">
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Location:</strong> {{ user.location }}</p>
-      <p><strong>Bio:</strong> {{ user.bio }}</p>
-    </div>
-    <div class="user-stats">
-      <h2>Stats</h2>
-      <ul>
-        <li v-for="(value, key) in user.stats" :key="key">
-          <span class="stat-name">{{ key }}:</span>
-          <span class="stat-value">{{ value }}</span>
-        </li>
-      </ul>
-    </div>
-    <div class="user-posts" v-if="user.posts && user.posts.length">
-      <h2>Recent Posts</h2>
-      <ul>
-        <li v-for="post in user.posts" :key="post.id">
-          <h3>{{ post.title }}</h3>
-          <p>{{ post.excerpt }}</p>
-          <a :href="'/posts/' + post.id">Read more</a>
-        </li>
-      </ul>
-    </div>
-    <div v-else class="no-posts">
-      <p>No posts yet.</p>
-    </div>
-  </div>
-</template>
-
-    `
-  },
-  {
     name: 'svelte.svelte',
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/svelte/svelte-original.svg',
@@ -2128,7 +2083,9 @@ func (w *World) GetComponent(entityID uuid.UUID, componentType ComponentType) (C
         return nil, fmt.Errorf("entity %v does not have component type %v", entityID, componentType)
     }
     return nil, fmt.Errorf("entity %v does not exist", entityID)
-}`
+}
+\`\`\`
+`
   },
   {
     name: 'java.java',
@@ -2136,136 +2093,134 @@ func (w *World) GetComponent(entityID uuid.UUID, componentType ComponentType) (C
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg',
     language: 'java',
     displayName: 'Java',
-    snippet: `
-import java.util.*;
-    import java.io.*;
-    import java.util.stream.*;
-    
-    class Person {
-        private String name;
-        private int age;
-    
-        public Person(String name, int age) {
-            this.name = name;
-            this.age = age;
-        }
-    
-        public void introduce() {
-            System.out.printf("Hello, my name is %s and I'm %d years old.%n", name, age);
-        }
-    
-        public static Person createFromMap(Map<String, Object> data) {
-            return new Person((String) data.get("name"), (Integer) data.get("age"));
-        }
-    }
-    
-    interface Greetable {
-        void greet();
-    }
-    
-    class Employee extends Person implements Greetable {
-        private String position;
-    
-        public Employee(String name, int age, String position) {
-            super(name, age);
-            this.position = position;
-        }
-    
-        @Override
-        public void introduce() {
-            super.introduce();
-            System.out.printf("I work as a %s.%n", position);
-        }
-    
-        @Override
-        public void greet() {
-            System.out.printf("Hello, %s!%n", name);
-        }
-    }
-    
-    public class Main {
-        public static void main(String[] args) {
-            // Create instances
-            Person person = new Person("Alice", 30);
-            Employee employee = new Employee("Bob", 35, "Developer");
-    
-            // Method calls
-            person.introduce();
-            employee.introduce();
-            employee.greet();
-    
-            // List and iteration
-            List<Map<String, Object>> people = Arrays.asList(
-                Map.of("name", "Charlie", "age", 25),
-                Map.of("name", "David", "age", 40),
-                Map.of("name", "Eve", "age", 22)
-            );
-    
-            people.stream()
-            .map(Person::createFromMap)
-            .forEach(Person::introduce);
+    snippet: `import java.util.*;
+import java.io.*;
+import java.util.stream.*;
 
-        // Map manipulation
-        Map<String, Integer> scores = Map.of("alice", 95, "bob", 80, "charlie", 90);
-        Map<String, Integer> highScores = scores.entrySet().stream()
-            .filter(entry -> entry.getValue() >= 90)
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        System.out.println("High scores: " + highScores);
+class Person {
+    private String name;
+    private int age;
 
-        // Exception handling
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public void introduce() {
+        System.out.printf("Hello, my name is %s and I'm %d years old.%n", name, age);
+    }
+
+    public static Person createFromMap(Map<String, Object> data) {
+        return new Person((String) data.get("name"), (Integer) data.get("age"));
+    }
+}
+
+interface Greetable {
+    void greet();
+}
+
+class Employee extends Person implements Greetable {
+    private String position;
+
+    public Employee(String name, int age, String position) {
+        super(name, age);
+        this.position = position;
+    }
+
+    @Override
+    public void introduce() {
+        super.introduce();
+        System.out.printf("I work as a %s.%n", position);
+    }
+
+    @Override
+    public void greet() {
+        System.out.printf("Hello, %s!%n", name);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Create instances
+        Person person = new Person("Alice", 30);
+        Employee employee = new Employee("Bob", 35, "Developer");
+
+        // Method calls
+        person.introduce();
+        employee.introduce();
+        employee.greet();
+
+        // List and iteration
+        List<Map<String, Object>> people = Arrays.asList(
+            Map.of("name", "Charlie", "age", 25),
+            Map.of("name", "David", "age", 40),
+            Map.of("name", "Eve", "age", 22)
+        );
+
+        people.stream()
+        .map(Person::createFromMap)
+        .forEach(Person::introduce);
+
+    // Map manipulation
+    Map<String, Integer> scores = Map.of("alice", 95, "bob", 80, "charlie", 90);
+    Map<String, Integer> highScores = scores.entrySet().stream()
+        .filter(entry -> entry.getValue() >= 90)
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    System.out.println("High scores: " + highScores);
+
+    // Exception handling
+    try {
+        System.out.println(divide(10, 2));
+        System.out.println(divide(10, 0));
+    } catch (ArithmeticException e) {
+        System.out.println("Error: " + e.getMessage());
+    } finally {
+        System.out.println("Division attempt completed.");
+    }
+
+    // File I/O
+    try {
+        FileWriter writer = new FileWriter("example.txt");
+        writer.write("This is a sample text.\n");
+        writer.write("Written by Java.");
+        writer.close();
+
+        BufferedReader reader = new BufferedReader(new FileReader("example.txt"));
+        System.out.println("File content:");
+        reader.lines().forEach(System.out::println);
+        reader.close();
+
+        // Remove the file
+        new File("example.txt").delete();
+    } catch (IOException e) {
+        System.out.println("An error occurred: " + e.getMessage());
+    }
+
+    // Multithreading
+    Runnable task = () -> {
+        String threadName = Thread.currentThread().getName();
+        System.out.println(threadName + " is running");
         try {
-            System.out.println(divide(10, 2));
-            System.out.println(divide(10, 0));
-        } catch (ArithmeticException e) {
-            System.out.println("Error: " + e.getMessage());
-        } finally {
-            System.out.println("Division attempt completed.");
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        System.out.println(threadName + " finished");
+    };
 
-        // File I/O
-        try {
-            FileWriter writer = new FileWriter("example.txt");
-            writer.write("This is a sample text.\n");
-            writer.write("Written by Java.");
-            writer.close();
-
-            BufferedReader reader = new BufferedReader(new FileReader("example.txt"));
-            System.out.println("File content:");
-            reader.lines().forEach(System.out::println);
-            reader.close();
-
-            // Remove the file
-            new File("example.txt").delete();
-        } catch (IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
-        }
-
-        // Multithreading
-        Runnable task = () -> {
-            String threadName = Thread.currentThread().getName();
-            System.out.println(threadName + " is running");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println(threadName + " finished");
-        };
-
-        for (int i = 0; i < 3; i++) {
-            new Thread(task).start();
-        }
+    for (int i = 0; i < 3; i++) {
+        new Thread(task).start();
     }
+}
 
-    public static double divide(int a, int b) {
-        if (b == 0) {
-            throw new ArithmeticException("Division by zero");
-        }
-        return (double) a / b;
+public static double divide(int a, int b) {
+    if (b == 0) {
+        throw new ArithmeticException("Division by zero");
     }
+    return (double) a / b;
+}
 } 
-
-    `
+`
   },
   {
     name: 'csharp.cs',
@@ -3067,11 +3022,11 @@ private:
 #include <unistd.h>
 
 #define MAX_BUFFER_SIZE 4096
-#define ERROR_CHECK(x) do { \
-    if (!(x)) { \
-        fprintf(stderr, "Error at %s:%d\n", __FILE__, __LINE__); \
-        exit(EXIT_FAILURE); \
-    } \
+#define ERROR_CHECK(x) do { 
+    if (!(x)) { 
+        fprintf(stderr, "Error at %s:%d\n", __FILE__, __LINE__); 
+        exit(EXIT_FAILURE); 
+    } 
 } while (0)
 
 typedef struct {
@@ -3797,136 +3752,6 @@ description: |
     `
   },
   {
-    name: 'toml.toml',
-    isFolder: false,
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/toml/toml-original.svg',
-    language: 'toml',
-    displayName: 'TOML',
-    snippet: `# E-commerce Platform Configuration
-title = "E-commerce Platform Settings"
-version = "2.0.0"
-last_updated = 2024-03-20T15:30:00Z
-
-# System-wide configuration
-[system]
-environment = "production"
-debug = false
-maintenance_mode = false
-maintenance_window = { start = "00:00:00", duration = "2h" }
-
-# Database configuration
-[database]
-driver = "postgresql"
-host = "postgres.internal"
-port = 5432
-name = "ecommerce"
-max_connections = 100
-connection_timeout = "30s"
-
-[[database.replicas]]
-host = "postgres-replica-1.internal"
-port = 5432
-readonly = true
-weight = 0.5
-
-[[database.replicas]]
-host = "postgres-replica-2.internal"
-port = 5432
-readonly = true
-weight = 0.5
-
-# Cache configuration
-[cache]
-driver = "redis"
-ttl = "1h"
-prefix = "ecom:"
-
-[[cache.clusters]]
-hosts = [
-    "redis-0.internal:6379",
-    "redis-1.internal:6379",
-    "redis-2.internal:6379"
-]
-password = "\${REDIS_PASSWORD}"
-database = 0
-
-# Product catalog settings
-[catalog]
-default_currency = "USD"
-price_precision = 2
-enable_variants = true
-enable_digital_products = true
-
-[catalog.categories.electronics]
-name = "Electronics"
-tax_rate = 0.08
-shipping_rules = { domestic = "express", international = "priority" }
-estimated_delivery = { domestic = "2-3d", international = "5-7d" }
-
-[catalog.categories.clothing]
-name = "Clothing"
-tax_rate = 0.05
-requires_size_chart = true
-
-# Authentication configuration
-[auth]
-jwt_expiry = "24h"
-refresh_token_expiry = "30d"
-max_login_attempts = 5
-lockout_duration = "15m"
-
-[auth.providers]
-enable_google = true
-enable_facebook = true
-enable_apple = true
-
-[auth.providers.google]
-client_id = "\${GOOGLE_CLIENT_ID}"
-client_secret = "\${GOOGLE_CLIENT_SECRET}"
-callback_url = "https://api.example.com/auth/google/callback"
-
-# Search engine configuration
-[search]
-engine = "elasticsearch"
-index_prefix = "ecom_"
-min_score = 0.5
-timeout = "5s"
-
-[[search.analyzers]]
-name = "product_name"
-type = "custom"
-tokenizer = "standard"
-filters = ["lowercase", "asciifolding", "word_delimiter"]
-
-[[search.analyzers]]
-name = "product_sku"
-type = "custom"
-tokenizer = "keyword"
-filters = ["lowercase", "trim"]
-
-# Monitoring and metrics
-[monitoring]
-enable_apm = true
-sample_rate = 0.1
-log_retention = "30d"
-
-[monitoring.alerts]
-cpu_threshold = 80.0
-memory_threshold = 85.0
-disk_threshold = 90.0
-
-# Feature flags and experiments
-[features]
-enable_recommendations = true
-enable_reviews = true
-enable_wishlists = true
-
-[features.ab_tests]
-new_checkout_flow = { enabled = true, sample_size = 0.5 }
-product_layout = { enabled = true, variants = ["grid", "list"] }
-  `
-  },
-  {
     name: 'json.json',
     isFolder: false,
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/json/json-original.svg',
@@ -4179,24 +4004,30 @@ main "$@"`
 > Last updated: 2024-03-20
 
 ## Table of Contents
+
 1. [Introduction](#introduction)
 2. [Architecture](#architecture)
 3. [API Reference](#api-reference)
 
 ## Introduction
+
 This document describes the **E-commerce Platform** architecture and implementation details. The platform is built using a _microservices architecture_ with ~~monolithic~~ distributed components.
 
 ### Key Features
+
 * **High Availability**
+
   - Multi-region deployment
   - Automatic failover
   - Load balancing
 * **Scalability**
+
   - Horizontal scaling
   - Auto-scaling groups
   - Elastic resources
 
 #### Technology Stack
+
 | Component | Technology | Version |
 |-----------|------------|---------|
 | Frontend | React | 18.2.0 |
@@ -4216,44 +4047,53 @@ This document describes the **E-commerce Platform** architecture and implementat
    \`\`\`
 
 ###### Security Considerations
+
 * Authentication using [JWT](https://jwt.io)
 * Rate limiting: \`10 requests/second\`
 * [OWASP Top 10](https://owasp.org/Top10) compliance
 
 ### Code Examples
-rust
-#[derive(Debug, Serialize)]
-pub struct Product {
-id: Uuid,
-name: String,
-price: Decimal,
-stock: i32,
-}
-impl Product {
-pub fn new(name: String, price: Decimal) -> Self {
-Self {
-id: Uuid::new_v4(),
-name,
-price,
-stock: 0,
-}
-}
-}
+
+  \`\`\`rust
+  #[derive(Debug, Serialize)]
+  pub struct Product {
+    id: Uuid,
+    name: String,
+    price: Decimal,
+    stock: i32,
+  }
+  impl Product {
+    pub fn new(name: String, price: Decimal) -> Self {
+      Self {
+        id: Uuid::new_v4(),
+        name,
+        price,
+        stock: 0,
+      }
+    }
+  }
+  \`\`\`
+
 ### API Endpoints
+
 The following endpoints are available:
-http
-GET /api/v1/products
-POST /api/v1/products
-PUT /api/v1/products/:id
-DELETE /api/v1/products/:id
+
+  \`\`\`http
+  GET /api/v1/products
+  POST /api/v1/products
+  PUT /api/v1/products/:id
+  DELETE /api/v1/products/:id
+  \`\`\`
 
 ### Configuration
+
 Use the following environment variables:
 
-yaml
-DATABASE_URL: postgresql://user:pass@localhost:5432/db
-REDIS_URL: redis://localhost:6379
-JWT_SECRET: your-secret-key
+  \`\`\`yaml
+  DATABASE_URL: postgresql://user:pass@localhost:5432/db
+  REDIS_URL: redis://localhost:6379
+  JWT_SECRET: your-secret-key
+  \`\`\`
 
 ---
 
