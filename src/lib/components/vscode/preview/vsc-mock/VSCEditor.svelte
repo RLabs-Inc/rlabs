@@ -66,7 +66,7 @@
     >
       <input
         type="text"
-        class="h-5 w-72 rounded-md border p-1 text-xs"
+        class="h-5 w-72 rounded-md border p-1 text-xs focus:outline-none"
         style={`background: var(--bg1); color: var(--fg1); border-color: var(--comment); transition-property: all; transition-duration: 200ms;`}
       />
     </div>
