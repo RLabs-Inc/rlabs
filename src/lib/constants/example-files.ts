@@ -121,7 +121,10 @@ const apiClient = EnhancedApiClient.getInstance({
 const userData = await apiClient.request<UserResponse>('/users/profile', {
   method: 'GET',
   cache: 'no-cache'
-});\`import { type NextApiRequest, type NextApiResponse } from 'next';
+});
+
+// Next.js API route example
+import { type NextApiRequest, type NextApiResponse } from 'next';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { rateLimit } from '@/lib/rate-limit';
