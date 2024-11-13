@@ -15,7 +15,7 @@
   import { dev } from '$app/environment';
 
   injectAnalytics({ mode: dev ? 'development' : 'production' });
-  injectSpeedInsights({ mode: dev ? 'development' : 'production' });
+  injectSpeedInsights();
 
   let { children }: { children: Snippet } = $props();
 </script>
