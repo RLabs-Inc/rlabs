@@ -8,7 +8,7 @@
   />
 </svelte:head>
 
-<div class="flex min-h-[calc(100vh-2rem)] flex-col items-center justify-center">
-  <h1 class="text-4xl font-black">How to use the VSCode theme generator</h1>
+<div class="flex min-h-[calc(100vh-2rem)] flex-col items-center justify-center p-4">
+  <h1 class="text-xl font-black md:text-4xl">How to use the VSCode theme generator</h1>
   <p class="text-lg">Instructions coming soon...</p>
 </div>
