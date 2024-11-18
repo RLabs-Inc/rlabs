@@ -28,6 +28,7 @@
 
   import { ColorSchemes } from '$lib/types/color';
   import type { Theme } from '$lib/types/theme';
+  import Export from './Export.svelte';
 
   const { userId, themes }: { userId: string | null; themes: Theme[] } = $props();
   const controls = getControls();
@@ -232,6 +233,9 @@
       </div>
       <div class="py-3">
         <ColorPicker />
+      </div>
+      <div class="w-full rounded-md border border-border p-2 shadow-sm">
+        <Export />
       </div>
       <div class="w-full rounded-md border border-border p-2 shadow-sm">
         <LoadSaveTheme {userId} themes={themes || []} />
