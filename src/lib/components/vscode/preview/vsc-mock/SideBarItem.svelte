@@ -67,15 +67,18 @@
 <style>
   .item:hover {
     background-color: var(--listHover);
+    color: var(--fg1);
   }
   .item.active {
     background-color: var(--listActive);
+    color: var(--fg1);
   }
   .item {
-    color: var(--fg1);
     background-color: var(--bg1);
+    color: var(--fg2);
   }
   .item.main {
     background-color: var(--bg2);
+    color: var(--fg2);
   }
 </style>

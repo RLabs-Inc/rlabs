@@ -32,7 +32,7 @@
 
 <div
   class="sideBar flex w-12 flex-col sm:w-36 md:w-52"
-  style="background-color: var(--bg1); border-right: 1px solid var(--border);"
+  style="background-color: var(--bg1); border-right: 1px solid var(--border); color: var(--fg2);"
 >
   <div class="flex items-center justify-between p-2">
     <span class="text-xs font-bold" style="color: var(--fg1);">EXPLORER</span>

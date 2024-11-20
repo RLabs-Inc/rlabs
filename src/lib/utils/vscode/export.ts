@@ -745,7 +745,7 @@ export function generateSemanticThemeJSON(
       // debugTokenExpression.error: # Foreground color for expression errors in debug views.
       // debugTokenExpression.type: # Foreground color for the token types shown in the debug views (ie. the Variables or Watch view).
 
-      // // # Testing colors
+      // Testing colors
       // testing.runAction: # Color for 'run' icons in the editor.
       // testing.iconErrored: # Color for the 'Errored' icon in the test explorer.
       // testing.iconFailed: # Color for the 'failed' icon in the test explorer.

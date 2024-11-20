@@ -47,8 +47,8 @@
       --fg3: ${selectedThemeState().theme?.uiColors.FG3};
       --ac1: ${selectedThemeState().theme?.uiColors.AC1};
       --ac2: ${selectedThemeState().theme?.uiColors.AC2};
-      --listActive: ${getColorWithOpacity(selectedThemeState().theme?.uiColors.AC1, 80)};
-      --listHover: ${getColorWithOpacity(selectedThemeState().theme?.uiColors.AC1, 40)};
+      --listActive: ${getColorWithOpacity(selectedThemeState().theme?.uiColors.AC2, 80)};
+      --listHover: ${getColorWithOpacity(selectedThemeState().theme?.uiColors.AC2, 40)};
       --tabHover: ${getColorWithOpacity(selectedThemeState().theme?.uiColors.BG2, 80)};
       --border: ${selectedThemeState().theme?.uiColors.BORDER};
       --comment: ${selectedThemeState().theme?.syntaxColors.comment};

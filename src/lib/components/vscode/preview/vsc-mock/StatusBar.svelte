@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Color from 'color';
   import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import { Bell, GitBranch, Check, UploadCloud, CircleX, TriangleAlert } from 'lucide-svelte';
 

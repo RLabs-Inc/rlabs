@@ -26,7 +26,7 @@
     border-color: var(--border);
   }
   .tab:hover {
-    background: var(--bg2);
+    background: var(--tabHover);
     color: var(--fg1);
   }
 </style>
