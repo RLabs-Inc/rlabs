@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { File, Folder, MoreHorizontal } from 'lucide-svelte';
+  import { Folder, MoreHorizontal } from 'lucide-svelte';
   import { exampleFiles } from '$lib/constants/example-files';
   import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import SideBarItem from './SideBarItem.svelte';
@@ -35,7 +35,7 @@
   style="background-color: var(--bg1); border-right: 1px solid var(--border); color: var(--fg2);"
 >
   <div class="flex items-center justify-between p-2">
-    <span class="text-xs font-bold" style="color: var(--fg1);">EXPLORER</span>
+    <span class="text-xs" style="color: var(--fg1);">EXPLORER</span>
     <MoreHorizontal class="h-4 w-4" style="color: var(--fg1);" />
   </div>
   <div class="custom-scrollbar overflow-y-auto text-sm">
@@ -47,7 +47,6 @@
       fileSelect={handleFileSelect}
       isFolder
       isMain
-      isActive={false}
     >
       <SideBarItem
         name="src"
@@ -56,7 +55,6 @@
         folderToggle={handleFolderToggle}
         fileSelect={handleFileSelect}
         isFolder
-        isActive={false}
         isMain={false}
       >
         <SideBarItem
@@ -66,9 +64,7 @@
           folderToggle={handleFolderToggle}
           fileSelect={handleFileSelect}
           isFolder
-          isActive={false}
           isMain={false}
-          class="sticky"
         >
           <div class="">
             {#each exampleFiles as file}

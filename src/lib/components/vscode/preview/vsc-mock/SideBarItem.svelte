@@ -19,6 +19,7 @@
     isFolder: boolean;
     isOpen: boolean;
     isMain: boolean;
+    children?: () => any;
   }>();
 
   const isActive = $derived(selectedFile().file.name === name);
@@ -37,7 +38,7 @@
     'item flex w-full cursor-pointer items-center truncate px-2 py-1',
     isOpen && !isMain && 'sticky top-7',
     isActive && 'active',
-    isMain && 'main',
+    isMain && 'main font-bold',
     isOpen && isMain && 'sticky top-0'
   )}
   onclick={handleClick}
@@ -56,7 +57,7 @@
   {:else}
     <img src={icon} class="mr-1 h-4 w-4" alt={name} />
   {/if}
-  <span class="truncate">{name}</span>
+  <span class="truncate text-xs">{name}</span>
 </button>
 {#if isFolder && isOpen}
   <div class="pl-1">

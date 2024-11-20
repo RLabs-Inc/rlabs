@@ -63,8 +63,8 @@ function getMonacoEditor() {
       language: lang,
       theme: 'theme',
       readOnly: true,
-      fontFamily: 'Recursive, monospace',
-      fontSize: 15,
+      fontFamily: "'Recursive', monospace",
+      fontSize: 13,
       'semanticHighlighting.enabled': true,
       minimap: { enabled: false }
     });
