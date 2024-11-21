@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
+  import { enhance, applyAction } from '$app/forms';
   import { LoaderPinwheel } from 'lucide-svelte';
   import { Button } from '$lib/components/ui/button';
 
@@ -26,7 +26,7 @@
   method="post"
   use:enhance={() => {
     isDownloading = true;
-    return async ({ result, update }: { result: any; update: () => void }) => {
+    return async ({ result }: { result: any }) => {
       const data = result.data;
       if (data?.success) {
         const blob = new Blob([data.vsixBuffer], {
@@ -41,7 +41,8 @@
         window.URL.revokeObjectURL(url);
         a.remove();
       }
-      update();
+      console.log(result);
+      applyAction(result);
       isDownloading = false;
     };
   }}

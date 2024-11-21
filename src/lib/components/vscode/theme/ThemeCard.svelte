@@ -1,11 +1,11 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
+  import { enhance, applyAction } from '$app/forms';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import DownloadButton from '$lib/components/vscode/theme/DownloadButton.svelte';
   import ShareButton from '$lib/components/vscode/theme/ShareButton.svelte';
   import type { Theme } from '$lib/types/theme';
   import clsx from 'clsx';
-  import { enhance } from '$app/forms';
 
   const { theme, stopRandomizing }: { theme: Theme; stopRandomizing: () => void } = $props();
 
@@ -83,7 +83,7 @@
         method="post"
         use:enhance={() => {
           isDownloading = true;
-          return async ({ result, update }: { result: any; update: () => void }) => {
+          return async ({ result }: { result: any }) => {
             const data = result.data;
             if (data?.success) {
               const blob = new Blob([data.vsixBuffer], {
@@ -99,7 +99,7 @@
               a.remove();
             }
             invalidateAll();
-            update();
+            applyAction(result);
             isDownloading = false;
           };
         }}

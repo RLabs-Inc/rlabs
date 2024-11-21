@@ -1,5 +1,6 @@
 <script lang="ts">
   import { invalidateAll, goto } from '$app/navigation';
+  import { enhance, applyAction } from '$app/forms';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import { getIsEditing } from '$lib/state/vscode/editor.svelte';
   import DownloadButton from '$lib/components/vscode/theme/DownloadButton.svelte';
@@ -9,7 +10,6 @@
 
   import type { Theme } from '$lib/types/theme';
   import clsx from 'clsx';
-  import { enhance } from '$app/forms';
 
   const { theme }: { theme: Theme } = $props();
 
@@ -114,7 +114,7 @@
           method="post"
           use:enhance={() => {
             isDownloading = true;
-            return async ({ result, update }: { result: any; update: () => void }) => {
+            return async ({ result }: { result: any }) => {
               const data = result.data;
               if (data?.success) {
                 const blob = new Blob([data.vsixBuffer], {
@@ -130,7 +130,7 @@
                 a.remove();
               }
               invalidateAll();
-              update();
+              applyAction(result);
               isDownloading = false;
             };
           }}

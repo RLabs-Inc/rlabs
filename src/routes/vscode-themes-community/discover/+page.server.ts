@@ -6,6 +6,7 @@ import { getPublicThemes, getThemeById, updateThemeDownloads } from '$lib/server
 import logoURL from '../../../../vsix-template/images/RLabs-Lamp.png';
 
 const logoData = read(logoURL);
+const logo = await logoData.arrayBuffer();
 
 const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
   query: '?raw',
@@ -52,7 +53,6 @@ export const actions: Actions = {
         readme = readme.replace(/\${themeName}/g, theme.name);
         zip.addFile('extension/README.md', Buffer.from(readme), 'utf-8');
       } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
-        const logo = await logoData.arrayBuffer();
         zip.addFile('extension/images/RLabs-Lamp.png', Buffer.from(logo));
       } else if (filePath === '/vsix-template/LICENSE') {
         let license = fileData as string;
