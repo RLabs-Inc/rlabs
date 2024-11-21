@@ -1,5 +1,6 @@
+import { read } from '$app/server';
 import type { Actions, PageServerLoad } from './$types';
-import JSZip from 'jszip';
+import AdmZip from 'adm-zip';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
 import { getPublicThemes, getThemeById, updateThemeDownloads } from '$lib/server/vscode/themes';
 
@@ -31,33 +32,31 @@ export const actions: Actions = {
       return { success: false, error: 'Theme not found' };
     }
 
-    const zip = new JSZip();
-    const extensionFolder = zip.folder('extension');
-    if (!extensionFolder) {
-      return { success: false, error: 'Failed to create extension folder' };
-    }
+    const zip = new AdmZip();
 
     for (const [filePath, fileData] of Object.entries(vsixTemplateFiles)) {
       if (filePath === '/vsix-template/package.json') {
-        let jsonData = fileData;
+        let jsonData = fileData as string;
         jsonData = jsonData.replace(/\${themeName}/g, theme.name);
         jsonData = jsonData.replace(
           /\${themeNameKebab}/g,
           theme.name.toLowerCase().replace(/\s+/g, '-')
         );
         jsonData = jsonData.replace(/\${uiTheme}/g, theme.isDark ? 'vs-dark' : 'vs');
-        extensionFolder.file('package.json', jsonData);
+        zip.addFile('extension/package.json', Buffer.from(jsonData), 'utf-8');
       } else if (filePath === '/vsix-template/README.md') {
-        let readme = fileData;
+        let readme = fileData as string;
         readme = readme.replace(/\${themeName}/g, theme.name);
-        extensionFolder.file('README.md', readme);
+        zip.addFile('extension/README.md', Buffer.from(readme), 'utf-8');
       } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
-        const imageData = fileData;
-        extensionFolder.file('images/RLabs-Lamp.png', imageData);
+        zip.addFile(
+          'extension/images/RLabs-Lamp.png',
+          Buffer.from(await read(filePath).arrayBuffer())
+        );
       } else if (filePath === '/vsix-template/LICENSE') {
-        let license = fileData;
-        license = license.replace(/\${year}/g, new Date().getFullYear());
-        extensionFolder.file('LICENSE', license);
+        let license = fileData as string;
+        license = license.replace(/\${year}/g, new Date().getFullYear().toString());
+        zip.addFile('extension/LICENSE', Buffer.from(license), 'utf-8');
       }
     }
 
@@ -68,12 +67,8 @@ export const actions: Actions = {
       theme.ansiColors
     );
 
-    const themesFolder = extensionFolder.folder('themes');
-    if (!themesFolder) {
-      return { success: false, error: 'Failed to create themes folder' };
-    }
-    themesFolder.file('theme.json', JSON.stringify(themeObject, null, 2));
-    const vsixBuffer = await zip.generateAsync({ type: 'nodebuffer' });
+    zip.addFile('extension/themes/theme.json', Buffer.from(JSON.stringify(themeObject, null, 2)));
+    const vsixBuffer = await zip.toBufferPromise();
     await updateThemeDownloads(theme);
 
     return { vsixBuffer: vsixBuffer, success: true };

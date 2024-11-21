@@ -151,14 +151,14 @@ export function generateSemanticThemeJSON(
       'button.secondaryHoverBackground': colors.AC1, // Secondary button background color when hovering.
       'checkbox.background': colors.BG1, // Background color of checkbox widget.
       'checkbox.foreground': colors.FG1, // Foreground color of checkbox widget.
-      // "checkbox.border": // # Border color of checkbox widget.
-      // "checkbox.selectBackground": //# Background color of checkbox widget when the element it's in is selected.
+      'checkbox.border': syntaxColors.comment, // # Border color of checkbox widget.
+      // "checkbox.selectBackground":  //# Background color of checkbox widget when the element it's in is selected.
       // "checkbox.selectBorder": //# Border color of checkbox widget when the element it's in is selected.
 
       //# Dropdown Control
       'dropdown.background': colors.BG3, // Dropdown background
       //"dropdown.listBackground": // # Dropdown list background.
-      'dropdown.border': colors.BORDER, // Dropdown border
+      'dropdown.border': syntaxColors.comment, // Dropdown border
       'dropdown.foreground': colors.FG1, // Dropdown foreground
 
       //# Input Control
@@ -167,6 +167,7 @@ export function generateSemanticThemeJSON(
       'input.border': syntaxColors.comment, // Input box border
       'input.placeholderForeground': syntaxColors.comment, // Input box foreground color for placeholder text
       'inputOption.activeBorder': colors.AC1, // Border color of activated options in input fields
+
       // "inputOption.activeBackground": // # Background color of activated options in input fields.
       // "inputOption.activeForeground": //# Foreground color of activated options in input fields.
       // "inputOption.hoverBackground": //# Background color of activated options in input fields.
@@ -792,13 +793,13 @@ export function generateSemanticThemeJSON(
       // # SETTINGS
       'settings.headerForeground': colors.FG1, // The foreground color for a section header or active title
       'settings.modifiedItemIndicator': colors.WARNING, // The color of the line that indicates a modified setting
-      'settings.inactiveSelectedItemBorder': syntaxColors.comment, // The color of the selected setting row border, when the settings list does not have focus
+      'settings.inactiveSelectedItemBorder': colors.BORDER, // The color of the selected setting row border, when the settings list does not have focus
       'settings.dropdownBackground': colors.BG1, // Dropdown background
       'settings.dropdownForeground': colors.FG1, // Dropdown foreground
-      'settings.dropdownBorder': colors.BORDER, // Dropdown border
+      'settings.dropdownBorder': syntaxColors.comment, // Dropdown border
       'settings.checkboxBackground': colors.BG1, // Checkbox background
       'settings.checkboxForeground': colors.FG1, // Checkbox foreground
-      'settings.checkboxBorder': colors.BORDER, // Checkbox border
+      'settings.checkboxBorder': syntaxColors.comment, // Checkbox border
       'settings.textInputBackground': colors.BG1, // Text input box background
       'settings.textInputForeground': colors.FG1, // Text input box foreground
       'settings.textInputBorder': syntaxColors.comment, // Text input box border
@@ -807,7 +808,7 @@ export function generateSemanticThemeJSON(
       'settings.numberInputBorder': syntaxColors.comment, // Number input box border
       'settings.rowHoverBackground': getColorWithOpacity(colors.lineHighlight, '40'), // The background color of a settings row when hovered.
       'settings.focusedRowBackground': getColorWithOpacity(colors.lineHighlight, '50'), // Background color of a focused setting row.
-      'settings.focusedRowBorder': syntaxColors.comment, // The color of the row's top and bottom border when the row is focused.
+      'settings.focusedRowBorder': colors.BORDER, // The color of the row's top and bottom border when the row is focused.
       'settings.headerBorder': colors.BORDER, // The color of the header container border.
       // settings.sashBorder: # The color of the Settings editor splitview sash border.
       'settings.settingsHeaderHoverForeground': colors.FG1, // The foreground color for a section header or hovered title.
