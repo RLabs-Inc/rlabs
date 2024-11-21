@@ -130,6 +130,7 @@
                 a.remove();
               }
               invalidateAll();
+              update();
               isDownloading = false;
             };
           }}

@@ -26,7 +26,7 @@
   method="post"
   use:enhance={() => {
     isDownloading = true;
-    return async ({ result }: { result: any; update: () => void }) => {
+    return async ({ result, update }: { result: any; update: () => void }) => {
       const data = result.data;
       if (data?.success) {
         const blob = new Blob([data.vsixBuffer], {
@@ -41,6 +41,7 @@
         window.URL.revokeObjectURL(url);
         a.remove();
       }
+      update();
       isDownloading = false;
     };
   }}
