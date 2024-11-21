@@ -1,5 +1,5 @@
 import { read } from '$app/server';
-import type { Actions, PageServerLoad, ActionsSuccess } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import AdmZip from 'adm-zip';
 import { getPublicThemes, getThemeById, updateThemeDownloads } from '$lib/server/vscode/themes';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';

@@ -31,7 +31,7 @@
 </script>
 
 <div
-  class="sideBar flex w-12 flex-col sm:w-36 md:w-52"
+  class="sideBar flex w-12 flex-col sm:w-36 2xl:w-40"
   style="background-color: var(--bg1); border-right: 1px solid var(--border); color: var(--fg2);"
 >
   <div class="flex items-center justify-between p-2">
