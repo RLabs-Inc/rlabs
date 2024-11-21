@@ -3,6 +3,9 @@ import type { PageServerLoad, Actions } from './$types';
 import { getUserThemes } from '$lib/server/vscode/themes';
 import AdmZip from 'adm-zip';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
+import logoURL from '../../../../vsix-template/images/RLabs-Lamp.png';
+
+const logoData = read(logoURL);
 
 const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
   query: '?raw',
@@ -47,10 +50,8 @@ export const actions: Actions = {
         readme = readme.replace(/\${themeName}/g, 'Generated Theme');
         zip.addFile('extension/README.md', Buffer.from(readme), 'utf-8');
       } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
-        zip.addFile(
-          'extension/images/RLabs-Lamp.png',
-          Buffer.from(await read(filePath).arrayBuffer())
-        );
+        const logo = await logoData.arrayBuffer();
+        zip.addFile('extension/images/RLabs-Lamp.png', Buffer.from(logo));
       } else if (filePath === '/vsix-template/LICENSE') {
         let license = fileData as string;
         license = license.replace(/\${year}/g, new Date().getFullYear().toString());
