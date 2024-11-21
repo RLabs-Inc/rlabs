@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import AdmZip from 'adm-zip';
 import { getPublicThemes, getThemeById, updateThemeDownloads } from '$lib/server/vscode/themes';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
-import logoURL from '../../../../vsix-template/images/RLabs-Lamp.png';
+import logoURL from '../../../vsix-template/images/RLabs-Lamp.png';
 
 const logoData = read(logoURL);
 
