@@ -8,15 +8,27 @@
   import { randomInteger } from '$lib/utils/vscode/math';
   import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
 
+  import { mode } from 'mode-watcher';
+  import clsx from 'clsx';
+
   const { data }: { data: { themes: Theme[] } } = $props();
   const selectedTheme = getSelectedTheme();
   const selectedFile = getSelectedFile();
-  selectedTheme().set(data.themes[0]);
 
   let randomThemeInterval: NodeJS.Timeout;
 
+  selectRandomTheme();
+
+  function selectRandomTheme() {
+    const themeNumber = randomInteger(0, data.themes.length - 1);
+    selectedTheme().set(data.themes[themeNumber]);
+  }
+
+  selectRandomTheme();
+
   onMount(() => {
     randomizeSelectedTheme();
+    selectRandomTheme();
   });
 
   onDestroy(() => {
@@ -25,9 +37,8 @@
 
   const randomizeSelectedTheme = () => {
     randomThemeInterval = setInterval(() => {
-      const themeNumber = randomInteger(0, data.themes.length - 1);
-      selectedTheme().set(data.themes[themeNumber]);
-    }, 1000);
+      selectRandomTheme();
+    }, 2000);
   };
 
   const stopRandomizingSelectedTheme = () => {
@@ -46,46 +57,49 @@
 </svelte:head>
 
 <section
-  class="flex min-h-[calc(100vh-2rem)] w-full flex-col items-center"
-  style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, 'dd')}; transition-property: all; transition-duration: 200ms;`}
+  class={clsx('flex min-h-[calc(100vh-2rem)] w-full flex-col items-center')}
+  style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '60')}; transition-property: all; transition-duration: 350ms;`}
 >
-  <h1
-    class="text-bass px-5 pt-[4rem] text-center font-black drop-shadow-md sm:text-lg md:pt-[5rem] md:text-xl lg:text-xl 2xl:text-2xl"
-    style={`color: ${selectedTheme().theme?.uiColors.FG1}`}
+  <section
+    class="sticky -top-[6rem] z-10 w-full border-b border-border shadow-sm backdrop-blur-3xl md:-top-[7rem]"
+    style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '80')}; transition-property: all; transition-duration: 350ms;`}
   >
-    Welcome to VSCode Themes Community
-  </h1>
-  <div
-    class="w-full px-4 py-1 pt-[0.5rem]"
-    style={`color: ${selectedTheme().theme?.uiColors.AC2}; transition-property: all; transition-duration: 200ms;`}
-  >
-    <h2 class="text-center text-3xl font-black drop-shadow-md">Discover new themes</h2>
-  </div>
-  <div
-    class="sticky top-14 z-10 flex w-full flex-col items-center justify-center gap-5 p-5 pb-12 shadow-sm backdrop-blur-3xl"
-  >
-    <div
-      class="h-[17rem] w-full drop-shadow-md md:h-[20rem] md:w-5/6 lg:h-[17rem] lg:w-2/3 xl:h-[20rem] xl:w-1/2 2xl:h-[23rem]"
+    <h1
+      class="text-bass px-5 pt-[4rem] text-center font-black drop-shadow-md sm:text-lg md:pt-[5rem] md:text-xl lg:text-xl 2xl:text-2xl"
     >
-      <VSCEditor />
-      <div
-        class="mt-1 flex flex-row items-baseline justify-end gap-1 px-0.5"
-        style={`color: ${selectedTheme().theme?.uiColors.AC1}`}
+      Welcome to VSCode Themes Community
+    </h1>
+    <div class="w-full px-4 pt-[0.5rem]">
+      <h2
+        class="text-center text-3xl font-black drop-shadow-md"
+        style={`color: ${selectedTheme().theme?.uiColors.AC2}; transition-property: all; transition-duration: 500ms;`}
       >
-        <span
-          class="text-base font-black drop-shadow-sm lg:text-lg"
-          style={`color: ${selectedTheme().theme?.uiColors.AC1}`}
-          >{selectedTheme().theme?.name}</span
-        >
-        <span style={`color: ${selectedTheme().theme?.uiColors.FG1}`}>
-          <span class="text-xs font-normal drop-shadow-sm md:text-sm">by</span>
-          <span class="text-xs font-semibold drop-shadow-sm md:text-sm">
-            {selectedTheme().theme?.userName}
+        Discover new themes
+      </h2>
+    </div>
+    <div class="flex w-full flex-col items-center justify-center gap-5 px-5 pb-8 pt-5">
+      <div
+        class="mt-1 h-[17rem] w-full drop-shadow-md md:h-[20rem] md:w-5/6 lg:h-[17rem] lg:w-2/3 xl:h-[20rem] xl:w-1/2 2xl:h-[23rem]"
+      >
+        <VSCEditor />
+        <div class="flex flex-row items-baseline justify-end gap-1 px-0.5">
+          <span
+            class="text-base font-black drop-shadow-sm lg:text-lg"
+            style={`color: ${selectedTheme().theme?.uiColors.AC1}; transition-property: all; transition-duration: 200ms;`}
+            >{selectedTheme().theme?.name}</span
+          >
+          <span
+            style={`color: ${selectedTheme().theme?.uiColors.FG1}; transition-property: all; transition-duration: 200ms;`}
+          >
+            <span class="text-xs font-normal drop-shadow-sm md:text-sm">by</span>
+            <span class="text-xs font-semibold drop-shadow-sm md:text-sm">
+              {selectedTheme().theme?.userName}
+            </span>
           </span>
-        </span>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <div class="grid w-full grid-cols-1 gap-10 p-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
     {#each data.themes as theme, index (theme.id)}

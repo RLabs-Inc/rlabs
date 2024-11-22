@@ -13,10 +13,12 @@
     background-color: var(--bg1);
     color: var(--fg1);
     border-color: var(--comment);
-    transition: all 0.2s ease-in-out;
+    transition-property: all;
+    transition-duration: 350ms;
   }
   .top-bar {
     background-color: var(--bg2);
-    transition: all 0.2s ease-in-out;
+    transition-property: all;
+    transition-duration: 350ms;
   }
 </style>

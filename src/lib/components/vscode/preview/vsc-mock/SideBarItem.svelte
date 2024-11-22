@@ -1,6 +1,6 @@
 <script lang="ts">
   import clsx from 'clsx';
-  import { ChevronDown, ChevronRight, Folder, File } from 'lucide-svelte';
+  import { ChevronDown, ChevronRight, Folder } from 'lucide-svelte';
   import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
 
   type FolderStates = {
@@ -69,17 +69,25 @@
   .item:hover {
     background-color: var(--listHover);
     color: var(--fg1);
+    transition-property: all;
+    transition-duration: 350ms;
   }
   .item.active {
     background-color: var(--listActive);
     color: var(--fg1);
+    transition-property: all;
+    transition-duration: 350ms;
   }
   .item {
     background-color: var(--bg1);
     color: var(--fg2);
+    transition-property: all;
+    transition-duration: 350ms;
   }
   .item.main {
     background-color: var(--bg2);
     color: var(--fg2);
+    transition-property: all;
+    transition-duration: 350ms;
   }
 </style>

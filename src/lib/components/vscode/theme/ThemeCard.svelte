@@ -39,8 +39,10 @@
 
 <div
   class={clsx(
-    'theme-card flex w-full max-w-xs cursor-pointer flex-col gap-1 place-self-center overflow-hidden rounded-md focus:outline-none',
-    selectedTheme().theme?.name === theme.name ? 'active' : 'hover:scale-105 focus:scale-105'
+    'theme-card flex w-full max-w-xs cursor-pointer flex-col gap-1 place-self-center overflow-hidden rounded-md outline-none focus:outline-none',
+    selectedTheme().theme?.name === theme.name
+      ? 'active shadow-lg'
+      : 'hover:scale-105 hover:shadow-md focus:scale-105'
   )}
   style={styleVars}
   onclick={() => {
@@ -56,6 +58,7 @@
   aria-keyshortcuts="Enter"
   tabindex="0"
   role="button"
+  aria-pressed={selectedTheme().theme?.name === theme.name}
 >
   <div class="flex h-2 w-full items-center">
     <div class="h-2 w-full" style="background-color: var(--color-accent)"></div>

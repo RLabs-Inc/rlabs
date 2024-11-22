@@ -19,14 +19,27 @@
     background: var(--bg2);
     color: var(--fg1);
     border-color: var(--ac1);
+    transition-property: all;
+    transition-duration: 350ms;
+  }
+  .tab.active:hover {
+    background: var(--bg2);
+    color: var(--fg1);
+    border-color: var(--ac1);
+    transition-property: all;
+    transition-duration: 350ms;
   }
   .tab {
     background: var(--bg1);
     color: var(--comment);
     border-color: var(--border);
+    transition-property: all;
+    transition-duration: 350ms;
   }
   .tab:hover {
     background: var(--tabHover);
     color: var(--fg1);
+    transition-property: all;
+    transition-duration: 200ms;
   }
 </style>

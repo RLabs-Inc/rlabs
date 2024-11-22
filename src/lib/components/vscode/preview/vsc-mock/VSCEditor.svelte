@@ -62,18 +62,18 @@
   <div class="flex h-full flex-col overflow-hidden rounded-xl" style={colors}>
     <div
       class="flex h-10 w-full items-center justify-center"
-      style={`background: var(--bg2); transition-property: all; transition-duration: 200ms;`}
+      style={`background: var(--bg2); transition-property: all; transition-duration: 350ms;`}
     >
       <input
         type="text"
         class="h-5 w-72 rounded-md border p-1 text-xs focus:outline-none"
-        style={`background: var(--bg1); color: var(--fg1); border-color: var(--comment); transition-property: all; transition-duration: 200ms;`}
+        style={`background: var(--bg1); color: var(--fg1); border-color: var(--comment); transition-property: all; transition-duration: 350ms;`}
       />
     </div>
 
     <div
       class="no-scrollbar flex flex-1 overflow-y-hidden overflow-x-scroll text-sm"
-      style={`background: var(--bg1); color: var(--fg1); transition-property: all; transition-duration: 200ms;`}
+      style={`background: var(--bg1); color: var(--fg1); transition-property: all; transition-duration: 350ms;`}
     >
       <ActivityBar />
       <SideBar />

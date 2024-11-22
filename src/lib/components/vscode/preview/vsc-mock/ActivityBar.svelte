@@ -27,7 +27,8 @@
     .acBtn {
       color: var(--comment);
       border-color: transparent;
-      transition: all 0.2s ease-in-out;
+      transition-property: all;
+      transition-duration: 350ms;
     }
     .acBtn:hover {
       color: var(--fg1);
@@ -42,6 +43,7 @@
 <style>
   .acBar {
     background-color: var(--bg2);
-    transition: all 0.2s ease-in-out;
+    transition-property: all;
+    transition-duration: 350ms;
   }
 </style>

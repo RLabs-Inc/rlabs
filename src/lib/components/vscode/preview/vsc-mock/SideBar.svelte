@@ -32,11 +32,18 @@
 
 <div
   class="sideBar flex w-12 flex-col sm:w-36 2xl:w-40"
-  style="background-color: var(--bg1); border-right: 1px solid var(--border); color: var(--fg2);"
+  style="background-color: var(--bg1); border-right: 1px solid var(--border); color: var(--fg2); transition-property: all; transition-duration: 350ms;"
 >
   <div class="flex items-center justify-between p-2">
-    <span class="text-xs" style="color: var(--fg1);">EXPLORER</span>
-    <MoreHorizontal class="h-4 w-4" style="color: var(--fg1);" />
+    <span
+      class="text-xs"
+      style="color: var(--fg1); transition-property: all; transition-duration: 350ms;"
+      >EXPLORER</span
+    >
+    <MoreHorizontal
+      class="h-4 w-4"
+      style="color: var(--fg1); transition-property: all; transition-duration: 350ms;"
+    />
   </div>
   <div class="custom-scrollbar overflow-y-auto text-sm">
     <SideBarItem
