@@ -36,6 +36,7 @@ import { getPythonTokenColors } from './languages/python';
 import { getRegexpTokenColors } from './languages/regexp';
 import { getRustTokenColors } from './languages/rust';
 import { getShellTokenColors } from './languages/shell';
+import { getSvelteTokenColors } from './languages/svelte';
 
 export function getAllTokenColors(colors: TokenColors): TokenColor[] {
   return [
@@ -75,6 +76,7 @@ export function getAllTokenColors(colors: TokenColors): TokenColor[] {
     ...getPythonTokenColors(colors),
     ...getRegexpTokenColors(colors),
     ...getRustTokenColors(colors),
-    ...getShellTokenColors(colors)
+    ...getShellTokenColors(colors),
+    ...getSvelteTokenColors(colors)
   ];
 }

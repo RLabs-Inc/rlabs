@@ -36,7 +36,7 @@
 >
   <div class="flex items-center justify-between p-2">
     <span
-      class="text-xs"
+      class=" text-xs"
       style="color: var(--fg1); transition-property: all; transition-duration: 350ms;"
       >EXPLORER</span
     >
@@ -45,7 +45,7 @@
       style="color: var(--fg1); transition-property: all; transition-duration: 350ms;"
     />
   </div>
-  <div class="custom-scrollbar overflow-y-auto text-sm">
+  <div class="custom-scrollbar overflow-y-auto text-xs">
     <SideBarItem
       name="vscode-theme-generator"
       icon={Folder}

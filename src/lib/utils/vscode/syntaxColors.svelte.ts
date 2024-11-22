@@ -387,7 +387,7 @@ export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
       syntaxColors[key as keyof SyntaxColors] = ensureReadability(
         syntaxColors[key as keyof SyntaxColors],
         uiColorsState().uiColors.BG1,
-        4.5
+        5.5
       );
     }
   });

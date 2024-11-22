@@ -115,7 +115,7 @@ export function generateSemanticThemeJSON(
       disabledForeground: syntaxColors.comment, // Overall foreground for disabled elements. This color is only used if not overridden by a component.
       'widget.border': colors.BORDER, // Border color of widgets such as Find/Replace inside the editor.
       // "widget.shadow": colors.FG2, // Shadow color of widgets such as Find/Replace inside the editor
-      'selection.background': getColorWithOpacity(colors.AC2, '50'), // Background color of text selections in the workbench (for input fields or text areas, does not apply to selections within the editor and the terminal)
+      'selection.background': colors.selection, // Background color of text selections in the workbench (for input fields or text areas, does not apply to selections within the editor and the terminal)
       // 'selection.foreground': Color(colors.AC2).isDark() ? colors.FG1 : colors.FG3, // Foreground color of text selections in the workbench
       descriptionForeground: colors.FG2, // Foreground color for description text providing additional information, for example for a label.
       errorForeground: colors.ERROR, // Overall foreground color for error messages (this color is only used if not overridden by a component)
@@ -322,7 +322,7 @@ export function generateSemanticThemeJSON(
       // Editor
       'editor.background': colors.BG1,
       'editor.foreground': colors.FG1,
-      'editor.lineHighlightBackground': '#00000010',
+      'editor.lineHighlightBackground': colors.lineHighlight,
       'editorLineNumber.foreground': syntaxColors.comment,
       'editorLineNumber.activeForeground': colors.AC1,
       'editorLineNumber.dimmedForeground': getColorWithOpacity(syntaxColors.comment, '90'),
@@ -334,7 +334,7 @@ export function generateSemanticThemeJSON(
       'editorMultiCursor.secondary.background': colors.lineHighlight,
       'editor.selectionBackground': colors.selection,
       'editor.selectionForeground': colors.FG1,
-      'editor.inactiveSelectionBackground': colors.selection,
+      'editor.inactiveSelectionBackground': getColorWithOpacity(colors.selection, '30'),
       'editor.selectionHighlightBackground': colors.selection,
       // "editor.selectionHighlightBorder": colors.BORDER,
       'editor.foldBackground': colors.lineHighlight,
@@ -371,10 +371,10 @@ export function generateSemanticThemeJSON(
       // # FIND
       'editor.findMatchBackground': colors.findMatch,
       'editor.findMatchForeground': colors.FG1, //# Text color of the current search match.
-      'editor.findMatchHighlightBackground': getColorWithOpacity(colors.findMatch, '50'), // Color of the other search matches
+      'editor.findMatchHighlightBackground': colors.findMatch, // Color of the other search matches
       'editor.findMatchHighlightForeground': colors.FG1, // Foreground color of the other search matches.
       'editor.findRangeHighlightBackground': colors.selection, // Color the range limiting the search
-      // "editor.findMatchBorder": colors.BORDER, // Border color of the current search match.
+      'editor.findMatchBorder': syntaxColors.comment, // Border color of the current search match.
       // "editor.findMatchHighlightBorder": colors.BORDER, // Border color of the other search matches.
       // "editor.findRangeHighlightBorder": colors.BORDER, // Border color the range limiting the search (Enable 'Find in Selection' in the find widget).
 
@@ -539,7 +539,7 @@ export function generateSemanticThemeJSON(
       'peekViewResult.fileForeground': colors.FG1, // Foreground color for file nodes in the peek view result list
       'peekViewResult.lineForeground': colors.FG1, // Foreground color for line nodes in the peek view result list
       'peekViewResult.matchHighlightBackground': colors.lineHighlight, // Match highlight color in the peek view result list
-      'peekViewResult.selectionBackground': colors.BG2, // Background color of the selected entry in the peek view result list
+      'peekViewResult.selectionBackground': colors.selection, // Background color of the selected entry in the peek view result list
       'peekViewResult.selectionForeground': colors.FG1, // Foreground color of the selected entry in the peek view result list
       'peekViewTitle.background': colors.BG1, // Background color of the peek view title area
       'peekViewTitleDescription.foreground': colors.FG2, // Color of the peek view title info

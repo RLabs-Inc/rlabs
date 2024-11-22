@@ -1,10 +1,10 @@
 <script lang="ts">
 </script>
 
-<div class="top-bar flex h-10 w-full items-center justify-center">
+<div class="top-bar flex h-5 w-full items-center justify-center">
   <input
     type="text"
-    class="input h-5 w-40 rounded-md border p-1 text-xs focus:outline-none md:w-72"
+    class="input h-3 w-40 rounded-md border p-1 text-xs focus:outline-none md:w-72"
   />
 </div>
 

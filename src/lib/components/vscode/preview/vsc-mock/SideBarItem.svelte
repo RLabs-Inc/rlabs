@@ -35,7 +35,7 @@
 
 <button
   class={clsx(
-    'item flex w-full cursor-pointer items-center truncate px-2 py-1',
+    'item flex h-[1.3rem] w-full cursor-pointer items-center truncate px-2',
     isOpen && !isMain && 'sticky top-5',
     isActive && 'active',
     isMain && 'main font-bold',

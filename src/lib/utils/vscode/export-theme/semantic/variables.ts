@@ -8,7 +8,7 @@ export function getVariableSemanticTokens({
     // Basic variables
     variable: syntaxColors.variable,
     'variable.declaration': syntaxColors.variableDeclaration,
-    'variable.readonly': syntaxColors.variableReadonly,
+    'variable.readonly.local': syntaxColors.variableReadonly,
     'variable.readonly.defaultLibrary': syntaxColors.supportVariable,
     'variable.defaultLibrary': syntaxColors.supportVariable,
 
@@ -23,6 +23,8 @@ export function getVariableSemanticTokens({
     'property.readonly': syntaxColors.variableProperty,
     'property.declaration': syntaxColors.propertyDeclaration,
     'property.defaultLibrary': syntaxColors.supportProperty,
+
+    // Parameters
     parameter: syntaxColors.parameter,
 
     // Language specific - JavaScript/TypeScript

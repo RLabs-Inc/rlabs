@@ -70,7 +70,7 @@
 
 <div
   class={clsx(
-    'theme-card flex w-full max-w-sm cursor-pointer flex-col gap-1 place-self-center overflow-hidden rounded-md focus:outline-none',
+    'theme-card flex w-full max-w-sm cursor-pointer flex-col gap-1 place-self-center overflow-hidden rounded-md outline-none focus:outline-none',
     selectedTheme().theme?.name === theme.name ? 'active' : 'hover:scale-105 focus:scale-105'
   )}
   style={styleVars}

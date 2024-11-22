@@ -177,7 +177,7 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
       colors[key as keyof UIColors] = ensureReadability(
         colors[key as keyof UIColors],
         colors.BG1,
-        key.startsWith('BG') ? 1.5 : 5.5
+        key.startsWith('BG') ? 1.0 : 5.5
       );
     }
   });

@@ -6,12 +6,30 @@
 
 <div
   class={clsx(
-    'tab cursor-pointer items-center px-2 py-2 text-sm transition-colors duration-200 md:px-4',
+    'tab cursor-pointer items-center px-2 py-[0.37rem] text-sm transition-colors duration-200 md:px-4',
     active ? 'active flex border-t' : 'hidden border-r md:flex'
   )}
 >
   {name}
-  <span class="ml-2">x</span>
+  <span class={clsx('x ml-2 text-xs', active && 'active')}>x</span>
+
+  <style>
+    .x {
+      visibility: hidden;
+      transition-property: all;
+      transition-duration: 50ms;
+    }
+    .x.active {
+      visibility: visible;
+      transition-property: all;
+      transition-duration: 50ms;
+    }
+    .tab:hover .x {
+      visibility: visible;
+      transition-property: all;
+      transition-duration: 50ms;
+    }
+  </style>
 </div>
 
 <style>

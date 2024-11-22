@@ -49,13 +49,16 @@ export function getVariableSyntaxTokens({ syntaxColors }: TokenColors): TokenCol
     {
       scope: [
         'variable.other.property',
-        'variable.object.property',
-        'variable.property.cli',
-        'variable.property',
         'variable.other.object.property',
         'variable.other.object.instance.property',
         'variable.other.constant.property'
       ],
+      settings: {
+        foreground: syntaxColors.supportProperty
+      }
+    },
+    {
+      scope: ['variable.object.property', 'variable.property.cli', 'variable.property'],
       settings: {
         foreground: syntaxColors.variableProperty
       }

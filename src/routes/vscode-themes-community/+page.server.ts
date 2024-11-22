@@ -26,9 +26,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
   downloadTheme: async ({ request }) => {
-    console.log(request.body);
     const formData = await request.formData();
-    console.log(formData);
     const themeId = formData.get('themeId') as string;
     if (!themeId) {
       return { success: false, error: 'No theme ID provided' };

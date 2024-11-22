@@ -25,7 +25,7 @@
 </script>
 
 <div
-  class="flex h-7 w-full items-center overflow-hidden truncate text-xs"
+  class="flex h-6 w-full items-center overflow-hidden truncate text-xs"
   style="color: var(--fg3); transition-property: all; transition-duration: 350ms;"
 >
   <div
@@ -65,7 +65,7 @@
           style="color: var(--fgAc2); transition-property: all; transition-duration: 350ms;"
         >
           {#if item.icon}
-            <item.icon class="mr-1 h-4 w-4" />
+            <item.icon class="mr-1 h-3 w-3" />
           {/if}
           <span>{item.text}</span>
         </div>

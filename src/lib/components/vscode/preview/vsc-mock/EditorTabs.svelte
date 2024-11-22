@@ -20,7 +20,27 @@
     {/each}
   </div>
   <div
-    class="h-[1.45rem] w-full"
+    class="flex h-[1.25rem] w-full items-center"
     style="background-color: var(--bg2); transition-property: all; transition-duration: 350ms;"
-  ></div>
+  >
+    <span class="w-full px-4 text-xs">
+      <span class="breadcrumb"> src ></span>
+      <span class="breadcrumb"> example-files ></span>
+      <span class="breadcrumb"> {selectedFile().file.name}</span>
+    </span>
+  </div>
 </div>
+
+<style>
+  .breadcrumb {
+    color: var(--comment);
+    cursor: pointer;
+    transition-property: all;
+    transition-duration: 200ms;
+  }
+  .breadcrumb:hover {
+    color: var(--fg1);
+    transition-property: all;
+    transition-duration: 200ms;
+  }
+</style>

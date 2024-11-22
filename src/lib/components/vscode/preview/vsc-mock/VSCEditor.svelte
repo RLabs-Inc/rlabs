@@ -61,7 +61,7 @@
 <section class="flex h-full flex-col">
   <div class="flex h-full flex-col overflow-hidden rounded-xl" style={colors}>
     <div
-      class="flex h-10 w-full items-center justify-center"
+      class="flex h-7 w-full items-center justify-center"
       style={`background: var(--bg2); transition-property: all; transition-duration: 350ms;`}
     >
       <input
