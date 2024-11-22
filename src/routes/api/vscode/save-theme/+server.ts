@@ -3,7 +3,6 @@ import type { Theme } from '$lib/types/theme.js';
 
 export async function POST({ request }) {
   const theme: Theme = await request.json();
-  console.log(theme);
   if (!theme) {
     return new Response('No theme provided', { status: 400 });
   }

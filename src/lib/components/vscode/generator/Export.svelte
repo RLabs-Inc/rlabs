@@ -41,7 +41,6 @@
         window.URL.revokeObjectURL(url);
         a.remove();
       }
-      console.log(result);
       applyAction(result);
       isDownloading = false;
     };
