@@ -206,3 +206,15 @@ export const AnsiColorsSchema = z.object({
   BrightCyan: z.string(),
   BrightWhite: z.string()
 });
+
+export type LCHColor = {
+  mode: 'lch';
+  l: number;
+  c: number;
+  h: number;
+  alpha?: number;
+};
+
+export type ColorEvent = {
+  color: string;
+};

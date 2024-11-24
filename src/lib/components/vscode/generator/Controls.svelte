@@ -231,7 +231,7 @@
           </div>
         </div>
       </div>
-      <div class="py-3">
+      <div class="w-full py-3">
         <ColorPicker />
       </div>
       <div class="w-full rounded-md border border-border p-2 shadow-sm">
