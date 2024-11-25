@@ -116,9 +116,16 @@
           style={`background: ${LCH_to_sRGB_string(colorState)}`}
         ></div>
       </div>
-      <div class="flex flex-col justify-center gap-1 text-sm">
-        <div class="font-mono uppercase">
-          {LCH_to_sRGB_string(colorState)}
+      <div class="flex w-full flex-col justify-center gap-1 text-sm">
+        <div class="flex items-center justify-between">
+          <div class="font-mono uppercase">
+            {LCH_to_sRGB_string(colorState)}
+          </div>
+          {#if !isLCH_within_sRGB(pickerColorState().pickerLightness[0], pickerColorState().pickerChroma[0], pickerColorState().pickerHue[0])}
+            <span class="rounded bg-destructive px-1 text-xs text-destructive-foreground"
+              >Color is out of gamut</span
+            >
+          {/if}
         </div>
         <div class="flex items-center gap-2">
           <span class="text-xs text-muted-foreground">LCH:</span>
@@ -127,13 +134,10 @@
             {formatDecimal(pickerColorState().pickerChroma[0])},
             {formatDecimal(pickerColorState().pickerHue[0])}°
             {#if pickerColorState().pickerAlpha[0] !== 100}
-              , {formatDecimal(pickerColorState().pickerAlpha[0])}%
+              - {formatDecimal(pickerColorState().pickerAlpha[0])}%
             {/if}
           </span>
         </div>
-        {#if !isLCH_within_sRGB(pickerColorState().pickerLightness[0], pickerColorState().pickerChroma[0], pickerColorState().pickerHue[0])}
-          <span class="text-warning text-xs">Color is out of gamut</span>
-        {/if}
       </div>
     </div>
   </div>
@@ -286,7 +290,7 @@
   } */
 
   .out-of-gamut {
-    outline: 2px solid var(--warning, #f1a10d);
+    outline: 2px solid var(--error, #d65a5a);
   }
 
   .out-of-gamut::after {
