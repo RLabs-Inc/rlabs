@@ -43,7 +43,7 @@
   >
     <span class="text-sm font-black capitalize drop-shadow-sm">{selectedColor.name}</span>
     {#key selectedColor.name}
-      <!-- <LCHColorPicker onChange={handleColorChange} /> -->
+      <LCHColorPicker onChange={handleColorChange} />
     {/key}
   </div>
 {/if}

@@ -24,7 +24,7 @@
     AccordionContent
   } from '$lib/components/ui/accordion';
 
-  // import ColorPicker from './ColorPicker.svelte';
+  import ColorPicker from '$lib/components/vscode/generator/ColorPicker.svelte';
   import LoadSaveTheme from './LoadSaveTheme.svelte';
 
   import { ColorSchemes } from '$lib/types/color';
@@ -234,7 +234,7 @@
       </div>
       <div class="w-full py-3">
         {#if selectedColorState().selectedColor}
-          <!-- <ColorPicker /> -->
+          <ColorPicker />
         {/if}
       </div>
       <div class="w-full rounded-md border border-border p-2 shadow-sm">
