@@ -1,6 +1,50 @@
-import Color from 'color';
+import {
+  wcagLuminance,
+  wcagContrast,
+  filterBrightness,
+  filterSaturate,
+  parseHex,
+  formatHex8,
+  hsl
+} from 'culori';
 
 import { ColorSchemes } from '$lib/types/color';
+
+export const brightenColor = filterBrightness(1.2, 'rgb');
+export const darkenColor = filterBrightness(0.8, 'rgb');
+export const saturateColor = filterSaturate(1.3, 'rgb');
+export const desaturateColor = filterSaturate(0.9, 'rgb');
+
+export function brighten(color: string): string {
+  return formatHex8(brightenColor(parseHex(color)));
+}
+
+export function darken(color: string): string {
+  return formatHex8(darkenColor(parseHex(color)));
+}
+
+export function saturate(color: string): string {
+  return formatHex8(saturateColor(parseHex(color)));
+}
+
+export function desaturate(color: string): string {
+  return formatHex8(desaturateColor(parseHex(color)));
+}
+
+export function darkenSaturate(color: string): string {
+  return formatHex8(darkenColor(saturateColor(parseHex(color))));
+}
+export function brightenDesaturate(color: string): string {
+  return formatHex8(brightenColor(desaturateColor(parseHex(color))));
+}
+
+export function isDark(color: string): boolean {
+  return wcagLuminance(color) < 0.5;
+}
+
+export function calculateContrast(color1: string, color2: string): number {
+  return wcagContrast(color1, color2);
+}
 
 export function getAlphaColor(color: string, alpha: string): string {
   if (color.length > 7) {
@@ -445,57 +489,56 @@ function getNestedPolygons(baseHue: number): number[] {
 export function adjustCommentColor(
   commentColor: string,
   backgroundColor: string,
-  minContrast: number,
-  maxContrast: number
+  isDarkTheme: boolean
 ): string {
-  const bgColor = Color(backgroundColor);
-  let comment = Color(commentColor);
+  const minContrast = 2;
+  const maxContrast = 3;
+  let comment = parseHex(commentColor);
   // const bgLuminosity = bgColor.luminosity();
-  const isDarkTheme = bgColor.isDark();
+  console.log('Is dark theme: ', isDarkTheme, minContrast, maxContrast);
   const maxSaturation = isDarkTheme ? 15 : 35;
   // Adjust the comment color until it meets our criteria
   while (true) {
-    const contrast = comment.contrast(bgColor);
-    // const luminanceRatio = Math.abs(comment.luminosity() - bgLuminosity) / Math.max(comment.luminosity(), bgLuminosity);
+    const contrast = calculateContrast(formatHex8(comment), backgroundColor);
 
     if (isDarkTheme) {
-      // For dark themes, we want to darken the comment color
       if (contrast < minContrast || contrast > maxContrast) {
         if (contrast > maxContrast) {
-          comment = comment.darken(0.2);
-          comment = comment.desaturate(0.5);
+          comment = parseHex(darkenSaturate(formatHex8(comment)));
         } else if (contrast < minContrast) {
-          comment = comment.lighten(0.2);
-          comment = comment.saturate(0.2);
+          comment = parseHex(brightenDesaturate(formatHex8(comment)));
         }
       } else {
         break;
       }
     } else {
-      // For light themes, keep the current behavior
       if (contrast < minContrast || contrast > maxContrast) {
         if (contrast < minContrast) {
-          comment = comment.darken(0.2);
-          comment = comment.saturate(0.2);
+          comment = parseHex(darkenSaturate(formatHex8(comment)));
         } else if (contrast > maxContrast) {
-          comment = comment.lighten(0.2);
-          comment = comment.desaturate(0.5);
+          comment = parseHex(brightenDesaturate(formatHex8(comment)));
         }
       } else {
         break;
       }
     }
+    console.log('Comment contrast: ', contrast);
+    console.log(
+      'CONDITION: ',
+      isDarkTheme && isDark(formatHex8(comment)),
+      !isDarkTheme && !isDark(formatHex8(comment))
+    );
     // Prevent infinite loop and ensure the color doesn't get too dark or too light
-    if (isDarkTheme && comment.luminosity() < 0.05) break;
-    if (!isDarkTheme && comment.luminosity() > 0.95) break;
+    if (isDarkTheme && isDark(formatHex8(comment))) break;
+    if (!isDarkTheme && !isDark(formatHex8(comment))) break;
   }
 
   // Ensure maxSaturation
-  while (Color(comment).hsl().saturationl() > maxSaturation) {
-    comment = comment.desaturate(0.01);
+  while (hsl(comment).s > maxSaturation) {
+    comment = desaturateColor(comment);
   }
 
-  return comment.hexa();
+  return formatHex8(comment);
 }
 
 export function ensureReadability(
@@ -503,19 +546,43 @@ export function ensureReadability(
   background: string,
   minContrast = 5.5
 ): string {
-  let color = Color(foreground);
-  const bgColor = Color(background);
+  let color = parseHex(foreground);
+  const bgColor = parseHex(background);
+  const isDarkTheme = isDark(background);
   let iterations = 0;
   const maxIterations = 100;
 
-  while (color.contrast(bgColor) < minContrast && iterations < maxIterations) {
-    color = color.isLight()
-      ? color.darken(0.05).saturate(0.05)
-      : color.lighten(0.05).saturate(0.05);
-    iterations++;
-  }
+  if (isDarkTheme) {
+    while (
+      calculateContrast(formatHex8(color), formatHex8(bgColor)) < minContrast &&
+      iterations < maxIterations
+    ) {
+      color = !isDark(formatHex8(color))
+        ? parseHex(darkenSaturate(formatHex8(color)))
+        : parseHex(brightenDesaturate(formatHex8(color)));
+      iterations++;
+    }
+  } else {
+    while (
+      calculateContrast(formatHex8(color), formatHex8(bgColor)) < minContrast &&
+      iterations < maxIterations
+    ) {
+      let newColor = darkenColor(color);
+      newColor = saturateColor(newColor);
 
-  return color.hexa();
+      if (newColor) {
+        color = newColor;
+      }
+
+      iterations++;
+    }
+  }
+  console.log(
+    'Iterations: ',
+    iterations,
+    calculateContrast(formatHex8(color), formatHex8(bgColor))
+  );
+  return formatHex8(color);
 }
 
 export function adjustHue(hue: number): number {

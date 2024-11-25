@@ -1,4 +1,4 @@
-import Color from 'color';
+import { random, clampChroma, formatHex8, formatHex, parseHex, oklch } from 'culori';
 import { randomInteger, randomNumber } from '$lib/utils/vscode/math';
 import { ensureReadability } from '$lib/utils/vscode/colorUtils.svelte';
 import { getControls } from '$lib/state/vscode/controls.svelte';
@@ -6,6 +6,7 @@ import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';
 
 import { type UIColors } from '$lib/types/color';
 import type { UIColorsGenerationOptions } from '$lib/types/theme';
+import Color from 'color';
 
 export function generateUIColors(options: UIColorsGenerationOptions): {
   generatedUIColors: UIColors;
@@ -16,150 +17,127 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
   const bgBase = controlsState().isDark ? randomInteger(0, 5) : randomInteger(90, 100);
   const fgBase = controlsState().isDark ? randomInteger(85, 100) : randomInteger(0, 15);
 
-  const generateColor = (hue: number, saturation: number, lightness: number) => {
-    const randomHueShift = randomNumber(-5, 5);
-    const randomSaturationShift = randomNumber(-10, 10);
-    const randomLightnessShift = randomNumber(-5, 5);
-
-    hue = (hue + randomHueShift + 360) % 360;
-    saturation = Math.max(2, Math.min(100, saturation + randomSaturationShift));
-    lightness = Math.max(0, Math.min(100, lightness + randomLightnessShift));
-
-    const color = Color.hsl(hue, saturation, lightness).hexa();
-    return color;
+  const randomizeColor = (hue: number, lightness: number[], chroma: number[] | null) => {
+    const newColor = random('oklch', {
+      l: [lightness[0] / 100, lightness[1] / 100],
+      c: chroma ? [chroma[0] / 100, chroma[1] / 100] : [0, 0.4],
+      h: hue
+    });
+    console.log(newColor);
+    return formatHex(newColor);
   };
+
+  // const generateColor = (hue: number, saturation: number, lightness: number) => {
+  //   const randomHueShift = randomNumber(-5, 5);
+  //   const randomSaturationShift = randomNumber(-10, 10);
+  //   const randomLightnessShift = randomNumber(-5, 5);
+
+  //   hue = (hue + randomHueShift + 360) % 360;
+  //   saturation = Math.max(2, Math.min(100, saturation + randomSaturationShift));
+  //   lightness = Math.max(0, Math.min(100, lightness + randomLightnessShift));
+
+  //   const color = Color.hsl(hue, saturation, lightness).hexa();
+  //   return color;
+  // };
 
   const colors: UIColors = {
     BG1:
       lockedColors?.BG1 ||
-      generateColor(
-        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-          0,
-        controlsState().uiSaturation[0] * randomNumber(0.2, 0.4),
-        controlsState().isDark ? bgBase + randomInteger(-5, 7) : bgBase + randomInteger(-5, 10)
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [0, 30] : [85, 100],
+        [0, 2]
       ),
     BG2:
       lockedColors?.BG2 ||
-      generateColor(
-        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-          0,
-        controlsState().uiSaturation[0] * randomNumber(0.2, 0.4),
-        controlsState().isDark ? bgBase + randomInteger(-3, 7) : bgBase + randomInteger(-10, 10)
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [0, 20] : [80, 100],
+        [0, 3]
       ),
     BG3:
       lockedColors?.BG3 ||
-      generateColor(
-        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-          0,
-        controlsState().uiSaturation[0] * randomNumber(0.2, 0.4),
-        controlsState().isDark ? bgBase + randomInteger(-3, 7) : bgBase + randomInteger(-13, 10)
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [0, 25] : [75, 100],
+        [0, 3]
       ),
     FG1:
       lockedColors?.FG1 ||
-      generateColor(
-        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-          0,
-        controlsState().uiSaturation[0] * randomNumber(0.2, 1.25),
-        controlsState().isDark ? fgBase - randomInteger(0, 7) : fgBase + randomInteger(0, 9)
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [97, 100] : [0, 20],
+        [0, 10]
       ),
 
     FG2:
       lockedColors?.FG2 ||
-      generateColor(
-        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-          0,
-        controlsState().uiSaturation[0] * randomNumber(0.2, 1.25),
-        controlsState().isDark ? fgBase - randomInteger(3, 15) : fgBase + randomInteger(3, 15)
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [95, 100] : [0, 30],
+        [0, 15]
       ),
     FG3:
       lockedColors?.FG3 ||
-      generateColor(
-        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-          0,
-        controlsState().uiSaturation[0] * randomNumber(0.6, 1.25),
-        controlsState().isDark ? bgBase + randomInteger(0, 5) : bgBase - randomInteger(0, 5)
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [0, 20] : [70, 100],
+        [0, 30]
       ),
     AC1:
       lockedColors?.AC1 ||
-      generateColor(
-        schemeHuesState().schemeHues[0] ?? 0,
-        controlsState().uiSaturation[0] * randomNumber(0.3, 1.25),
-        controlsState().isDark ? 60 : fgBase + randomInteger(0, 40)
+      randomizeColor(
+        schemeHuesState().schemeHues[0],
+        controlsState().isDark ? [60, 100] : [0, 40],
+        [0, 40]
       ),
     AC2:
       lockedColors?.AC2 ||
-      generateColor(
-        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-          0,
-        controlsState().uiSaturation[0] * randomNumber(0.3, 1.25),
-        controlsState().isDark ? 65 : fgBase + randomInteger(0, 50)
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [65, 100] : [0, 50],
+        [0, 40]
       ),
     BORDER:
       lockedColors?.BORDER ||
-      generateColor(
-        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-          0,
-        controlsState().uiSaturation[0] * randomNumber(0.3, 1.25),
-        controlsState().isDark ? bgBase + randomInteger(-10, 10) : bgBase + randomInteger(-5, 5)
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [0, 10] : [90, 100],
+        [0, 10]
       ),
     INFO:
       lockedColors?.INFO ||
-      generateColor(
-        210,
-        controlsState().uiSaturation[0] * randomNumber(0.3, 1.25),
-        controlsState().isDark ? 65 : 45
-      ),
+      randomizeColor(210, controlsState().isDark ? [65, 100] : [30, 50], [0, 40]),
     ERROR:
       lockedColors?.ERROR ||
-      generateColor(
-        0,
-        controlsState().uiSaturation[0] * randomNumber(0.2, 1.5),
-        controlsState().isDark ? 65 : 35
-      ),
+      randomizeColor(0, controlsState().isDark ? [65, 100] : [30, 50], [0, 40]),
     WARNING:
       lockedColors?.WARNING ||
-      generateColor(
-        30,
-        controlsState().uiSaturation[0] * randomNumber(0.3, 1.25),
-        controlsState().isDark ? 65 : 35
-      ),
+      randomizeColor(30, controlsState().isDark ? [65, 100] : [30, 50], [0, 40]),
     SUCCESS:
       lockedColors?.SUCCESS ||
-      generateColor(
-        120,
-        controlsState().uiSaturation[0] * randomNumber(0.3, 1.25),
-        controlsState().isDark ? 40 : 25
-      ),
+      randomizeColor(120, controlsState().isDark ? [40, 100] : [25, 50], [0, 40]),
     lineHighlight:
       lockedColors?.lineHighlight ||
-      Color(
-        generateColor(
-          schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-            0,
-          controlsState().uiSaturation[0] * randomNumber(0.3, 1.25),
-          controlsState().isDark ? bgBase + 5 : bgBase - 5
-        )
-      ).hex() + '70',
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [0, 20] : [70, 100],
+        [0, 40]
+      ) + '70',
     selection:
       lockedColors?.selection ||
-      Color(
-        generateColor(
-          schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-            0,
-          controlsState().uiSaturation[0] * randomNumber(0.3, 1.25),
-          controlsState().isDark ? bgBase + 15 : bgBase - 15
-        )
-      ).hex() + '70',
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [0, 20] : [70, 100],
+        [0, 40]
+      ) + '70',
     findMatch:
       lockedColors?.findMatch ||
-      Color(
-        generateColor(
-          schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)] ??
-            0,
-          controlsState().uiSaturation[0] * randomNumber(0.3, 1.25),
-          controlsState().isDark ? bgBase + 20 : bgBase - 20
-        )
-      ).hex() + '70'
+      randomizeColor(
+        schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)],
+        controlsState().isDark ? [0, 20] : [70, 100],
+        [0, 40]
+      ) + '70'
   };
   // Ensure readability for specific colors
   Object.keys(colors).forEach((key) => {
@@ -177,16 +155,18 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
       colors[key as keyof UIColors] = ensureReadability(
         colors[key as keyof UIColors],
         colors.BG1,
-        key.startsWith('BG') ? 1.0 : 5.5
+        5.5
       );
     }
   });
 
   if (!few) {
-    const ac1Hue = Color(colors.AC1).hue();
-    const ac2Hue = Color(colors.AC2).hue();
-    schemeHuesState().generateAdditionalHues(ac1Hue, controlsState().scheme);
-    schemeHuesState().generateAdditionalHues(ac2Hue, controlsState().scheme);
+    const ac1Hue = oklch(colors.AC1)?.h;
+    const ac2Hue = oklch(colors.AC2)?.h;
+    if (ac1Hue && ac2Hue) {
+      schemeHuesState().generateAdditionalHues(ac1Hue, controlsState().scheme);
+      schemeHuesState().generateAdditionalHues(ac2Hue, controlsState().scheme);
+    }
   }
   return { generatedUIColors: colors };
 }

@@ -396,9 +396,8 @@ export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
   if (!lockedColors?.comment) {
     syntaxColors.comment = adjustCommentColor(
       syntaxColors.comment,
-      uiColorsState().uiColors.BG1,
-      controlsState().isDark ? 3 : 1.5, // minContrast
-      controlsState().isDark ? 3.25 : 2.5 // maxContrast
+      controlsState().isDark ? uiColorsState().uiColors.BG1 : uiColorsState().uiColors.BG2,
+      controlsState().isDark
     );
   }
   return { generatedSyntaxColors: syntaxColors };
