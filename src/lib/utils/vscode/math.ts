@@ -15,3 +15,5 @@ export const randomEnum = (enumObj: ColorSchemes) => {
   );
   return enumValues[Math.floor(Math.random() * enumValues.length)];
 };
+// Format number to 1 decimal place
+export const formatDecimal = (num: number) => Number(num.toFixed(1));

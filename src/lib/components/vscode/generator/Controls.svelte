@@ -3,6 +3,7 @@
   import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
   import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
   import { getAnsiColors } from '$lib/state/vscode/ansi-colors.svelte';
+  import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
 
   import { Label } from '$lib/components/ui/label';
   import { Button } from '$lib/components/ui/button';
@@ -23,7 +24,7 @@
     AccordionContent
   } from '$lib/components/ui/accordion';
 
-  import ColorPicker from './ColorPicker.svelte';
+  // import ColorPicker from './ColorPicker.svelte';
   import LoadSaveTheme from './LoadSaveTheme.svelte';
 
   import { ColorSchemes } from '$lib/types/color';
@@ -35,7 +36,7 @@
   const uiColorsState = getUiColors();
   const syntaxColorsState = getSyntaxColors();
   const ansiColorsState = getAnsiColors();
-
+  const selectedColorState = getSelectedColor();
   const getSaturationGradient = (hue: number) => `
   linear-gradient(to right,
     hsl(${hue}, 0%, 50%),
@@ -232,7 +233,9 @@
         </div>
       </div>
       <div class="w-full py-3">
-        <ColorPicker />
+        {#if selectedColorState().selectedColor}
+          <!-- <ColorPicker /> -->
+        {/if}
       </div>
       <div class="w-full rounded-md border border-border p-2 shadow-sm">
         <Export />

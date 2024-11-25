@@ -1,4 +1,4 @@
-import { converter, formatHex8 } from 'culori';
+import { converter, formatHex8, type Lch, type Oklch } from 'culori';
 
 const toOKLCH = converter('oklch');
 const toRGB = converter('rgb');
@@ -205,13 +205,9 @@ export function LCH_to_P3_string(l: number, c: number, h: number, a = 100, force
   );
 }
 
-export function LCH_to_sRGB_string(
-  l: number,
-  c: number,
-  h: number,
-  a = 100,
-  forceInGamut = false
-): string {
+export function LCH_to_sRGB_string(newColor: Oklch, forceInGamut = false): string {
+  let { l, c, h, alpha } = newColor;
+
   if (forceInGamut) {
     [l, c, h] = force_into_gamut(l, c, h, isLCH_within_sRGB);
   }
@@ -221,7 +217,7 @@ export function LCH_to_sRGB_string(
     l: l / 100,
     c: c / 132,
     h: h,
-    alpha: a / 100
+    alpha: alpha / 100
   });
 
   return formatHex8(color);
@@ -305,10 +301,13 @@ export function slider_stops(
       values[index] = x;
       // Force colors into gamut for accurate representation
       return LCH_to_sRGB_string(
-        values[0],
-        values[1],
-        values[2],
-        values[3],
+        {
+          mode: 'oklch',
+          l: values[0],
+          c: values[1],
+          h: values[2],
+          alpha: values[3]
+        },
         true // forceInGamut = true
       );
     })

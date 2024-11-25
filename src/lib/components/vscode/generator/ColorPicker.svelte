@@ -16,7 +16,7 @@
 
   function handleColorChange(newColor: string) {
     if (!selectedColor) return;
-
+    selectedColorState().setSelectedColor({ ...selectedColor, color: newColor });
     switch (selectedColor.type) {
       case 'ui':
         if (!uiColorsState().lockedUIColors[selectedColor.name as keyof UIColors]) {
@@ -42,10 +42,8 @@
     class="flex w-full flex-col items-center justify-center gap-2 rounded-md border border-border p-2 text-xs shadow-sm"
   >
     <span class="text-sm font-black capitalize drop-shadow-sm">{selectedColor.name}</span>
-    <LCHColorPicker
-      color={selectedColor.color}
-      onInput={handleColorChange}
-      onChange={handleColorChange}
-    />
+    {#key selectedColor.name}
+      <!-- <LCHColorPicker onChange={handleColorChange} /> -->
+    {/key}
   </div>
 {/if}
