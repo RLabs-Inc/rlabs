@@ -1,10 +1,5 @@
-import { clampChroma, formatHex8 } from 'culori';
-import {
-  brightenColor,
-  ensureReadability,
-  randomizeColor,
-  saturateColor
-} from './colorUtils.svelte';
+import { clampChroma, formatHex8, oklch } from 'culori';
+import { brightenColor, ensureReadability, randomizeColor } from './colorUtils.svelte';
 import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
 import { getControls } from '$lib/state/vscode/controls.svelte';
 
@@ -19,8 +14,6 @@ export function generateAnsiColors(options: AnsiColorsGenerationOptions): {
   const start = performance.now();
   const isDarkTheme = controlsState().isDark;
   const { lockedColors } = options;
-  const baseSaturation = 30 + Math.random() * 30; // 30-60
-  const baseLightness = 30 + Math.random() * 30; // 30-60
 
   const colors: AnsiColors = {
     Black: lockedColors.Black
@@ -31,22 +24,22 @@ export function generateAnsiColors(options: AnsiColorsGenerationOptions): {
       : randomizeColor([23, 37], isDarkTheme ? [40, 60] : [10, 60], [0, 20]),
     Green: lockedColors.Green
       ? lockedColors.Green
-      : formatHex8(randomizeColor([115, 175], isDarkTheme ? [40, 60] : [10, 60], [0, 20])),
+      : formatHex8(randomizeColor([115, 175], isDarkTheme ? [40, 60] : [10, 60], [2, 20])),
     Yellow: lockedColors.Yellow
       ? lockedColors.Yellow
-      : formatHex8(randomizeColor([40, 96], isDarkTheme ? [40, 60] : [10, 60], [0, 20])), // Center on orange-yellow
+      : formatHex8(randomizeColor([40, 96], isDarkTheme ? [40, 60] : [10, 60], [2, 20])), // Center on orange-yellow
     Blue: lockedColors.Blue
       ? lockedColors.Blue
-      : formatHex8(randomizeColor([233, 270], isDarkTheme ? [40, 85] : [10, 60], [0, 20])),
+      : formatHex8(randomizeColor([233, 270], isDarkTheme ? [40, 60] : [10, 60], [2, 20])),
     Magenta: lockedColors.Magenta
       ? lockedColors.Magenta
-      : formatHex8(randomizeColor([280, 360], isDarkTheme ? [40, 85] : [10, 60], [0, 20])),
+      : formatHex8(randomizeColor([280, 360], isDarkTheme ? [40, 60] : [10, 60], [2, 20])),
     Cyan: lockedColors.Cyan
       ? lockedColors.Cyan
-      : formatHex8(randomizeColor([180, 225], isDarkTheme ? [40, 85] : [10, 60], [0, 20])),
+      : formatHex8(randomizeColor([180, 225], isDarkTheme ? [40, 60] : [10, 60], [2, 20])),
     White: lockedColors.White
       ? lockedColors.White
-      : formatHex8(randomizeColor([50, 90], isDarkTheme ? [95, 100] : [85, 95], [0, 10])),
+      : formatHex8(randomizeColor([50, 90], isDarkTheme ? [95, 100] : [85, 95], [2, 20])),
     BrightBlack: lockedColors.BrightBlack
       ? lockedColors.BrightBlack
       : formatHex8(randomizeColor([280, 281], isDarkTheme ? [10, 15] : [5, 15], [0, 5])),
@@ -71,15 +64,17 @@ export function generateAnsiColors(options: AnsiColorsGenerationOptions): {
   ['Red', 'Green', 'Yellow', 'Blue', 'Magenta', 'Cyan'].forEach((color) => {
     if (colors[`Bright${color}` as keyof AnsiColors] === '') {
       let i = 0;
-      while (i < 50) {
-        colors[`Bright${color}` as keyof AnsiColors] = brightenColor(
-          colors[color as keyof AnsiColors]
-        );
-        colors[`Bright${color}` as keyof AnsiColors] = clampChroma(
-          colors[`Bright${color}` as keyof AnsiColors]
-        );
+      let tempColor = oklch(colors[color as keyof AnsiColors]);
+      while (i < 3) {
+        tempColor = {
+          ...tempColor!,
+          c: tempColor!.c + 0.2,
+          l: tempColor!.l < 0.9 ? tempColor!.l + 0.05 : tempColor!.l
+        };
+        tempColor = clampChroma(tempColor!, 'oklch');
         i++;
       }
+      colors[`Bright${color}` as keyof AnsiColors] = formatHex8(tempColor!);
     }
   });
   const startRead = performance.now();
