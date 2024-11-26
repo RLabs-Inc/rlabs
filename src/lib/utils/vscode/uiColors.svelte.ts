@@ -21,21 +21,21 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
       lockedColors?.BG1 ||
       randomizeColor(
         [schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)]],
-        controlsState().isDark ? [0, 35] : [85, 100],
+        controlsState().isDark ? [0, 35] : [93, 100],
         [0, 2]
       ),
     BG2:
       lockedColors?.BG2 ||
       randomizeColor(
         [schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)]],
-        controlsState().isDark ? [0, 25] : [80, 100],
+        controlsState().isDark ? [0, 25] : [85, 100],
         [0, 3]
       ),
     BG3:
       lockedColors?.BG3 ||
       randomizeColor(
         [schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)]],
-        controlsState().isDark ? [0, 25] : [75, 100],
+        controlsState().isDark ? [0, 25] : [85, 100],
         [0, 3]
       ),
     FG1:

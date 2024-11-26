@@ -1,4 +1,4 @@
-import type { TokenColors } from '$lib/types/theme';
+import type { TokenColors, TokenColor } from '$lib/types/theme';
 
 export function getVariableSyntaxTokens({ syntaxColors }: TokenColors): TokenColor[] {
   return [

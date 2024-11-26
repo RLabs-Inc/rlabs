@@ -586,7 +586,7 @@ export function ensureReadability(
   // const end = performance.now();
   // console.log(`ENSURE READABILITY: ${end - start} milliseconds`);
 
-  return formatHex8(color);
+  return formatHex8(color!);
 }
 
 export function adjustHue(hue: number): number {

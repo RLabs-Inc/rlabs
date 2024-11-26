@@ -1,9 +1,6 @@
 import type { SemanticTokenColor, TokenColors } from '$lib/types/theme';
 
-export function getFunctionSemanticTokens({
-  syntaxColors,
-  colors
-}: TokenColors): SemanticTokenColor {
+export function getFunctionSemanticTokens({ syntaxColors }: TokenColors): SemanticTokenColor {
   return {
     // Function declarations and calls
     function: syntaxColors.functionCall,
