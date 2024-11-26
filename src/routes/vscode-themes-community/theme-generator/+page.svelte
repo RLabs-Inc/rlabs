@@ -8,11 +8,14 @@
   import SyntaxColors from '$lib/components/vscode/generator/SyntaxColors.svelte';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
+  import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
   import type { Theme } from '$lib/types/theme';
+
+  import ColorPicker from '$lib/components/vscode/generator/ColorPicker.svelte';
 
   const selectedTheme = getSelectedTheme();
   const selectedFile = getSelectedFile();
-
+  const selectedColor = getSelectedColor();
   const { data }: { data: PageData } = $props();
 
   let theme = $state<Theme | undefined>(undefined);

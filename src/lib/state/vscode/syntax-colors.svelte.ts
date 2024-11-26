@@ -34,6 +34,9 @@ export function getSyntaxColors() {
     const options: SyntaxColorsGenerationOptions = {
       lockedColors: lockedSyntaxColors
     };
+    console.log('------------------------------');
+    console.log(`GENERATE SYNTAX COLORS`);
+    console.log('------------------------------');
     const { generatedSyntaxColors } = generateSyntaxColors(options);
     setSyntaxColors(generatedSyntaxColors);
   }

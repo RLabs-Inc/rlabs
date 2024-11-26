@@ -1,6 +1,10 @@
 import Color from 'color';
 import { randomInteger, randomNumber } from '$lib/utils/vscode/math';
-import { ensureReadability, adjustCommentColor } from '$lib/utils/vscode/colorUtils.svelte';
+import {
+  ensureReadability,
+  adjustCommentColor,
+  randomizeColor
+} from '$lib/utils/vscode/colorUtils.svelte';
 import { getControls } from '$lib/state/vscode/controls.svelte';
 import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';
 import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
@@ -12,33 +16,47 @@ import type { SyntaxColorsGenerationOptions } from '$lib/types/theme';
 export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
   generatedSyntaxColors: SyntaxColors;
 } {
+  const start = performance.now();
   const controlsState = getControls();
   const uiColorsState = getUiColors();
   const schemeHuesState = getSchemeHues();
   const { lockedColors } = options;
+
+  const isDark = controlsState().isDark;
+
   const baseLightness = controlsState().isDark ? 80 : 25;
   const inverseBaseLightness = controlsState().isDark ? 15 : 85;
 
-  const generateColor = (
-    schemeHue: number,
-    saturationMultiplier: number = 1,
-    lightnessShift: number = 0,
-    hueShift: number = 0,
-    highContrast: boolean = true
-  ) => {
-    const hue = (schemeHue + hueShift) % 360;
-    const saturation = Math.max(
-      2,
-      Math.min(100, controlsState().syntaxSaturation[0] * saturationMultiplier)
-    );
-    const lightness = Math.min(
-      100,
-      Math.max(
-        0,
-        highContrast ? baseLightness + lightnessShift : inverseBaseLightness - lightnessShift
-      )
-    );
-    return Color.hsl(hue, saturation, lightness).hexa();
+  // const generateColor = (
+  //   schemeHue: number,
+  //   saturationMultiplier: number = 1,
+  //   lightnessShift: number = 0,
+  //   hueShift: number = 0,
+  //   highContrast: boolean = true
+  // ) => {
+  //   // const startGen = performance.now();
+  //   const hue = (schemeHue + hueShift) % 360;
+  //   const saturation = Math.max(
+  //     2,
+  //     Math.min(100, controlsState().syntaxSaturation[0] * saturationMultiplier)
+  //   );
+  //   const lightness = Math.min(
+  //     100,
+  //     Math.max(
+  //       0,
+  //       highContrast ? baseLightness + lightnessShift : inverseBaseLightness - lightnessShift
+  //     )
+  //   );
+  //   // const endGen = performance.now();
+  //   // console.log(`GENERATE COLOR: ${endGen - startGen} milliseconds`);
+  //   return Color.hsl(hue, saturation, lightness).hexa();
+  // };
+
+  const getRandomHue = () => {
+    return schemeHuesState().schemeHues[
+      randomInteger(0, schemeHuesState().schemeHues.length - 1) %
+        schemeHuesState().schemeHues.length
+    ];
   };
 
   const AC1hue = Color(uiColorsState().uiColors.AC1).hsl().hue();
@@ -94,293 +112,123 @@ export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
   const syntaxColors: SyntaxColors = {
     comment:
       lockedColors?.comment ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        0.45,
-        0,
-        0,
-        false
-      ),
+      randomizeColor([getRandomHue()], isDark ? [10, 20] : [60, 90], [0, 10]),
     keyword:
       lockedColors?.keyword ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-13, 13)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
     storage:
-      lockedColors?.storage ||
-      generateColor(AC2hue, randomNumber(0.75, 1.25), randomInteger(-5, 5)),
+      lockedColors?.storage || randomizeColor([AC2hue], isDark ? [40, 90] : [15, 60], [0, 40]),
     modifier:
       lockedColors?.modifier ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-5, 5)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
     other:
       lockedColors?.other ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        -randomInteger(0, 6)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
 
     language:
       lockedColors?.language ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        -randomInteger(0, 9)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
     operator:
       lockedColors?.operator ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        randomInteger(0, 13)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
     control:
-      lockedColors?.control ||
-      generateColor(controlHue!, randomNumber(0.75, 1.25), randomInteger(-20, 20)),
+      lockedColors?.control || randomizeColor([controlHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     controlFlow:
       lockedColors?.controlFlow ||
-      generateColor(
-        controlHue!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-25, 25),
-        randomInteger(-45, 45)
-      ),
+      randomizeColor([controlHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     controlImport:
       lockedColors?.controlImport ||
-      generateColor(
-        controlHue!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-27, 27),
-        randomInteger(-45, 45)
-      ),
-
+      randomizeColor([controlHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     support:
-      lockedColors?.support ||
-      generateColor(supportHue!, randomNumber(0.75, 1.25), -randomInteger(-7, 7)),
+      lockedColors?.support || randomizeColor([supportHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     supportFunction:
       lockedColors?.supportFunction ||
-      generateColor(supportFunctionHue!, randomNumber(0.75, 1.25), randomInteger(-20, 20)),
+      randomizeColor([supportFunctionHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     supportMethod:
       lockedColors?.supportMethod ||
-      generateColor(
-        supportFunctionHue!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-20, 20),
-        randomInteger(-25, 25)
-      ),
+      randomizeColor([supportFunctionHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     supportVariable:
       lockedColors?.supportVariable ||
-      generateColor(supportHue!, randomNumber(0.75, 1.25), randomInteger(-20, 20)),
+      randomizeColor([supportHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     supportProperty:
       lockedColors?.supportProperty ||
-      generateColor(
-        supportHue!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-20, 20),
-        randomInteger(-10, 10)
-      ),
+      randomizeColor([supportHue], isDark ? [40, 90] : [15, 60], [0, 40]),
 
     function:
       lockedColors?.function ||
-      generateColor(functionHue, randomNumber(0.75, 1.25), randomInteger(-7, 7)),
+      randomizeColor([functionHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     functionCall:
       lockedColors?.functionCall ||
-      generateColor(
-        functionHue,
-        randomNumber(0.75, 1.25),
-        randomInteger(-13, 13),
-        randomInteger(-15, 15)
-      ),
+      randomizeColor([functionHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     method:
-      lockedColors?.method ||
-      generateColor(methodHue!, randomNumber(0.75, 1.25), randomInteger(0, 7)),
+      lockedColors?.method || randomizeColor([methodHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     methodCall:
       lockedColors?.methodCall ||
-      generateColor(
-        methodHue!,
-        randomNumber(0.75, 1.25),
-        randomInteger(5, 13),
-        randomInteger(-15, 15)
-      ),
+      randomizeColor([methodHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     selector:
       lockedColors?.selector ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        randomInteger(0, 7)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
 
     parameter:
       lockedColors?.parameter ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-7, 7)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
     variable:
       lockedColors?.variable ||
-      generateColor(variableHue!, randomNumber(0.75, 1.25), randomInteger(0, 3)),
+      randomizeColor([variableHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     variableReadonly:
       lockedColors?.variableReadonly ||
-      generateColor(
-        variableHue!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-15, 15),
-        randomInteger(-15, 15)
-      ),
+      randomizeColor([variableHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     variableDeclaration:
       lockedColors?.variableDeclaration ||
-      generateColor(
-        variableHue!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-15, 15),
-        randomInteger(-15, 15)
-      ),
+      randomizeColor([variableHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     variableProperty:
       lockedColors?.variableProperty ||
-      generateColor(
-        variableHue!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-15, 15),
-        randomInteger(-15, 15)
-      ),
-
+      randomizeColor([variableHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     property:
       lockedColors?.property ||
-      generateColor(propertyHue!, randomNumber(0.75, 1.25), randomInteger(0, 15)),
+      randomizeColor([propertyHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     propertyDeclaration:
       lockedColors?.propertyDeclaration ||
-      generateColor(
-        propertyHue!,
-        randomNumber(0.75, 1.25),
-        randomInteger(0, 15),
-        randomInteger(-15, 15)
-      ),
+      randomizeColor([propertyHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     class:
       lockedColors?.class ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        randomInteger(0, 3)
-      ),
-    type:
-      lockedColors?.type || generateColor(typeHue!, randomNumber(0.75, 1.25), randomInteger(-5, 5)),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
+    type: lockedColors?.type || randomizeColor([typeHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     typeParameter:
       lockedColors?.typeParameter ||
-      generateColor(
-        typeHue!,
-        randomNumber(0.75, 1.25),
-        -randomInteger(-5, 5),
-        randomInteger(-30, 30)
-      ),
+      randomizeColor([typeHue], isDark ? [40, 90] : [15, 60], [0, 40]),
 
-    tag: lockedColors?.tag || generateColor(tagHue!, randomNumber(0.75, 1.25), randomInteger(3, 9)),
+    tag: lockedColors?.tag || randomizeColor([tagHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     attribute:
       lockedColors?.attribute ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-10, 10)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
     constant:
       lockedColors?.constant ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        randomInteger(-9, 9)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
     unit:
-      lockedColors?.unit ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        -randomInteger(-5, 5)
-      ),
+      lockedColors?.unit || randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
     datetime:
       lockedColors?.datetime ||
-      generateColor(
-        schemeHuesState().schemeHues[
-          randomInteger(0, schemeHuesState().schemeHues.length - 1) %
-            schemeHuesState().schemeHues.length
-        ]!,
-        randomNumber(0.75, 1.25),
-        randomInteger(0, 5)
-      ),
+      randomizeColor([getRandomHue()], isDark ? [40, 90] : [15, 60], [0, 40]),
 
     tagPunctuation:
       lockedColors?.tagPunctuation ||
-      generateColor(tagHue!, randomNumber(0.5, 1.25), randomInteger(0, 6), randomInteger(9, 17)),
+      randomizeColor([tagHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     punctuation:
       lockedColors?.punctuation ||
-      generateColor(punctuationHue!, randomNumber(0.7, 1.25), randomInteger(-15, 15)),
+      randomizeColor([punctuationHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     punctuationQuote:
       lockedColors?.punctuationQuote ||
-      generateColor(
-        punctuationHue!,
-        randomNumber(0.7, 1.25),
-        randomInteger(-20, 20),
-        randomInteger(-30, 30)
-      ),
+      randomizeColor([punctuationHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     punctuationBrace:
       lockedColors?.punctuationBrace ||
-      generateColor(
-        punctuationHue!,
-        randomNumber(0.7, 1.25),
-        randomInteger(-20, 20),
-        randomInteger(-30, 30)
-      ),
+      randomizeColor([punctuationHue], isDark ? [40, 90] : [15, 60], [0, 40]),
     punctuationComma:
       lockedColors?.punctuationComma ||
-      generateColor(
-        punctuationHue!,
-        randomNumber(0.7, 1.25),
-        randomInteger(-20, 20),
-        randomInteger(-30, 30)
-      )
+      randomizeColor([punctuationHue], isDark ? [40, 90] : [15, 60], [0, 40])
   };
 
+  const startRead = performance.now();
   // Ensure readability and harmony
   Object.keys(syntaxColors).forEach((key) => {
     if (!lockedColors?.[key as keyof SyntaxColors]) {
@@ -391,7 +239,10 @@ export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
       );
     }
   });
+  const endRead = performance.now();
+  console.log(`ENSURE READABILITY: ${endRead - startRead} milliseconds`);
 
+  const startAdjust = performance.now();
   // Apply the new comment color adjustment
   if (!lockedColors?.comment) {
     syntaxColors.comment = adjustCommentColor(
@@ -400,6 +251,10 @@ export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
       controlsState().isDark
     );
   }
+  const endAdjust = performance.now();
+  console.log(`ADJUST COMMENT COLOR: ${endAdjust - startAdjust} milliseconds`);
+  const end = performance.now();
+  console.log(`GENERATE SYNTAX COLORS: ${end - start} milliseconds`);
   return { generatedSyntaxColors: syntaxColors };
 }
 

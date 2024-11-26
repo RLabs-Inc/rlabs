@@ -61,11 +61,17 @@ export function getControls() {
 
   function generate() {
     const selectedTheme = getSelectedTheme();
+    console.log('===========================');
+    console.log(`GENERATE COLORS`);
+    console.log('===========================');
     selectedTheme().generate(fewerGeneratedColors);
   }
 
   function randomize() {
     const selectedTheme = getSelectedTheme();
+    console.log('===========================');
+    console.log(`RANDOMIZE COLORS`);
+    console.log('===========================');
     selectedTheme().randomize(fewerRandomColors);
   }
 

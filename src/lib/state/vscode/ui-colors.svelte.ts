@@ -32,6 +32,9 @@ export function getUiColors() {
       few: fewerColors,
       lockedColors: lockedUIColors
     };
+    console.log('------------------------------');
+    console.log(`GENERATE UI COLORS`);
+    console.log('------------------------------');
     const { generatedUIColors } = generateUIColors(options);
     setUiColors(generatedUIColors);
   }

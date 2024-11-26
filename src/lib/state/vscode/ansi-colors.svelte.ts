@@ -34,6 +34,9 @@ export function getAnsiColors() {
     const options: AnsiColorsGenerationOptions = {
       lockedColors: lockedAnsiColors
     };
+    console.log('------------------------------');
+    console.log(`GENERATE ANSI COLORS`);
+    console.log('------------------------------');
     const { generatedAnsiColors } = generateAnsiColors(options);
     setAnsiColors(generatedAnsiColors);
   }

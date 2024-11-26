@@ -5,7 +5,12 @@ import {
   filterSaturate,
   parseHex,
   formatHex8,
-  hsl
+  converter,
+  clampChroma,
+  oklch,
+  random,
+  formatHex,
+  type Oklch
 } from 'culori';
 
 import { ColorSchemes } from '$lib/types/color';
@@ -14,6 +19,7 @@ export const brightenColor = filterBrightness(1.2, 'rgb');
 export const darkenColor = filterBrightness(0.8, 'rgb');
 export const saturateColor = filterSaturate(1.3, 'rgb');
 export const desaturateColor = filterSaturate(0.9, 'rgb');
+export const oklchConverter = converter('oklch');
 
 export function brighten(color: string): string {
   return formatHex8(brightenColor(parseHex(color)));
@@ -38,7 +44,7 @@ export function brightenDesaturate(color: string): string {
   return formatHex8(brightenColor(desaturateColor(parseHex(color))));
 }
 
-export function isDark(color: string): boolean {
+export function isDark(color: string | Oklch): boolean {
   return wcagLuminance(color) < 0.5;
 }
 
@@ -54,7 +60,21 @@ export function getAlphaColor(color: string, alpha: string): string {
   }
 }
 
+export const randomizeColor = (hue: number[], lightness: number[], chroma: number[] | null) => {
+  // const startRand = performance.now();
+  console.log('HUE: ', hue);
+  console.log('LIGHTNESS: ', lightness);
+  console.log('CHROMA: ', chroma);
+  const newColor = random('oklch', {
+    l: [lightness[0] / 100, lightness[1] / 100],
+    c: chroma ? [chroma[0] / 100, chroma[1] / 100] : [0, 0.4],
+    h: hue.length > 1 ? [hue[0], hue[1]] : hue[0]
+  });
+  return formatHex(clampChroma(newColor, 'oklch'));
+};
+
 export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): number[] {
+  const start = performance.now();
   let result: number[];
   const goldenRatio = 0.618033988749895;
   // const fibSequence = [1, 1, 2, 3, 5, 8, 13, 21]
@@ -303,6 +323,8 @@ export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): numbe
     default:
       result = [baseHue];
   }
+  const end = performance.now();
+  console.log(`GENERATE SCHEME HUES: ${end - start} milliseconds`);
   return result;
 }
 
@@ -491,54 +513,34 @@ export function adjustCommentColor(
   backgroundColor: string,
   isDarkTheme: boolean
 ): string {
-  const minContrast = 2;
-  const maxContrast = 3;
-  let comment = parseHex(commentColor);
-  // const bgLuminosity = bgColor.luminosity();
-  console.log('Is dark theme: ', isDarkTheme, minContrast, maxContrast);
-  const maxSaturation = isDarkTheme ? 15 : 35;
-  // Adjust the comment color until it meets our criteria
-  while (true) {
-    const contrast = calculateContrast(formatHex8(comment), backgroundColor);
+  // const start = performance.now();
+  const minContrast = isDarkTheme ? 2 : 1.5;
+  const maxContrast = isDarkTheme ? 3 : 2.5;
+  let comment = oklch(commentColor);
+  const bgColor = oklch(backgroundColor);
 
-    if (isDarkTheme) {
-      if (contrast < minContrast || contrast > maxContrast) {
-        if (contrast > maxContrast) {
-          comment = parseHex(darkenSaturate(formatHex8(comment)));
-        } else if (contrast < minContrast) {
-          comment = parseHex(brightenDesaturate(formatHex8(comment)));
-        }
-      } else {
-        break;
+  while (true) {
+    const contrast = wcagContrast(comment!, bgColor!);
+    if (contrast < minContrast || contrast > maxContrast) {
+      if (contrast > maxContrast) {
+        comment = isDarkTheme ? darkenColor(comment!) : brightenColor(comment!);
+      } else if (contrast < minContrast) {
+        comment = isDarkTheme ? brightenColor(comment!) : darkenColor(comment!);
       }
     } else {
-      if (contrast < minContrast || contrast > maxContrast) {
-        if (contrast < minContrast) {
-          comment = parseHex(darkenSaturate(formatHex8(comment)));
-        } else if (contrast > maxContrast) {
-          comment = parseHex(brightenDesaturate(formatHex8(comment)));
-        }
-      } else {
-        break;
-      }
+      break;
     }
-    console.log('Comment contrast: ', contrast);
-    console.log(
-      'CONDITION: ',
-      isDarkTheme && isDark(formatHex8(comment)),
-      !isDarkTheme && !isDark(formatHex8(comment))
-    );
+
+    comment = clampChroma(comment!, 'oklch');
     // Prevent infinite loop and ensure the color doesn't get too dark or too light
-    if (isDarkTheme && isDark(formatHex8(comment))) break;
-    if (!isDarkTheme && !isDark(formatHex8(comment))) break;
+    // if (isDarkTheme && isDark(comment!)) break;
+    // if (!isDarkTheme && !isDark(comment!)) break;
   }
 
-  // Ensure maxSaturation
-  while (hsl(comment).s > maxSaturation) {
-    comment = desaturateColor(comment);
-  }
+  // const end = performance.now();
+  // console.log(`ADJUST COMMENT COLOR: ${end - start} milliseconds`);
 
-  return formatHex8(comment);
+  return formatHex8(comment!);
 }
 
 export function ensureReadability(
@@ -546,29 +548,32 @@ export function ensureReadability(
   background: string,
   minContrast = 5.5
 ): string {
-  let color = parseHex(foreground);
-  const bgColor = parseHex(background);
+  // const start = performance.now();
+  let color = oklch(foreground);
+  const bgColor = oklch(background);
   const isDarkTheme = isDark(background);
   let iterations = 0;
   const maxIterations = 100;
 
   if (isDarkTheme) {
-    while (
-      calculateContrast(formatHex8(color), formatHex8(bgColor)) < minContrast &&
-      iterations < maxIterations
-    ) {
-      color = !isDark(formatHex8(color))
-        ? parseHex(darkenSaturate(formatHex8(color)))
-        : parseHex(brightenDesaturate(formatHex8(color)));
+    while (wcagContrast(color!, bgColor!) < minContrast && iterations < maxIterations) {
+      // color = !isDark(formatHex8(color)) ? darkenColor(color) : brightenColor(color);
+      const newColor = clampChroma(
+        { ...oklchConverter(color)!, l: oklchConverter(color)!.l + 0.1 },
+        'oklch'
+      );
+      if (newColor) {
+        color = newColor;
+      }
+
       iterations++;
     }
   } else {
-    while (
-      calculateContrast(formatHex8(color), formatHex8(bgColor)) < minContrast &&
-      iterations < maxIterations
-    ) {
-      let newColor = darkenColor(color);
-      newColor = saturateColor(newColor);
+    while (wcagContrast(color!, bgColor!) < minContrast && iterations < maxIterations) {
+      const newColor = clampChroma(
+        { ...oklchConverter(color)!, l: oklchConverter(color)!.l - 0.1 },
+        'oklch'
+      );
 
       if (newColor) {
         color = newColor;
@@ -577,11 +582,10 @@ export function ensureReadability(
       iterations++;
     }
   }
-  console.log(
-    'Iterations: ',
-    iterations,
-    calculateContrast(formatHex8(color), formatHex8(bgColor))
-  );
+
+  // const end = performance.now();
+  // console.log(`ENSURE READABILITY: ${end - start} milliseconds`);
+
   return formatHex8(color);
 }
 

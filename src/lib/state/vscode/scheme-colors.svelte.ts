@@ -12,6 +12,9 @@ export function getSchemeHues() {
   }
 
   function generate() {
+    console.log('------------------------------');
+    console.log(`GENERATE SCHEME HUES FOR ${controlsState().scheme}`);
+    console.log('------------------------------');
     set(
       generateSchemeHues(
         controlsState().baseHue[0],
@@ -20,6 +23,9 @@ export function getSchemeHues() {
     );
   }
   function generateAdditionalHues(baseHue: number, scheme: string) {
+    console.log('------------------------------');
+    console.log(`GENERATE ADDITIONAL SCHEME HUES`);
+    console.log('------------------------------');
     const additionalHues = generateSchemeHues(
       baseHue,
       ColorSchemes[scheme as keyof typeof ColorSchemes]

@@ -10,6 +10,7 @@
   } from '$lib/utils/vscode/colors';
   import { formatDecimal } from '$lib/utils/vscode/math';
   import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
+  import { Input } from '$lib/components/ui/input';
 
   const pickerColorState = getSelectedColor();
 
@@ -72,7 +73,7 @@
 
   const getBgAlpha = (color: Oklch) => {
     return `linear-gradient(to right, ${slider_stops(
-      Array.from({ length: 6 }, (_, i) => i * 20),
+      Array.from({ length: 20 }, (_, i) => (i * 100) / (20 - 1)),
       color.l,
       color.c,
       color.h || 0,
@@ -146,9 +147,23 @@
   <div class="flex flex-col gap-4">
     <!-- Lightness Slider -->
     <div class="flex flex-col gap-2">
-      <label for="lightness-slider" class="text-xs"
-        >Lightness: {formatDecimal(pickerColorState().pickerLightness[0])}%</label
-      >
+      <div class="flex items-center justify-between">
+        <label for="lightness-slider" class="text-xs"
+          >Lightness: {formatDecimal(pickerColorState().pickerLightness[0])}%</label
+        >
+        <Input
+          class="w-20"
+          type="number"
+          min={0}
+          max={100}
+          step={0.1}
+          value={pickerColorState().pickerLightness[0]}
+          oninput={(e) => {
+            pickerColorState().setPickerLightness([Number((e.target as HTMLInputElement).value)]);
+            updateColor(colorState);
+          }}
+        />
+      </div>
 
       <SliderPicker
         value={pickerColorState().pickerLightness}
@@ -167,10 +182,23 @@
 
     <!-- Chroma Slider -->
     <div class="flex flex-col gap-2">
-      <label for="chroma-slider" class="text-xs"
-        >Chroma: {formatDecimal(pickerColorState().pickerChroma[0])}</label
-      >
-
+      <div class="flex items-center justify-between">
+        <label for="chroma-slider" class="text-xs"
+          >Chroma: {formatDecimal(pickerColorState().pickerChroma[0])}</label
+        >
+        <Input
+          class="w-20"
+          type="number"
+          min={0}
+          max={100}
+          step={0.1}
+          value={pickerColorState().pickerChroma[0]}
+          oninput={(e) => {
+            pickerColorState().setPickerChroma([Number((e.target as HTMLInputElement).value)]);
+            updateColor(colorState);
+          }}
+        />
+      </div>
       <SliderPicker
         value={pickerColorState().pickerChroma}
         onValueChange={(value) => {
@@ -188,10 +216,23 @@
 
     <!-- Hue Slider -->
     <div class="flex flex-col gap-2">
-      <label for="hue-slider" class="text-xs"
-        >Hue: {formatDecimal(pickerColorState().pickerHue[0])}°</label
-      >
-
+      <div class="flex items-center justify-between">
+        <label for="hue-slider" class="text-xs"
+          >Hue: {formatDecimal(pickerColorState().pickerHue[0])}°</label
+        >
+        <Input
+          class="w-20"
+          type="number"
+          min={0}
+          max={360}
+          step={0.1}
+          value={pickerColorState().pickerHue[0]}
+          oninput={(e) => {
+            pickerColorState().setPickerHue([Number((e.target as HTMLInputElement).value)]);
+            updateColor(colorState);
+          }}
+        />
+      </div>
       <SliderPicker
         value={pickerColorState().pickerHue}
         onValueChange={(value) => {
@@ -209,9 +250,23 @@
 
     <!-- Alpha Slider -->
     <div class="flex flex-col gap-2">
-      <label for="alpha-slider" class="text-xs"
-        >Alpha: {formatDecimal(pickerColorState().pickerAlpha[0])}%</label
-      >
+      <div class="flex items-center justify-between">
+        <label for="alpha-slider" class="text-xs"
+          >Alpha: {formatDecimal(pickerColorState().pickerAlpha[0])}%</label
+        >
+        <Input
+          class="w-20"
+          type="number"
+          min={0}
+          max={100}
+          step={0.1}
+          value={pickerColorState().pickerAlpha[0]}
+          oninput={(e) => {
+            pickerColorState().setPickerAlpha([Number((e.target as HTMLInputElement).value)]);
+            updateColor(colorState);
+          }}
+        />
+      </div>
 
       <SliderPicker
         value={pickerColorState().pickerAlpha}
@@ -225,6 +280,7 @@
         max={100}
         step={0.1}
         bgColor={bgAlpha}
+        alpha
       />
     </div>
   </div>
