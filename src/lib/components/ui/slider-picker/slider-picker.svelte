@@ -21,9 +21,11 @@
   {...restProps}
 >
   {#snippet children({ thumbs })}
-    {#if alpha}
-      <span class="checkerboard absolute inset-0 overflow-hidden rounded-full"></span>
-    {/if}
+    <!-- {#if alpha} -->
+    <span
+      class="checkerboard absolute inset-0 overflow-hidden rounded-full border border-dashed border-muted-foreground"
+    ></span>
+    <!-- {/if} -->
     <span class="relative h-5 w-full grow overflow-hidden rounded-full" style:background={bgColor}>
       <SliderPrimitive.Range class="absolute h-full bg-transparent" />
     </span>

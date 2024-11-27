@@ -5,16 +5,6 @@ const toRGB = converter('rgb');
 const toP3 = converter('p3');
 const toRec2020 = converter('rec2020');
 
-// function LCH_to_sRGB(lch: [number, number, number]) {
-//   const rgb = toRGB({
-//     mode: 'oklch',
-//     l: lch[0],
-//     c: lch[1],
-//     h: lch[2]
-//   });
-//   return [rgb.r, rgb.g, rgb.b];
-// }
-
 function LCH_to_P3(lch: [number, number, number]) {
   const p3 = toP3({
     mode: 'oklch',
@@ -38,10 +28,7 @@ function LCH_to_r2020(lch: [number, number, number]) {
 /**
  * Checks if an LCH color is within the sRGB gamut
  */
-export function isLCHWithinGamut(l: number, c: number, h: number): boolean {
-  const toRGB = converter('rgb');
-
-  // Convert to RGB to check if it's in gamut
+export function isLCH_within_sRGB(l: number, c: number, h: number): boolean {
   const rgb = toRGB({
     mode: 'oklch',
     l: l / 100,
@@ -51,11 +38,11 @@ export function isLCHWithinGamut(l: number, c: number, h: number): boolean {
 
   if (!rgb) return false;
 
-  // Check if the color is within sRGB boundaries
-  const ε = 0.000005; // Small epsilon for floating point comparison
-  return Object.values(rgb)
-    .slice(0, 3) // Take only r,g,b values, ignore alpha
-    .every((v) => v >= 0 - ε && v <= 1 + ε);
+  const ε = 0.000005;
+  return ['r', 'g', 'b'].every((channel) => {
+    const value = rgb[channel as 'r' | 'g' | 'b'];
+    return typeof value === 'number' && value >= 0 - ε && value <= 1 + ε;
+  });
 }
 
 /**
@@ -72,7 +59,7 @@ export function forceIntoGamut(
   }
 
   const originalColor = {
-    mode: 'oklch',
+    mode: 'oklch' as const,
     l: l / 100,
     c: c / 132,
     h: h
@@ -98,7 +85,7 @@ export function forceIntoGamut(
 
   // If we found a solution with just chroma adjustment, check if lightness adjustment might give better results
   const chromaOnlyColor = {
-    mode: 'oklch',
+    mode: 'oklch' as const,
     l: l / 100,
     c: newC / 132,
     h: h
@@ -118,7 +105,7 @@ export function forceIntoGamut(
       const higherL = l + lightnessChange;
       [, newC] = force_into_gamut(higherL, c, h, isWithinGamut);
       const lighterColor = {
-        mode: 'oklch',
+        mode: 'oklch' as const,
         l: higherL / 100,
         c: newC / 132,
         h: h
@@ -135,7 +122,7 @@ export function forceIntoGamut(
       const lowerL = l - lightnessChange;
       [, newC] = force_into_gamut(lowerL, c, h, isWithinGamut);
       const darkerColor = {
-        mode: 'oklch',
+        mode: 'oklch' as const,
         l: lowerL / 100,
         c: newC / 132,
         h: h
@@ -205,23 +192,29 @@ export function LCH_to_P3_string(l: number, c: number, h: number, a = 100, force
   );
 }
 
-export function LCH_to_sRGB_string(newColor: Oklch, forceInGamut = false): string {
-  let { l, c, h } = newColor;
-  const alpha = newColor.alpha || 100;
+export function LCH_to_sRGB_string(color: Oklch, forceInGamut = false): string {
+  const l = color.l;
+  const c = color.c;
+  const h = color.h || 0;
+  const alpha = color.alpha || 100;
+
+  let adjustedL = l;
+  let adjustedC = c;
+  let adjustedH = h;
 
   if (forceInGamut) {
-    [l, c, h] = force_into_gamut(l, c, h || 0, isLCH_within_sRGB);
+    [adjustedL, adjustedC, adjustedH] = force_into_gamut(l, c, h, isLCH_within_sRGB);
   }
 
-  const color = toRGB({
+  const rgb = toRGB({
     mode: 'oklch',
-    l: l / 100,
-    c: c / 132,
-    h: h,
+    l: adjustedL / 100,
+    c: adjustedC / 132,
+    h: adjustedH,
     alpha: alpha / 100
   });
 
-  return formatHex8(color);
+  return formatHex8(rgb);
 }
 
 export function force_into_gamut(
@@ -237,35 +230,18 @@ export function force_into_gamut(
   let hiC = c;
   let loC = 0;
   const ε = 0.0001;
-  c /= 2;
+  let adjustedC = c / 2;
 
   while (hiC - loC > ε) {
-    if (isLCH_within(l, c, h)) {
-      loC = c;
+    if (isLCH_within(l, adjustedC, h)) {
+      loC = adjustedC;
     } else {
-      hiC = c;
+      hiC = adjustedC;
     }
-    c = (hiC + loC) / 2;
+    adjustedC = (hiC + loC) / 2;
   }
 
-  return [l, c, h];
-}
-
-export function isLCH_within_sRGB(l: number, c: number, h: number): boolean {
-  const rgb = toRGB({
-    mode: 'oklch',
-    l: l / 100,
-    c: c / 132,
-    h: h
-  });
-
-  if (!rgb) return false;
-
-  const ε = 0.000005;
-  return ['r', 'g', 'b'].every((channel) => {
-    const value = rgb[channel as 'r' | 'g' | 'b'];
-    return typeof value === 'number' && value >= 0 - ε && value <= 1 + ε;
-  });
+  return [l, adjustedC, h];
 }
 
 export function isLCH_within_P3(l: number, c: number, h: number) {
@@ -300,17 +276,29 @@ export function slider_stops(
     .map((x) => {
       const values = [l, c, h, a];
       values[index] = x;
-      // Force colors into gamut for accurate representation
-      return LCH_to_sRGB_string(
-        {
-          mode: 'oklch',
-          l: values[0],
-          c: values[1],
-          h: values[2],
-          alpha: values[3]
-        },
-        true // forceInGamut = true
-      );
+
+      // Check if the color is in gamut
+      const isInGamut = isLCH_within_sRGB(values[0], values[1], values[2]);
+
+      // Convert to OKLCH color
+      const oklchColor = {
+        mode: 'oklch' as const,
+        l: values[0],
+        c: values[1],
+        h: values[2],
+        alpha: values[3]
+      };
+
+      // Get the color string, forcing into gamut if needed
+      const colorStr = LCH_to_sRGB_string(oklchColor, true);
+
+      // Return the color with transparency for out-of-gamut sections
+      return isInGamut
+        ? colorStr
+        : colorStr
+            .replace(')', ', 0.5)')
+            .replace('#', 'rgba(')
+            .replace(/([a-f\d]{2})/gi, (m: string) => String(parseInt(m, 16)));
     })
     .join(', ');
 }

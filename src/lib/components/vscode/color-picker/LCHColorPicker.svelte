@@ -1,15 +1,16 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { oklch, type Oklch } from 'culori';
-  import { SliderPicker } from '$lib/components/ui/slider-picker';
-  import {
-    LCH_to_sRGB_string,
-    colorToLCH,
-    isLCH_within_sRGB,
-    slider_stops
-  } from '$lib/utils/vscode/colors';
-  import { formatDecimal } from '$lib/utils/vscode/math';
+
   import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
+
+  import { formatDecimal } from '$lib/utils/vscode/math';
+  import { isLCH_within_sRGB } from './gamut-utils.svelte';
+  import { LCH_to_sRGB_string, colorToLCH } from './color-utils.svelte';
+  import { getBgLightness, getBgChroma, getBgHue, getBgAlpha } from './gradients.svelte';
+
+  import { SliderPicker } from '$lib/components/ui/slider-picker';
+
   import { Input } from '$lib/components/ui/input';
 
   const pickerColorState = getSelectedColor();
@@ -17,11 +18,6 @@
   const { onChange } = $props<{
     onChange?: (color: string) => void;
   }>();
-
-  // Constants for optimal color sampling
-  const LIGHTNESS_STOPS = 11; // Will become 41 stops with interpolation
-  const CHROMA_STOPS = 12; // Will become 45 stops with interpolation
-  const HUE_STOPS = 13; // Will become 49 stops with interpolation
 
   // Update color when any value changes
   function updateColor(color: Oklch) {
@@ -37,50 +33,6 @@
       alpha: pickerColorState().pickerAlpha[0]
     })
   );
-
-  const getBgLightness = (color: Oklch) => {
-    return `linear-gradient(to right, ${slider_stops(
-      Array.from({ length: LIGHTNESS_STOPS }, (_, i) => (i * 100) / (LIGHTNESS_STOPS - 1)),
-      color.l,
-      color.c,
-      color.h || 0,
-      color.alpha || 1,
-      0
-    )})`;
-  };
-
-  const getBgChroma = (color: Oklch) => {
-    return `linear-gradient(to right, ${slider_stops(
-      Array.from({ length: CHROMA_STOPS }, (_, i) => (i * 132) / (CHROMA_STOPS - 1)),
-      color.l,
-      color.c,
-      color.h || 0,
-      color.alpha || 1,
-      1
-    )})`;
-  };
-
-  const getBgHue = (color: Oklch) => {
-    return `linear-gradient(to right, ${slider_stops(
-      Array.from({ length: HUE_STOPS }, (_, i) => (i * 360) / (HUE_STOPS - 1)),
-      color.l,
-      color.c,
-      color.h || 0,
-      color.alpha || 1,
-      2
-    )})`;
-  };
-
-  const getBgAlpha = (color: Oklch) => {
-    return `linear-gradient(to right, ${slider_stops(
-      Array.from({ length: 20 }, (_, i) => (i * 100) / (20 - 1)),
-      color.l,
-      color.c,
-      color.h || 0,
-      color.alpha || 1,
-      3
-    )})`;
-  };
 
   const bgLightness = $derived(getBgLightness(colorState));
   const bgChroma = $derived(getBgChroma(colorState));
@@ -287,52 +239,7 @@
 </div>
 
 <style>
-  /* Base slider styles
-  .color-slider {
-    -webkit-appearance: none;
-    appearance: none;
-    background: transparent;
-    cursor: pointer;
-    width: 100%;
-    height: 20px;
-    position: relative;
-    z-index: 2;
-    margin: 0;
-  } */
-
-  /* .color-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 20px;
-    border-radius: 3px;
-    background: white;
-    border: 1px solid black;
-    box-shadow: 0 0 0 1px white;
-    cursor: pointer;
-    margin-top: -8px;
-  }
-
-  .color-slider::-moz-range-thumb {
-    width: 16px;
-    height: 20px;
-    border-radius: 3px;
-    background: white;
-    border: 1px solid black;
-    box-shadow: 0 0 0 1px white;
-    cursor: pointer;
-  } */
-
-  /* .slider-bg {
-    position: absolute;
-    inset: 0;
-    border-radius: 2px;
-    height: 4px;
-    margin: auto 0;
-  } */
-
-  /* Checkerboard pattern for alpha */
-  /* .checkerboard {
+  .checkerboard {
     background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
       linear-gradient(-45deg, #ccc 25%, transparent 25%),
       linear-gradient(45deg, transparent 75%, #ccc 75%),
@@ -343,8 +250,7 @@
       0 10px,
       10px -10px,
       -10px 0px;
-  } */
-
+  }
   .out-of-gamut {
     outline: 2px solid var(--error, #d65a5a);
   }
