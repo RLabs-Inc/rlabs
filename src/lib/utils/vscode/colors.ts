@@ -1,19 +1,19 @@
-import { converter, formatHex8, type Lch, type Oklch } from 'culori';
+import { converter, formatHex8, type Oklch } from 'culori';
 
 const toOKLCH = converter('oklch');
 const toRGB = converter('rgb');
 const toP3 = converter('p3');
 const toRec2020 = converter('rec2020');
 
-function LCH_to_sRGB(lch: [number, number, number]) {
-  const rgb = toRGB({
-    mode: 'oklch',
-    l: lch[0],
-    c: lch[1],
-    h: lch[2]
-  });
-  return [rgb.r, rgb.g, rgb.b];
-}
+// function LCH_to_sRGB(lch: [number, number, number]) {
+//   const rgb = toRGB({
+//     mode: 'oklch',
+//     l: lch[0],
+//     c: lch[1],
+//     h: lch[2]
+//   });
+//   return [rgb.r, rgb.g, rgb.b];
+// }
 
 function LCH_to_P3(lch: [number, number, number]) {
   const p3 = toP3({
@@ -206,10 +206,11 @@ export function LCH_to_P3_string(l: number, c: number, h: number, a = 100, force
 }
 
 export function LCH_to_sRGB_string(newColor: Oklch, forceInGamut = false): string {
-  let { l, c, h, alpha } = newColor;
+  let { l, c, h } = newColor;
+  const alpha = newColor.alpha || 100;
 
   if (forceInGamut) {
-    [l, c, h] = force_into_gamut(l, c, h, isLCH_within_sRGB);
+    [l, c, h] = force_into_gamut(l, c, h || 0, isLCH_within_sRGB);
   }
 
   const color = toRGB({
