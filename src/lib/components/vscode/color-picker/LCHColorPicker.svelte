@@ -58,9 +58,13 @@
   <div class="flex flex-col gap-2">
     <div class="flex flex-wrap gap-4">
       <div class="relative h-12 w-full">
-        <div class="checkerboard absolute inset-0 rounded"></div>
         <div
-          class="absolute inset-0 rounded transition-colors"
+          class=" pattern-isometric pattern-gray-500 pattern-bg-white pattern-size-2 pattern-opacity-20 absolute inset-0 overflow-hidden
+  rounded"
+        ></div>
+        <!-- <div class="checkerboard absolute inset-0 rounded"></div> -->
+        <div
+          class="absolute inset-0 rounded border border-dotted border-muted-foreground transition-colors"
           class:out-of-gamut={!isLCH_within_sRGB(
             pickerColorState().pickerLightness[0],
             pickerColorState().pickerChroma[0],

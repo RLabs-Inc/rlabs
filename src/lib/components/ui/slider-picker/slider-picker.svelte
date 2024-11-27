@@ -22,11 +22,18 @@
 >
   {#snippet children({ thumbs })}
     <!-- {#if alpha} -->
-    <span
-      class="checkerboard absolute inset-0 overflow-hidden rounded-full border border-dashed border-muted-foreground"
-    ></span>
+    <!-- <span class="checkerboard absolute inset-0 overflow-hidden rounded-full"></span> -->
+
+    <div
+      class=" pattern-isometric pattern-gray-500 pattern-bg-white pattern-size-1 pattern-opacity-20
+  absolute inset-0 overflow-hidden rounded-full"
+    ></div>
+
     <!-- {/if} -->
-    <span class="relative h-5 w-full grow overflow-hidden rounded-full" style:background={bgColor}>
+    <span
+      class="relative h-5 w-full grow overflow-hidden rounded-full border border-dotted border-muted-foreground"
+      style:background={bgColor}
+    >
       <SliderPrimitive.Range class="absolute h-full bg-transparent" />
     </span>
 
