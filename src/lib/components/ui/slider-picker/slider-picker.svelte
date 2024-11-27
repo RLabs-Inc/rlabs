@@ -8,9 +8,10 @@
     class: className,
     bgColor = $bindable('#000'),
     alpha = $bindable(false),
+    error = $bindable(false),
     ...restProps
   }: WithoutChildrenOrChild<
-    SliderPrimitive.RootProps & { bgColor?: string; alpha?: boolean }
+    SliderPrimitive.RootProps & { bgColor?: string; alpha?: boolean; error?: boolean }
   > = $props();
 </script>
 
@@ -26,12 +27,12 @@
 
     <div
       class=" pattern-isometric pattern-gray-500 pattern-bg-white pattern-size-1 pattern-opacity-20
-  absolute inset-0 overflow-hidden rounded-full"
+  absolute inset-0 overflow-hidden rounded"
     ></div>
 
     <!-- {/if} -->
     <span
-      class="relative h-5 w-full grow overflow-hidden rounded-full border border-dotted border-muted-foreground"
+      class="relative h-5 w-full grow overflow-hidden rounded border border-primary"
       style:background={bgColor}
     >
       <SliderPrimitive.Range class="absolute h-full bg-transparent" />
@@ -41,7 +42,10 @@
       <SliderPrimitive.Thumb
         index={thumb}
         class={cn(
-          'block size-5 rounded-full border-2 border-primary bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+          'before:absolute before:-left-[0.525rem] before:top-[0.125rem] before:h-0 before:w-0 before:rounded-md before:border-b-[0.6rem] before:border-l-[0.55rem] before:border-r-[0.55rem] before:border-primary-foreground before:border-l-transparent before:border-r-transparent  focus-visible:outline-none before:focus-visible:border-primary-foreground  before:focus-visible:border-l-transparent before:focus-visible:border-r-transparent before:focus-visible:outline-none before:disabled:pointer-events-none before:disabled:opacity-50',
+          'thumb focus-visible:border-offset-2 focus-visible:border-offset-2 top-[0.75rem] block h-0 w-0 rounded-lg border-b-[0.8rem] border-l-[0.7rem] border-r-[0.7rem] border-primary border-l-transparent border-r-transparent ring-offset-background transition-colors focus-visible:border-b-[0.8rem] disabled:pointer-events-none disabled:opacity-50',
+          'after:absolute after:-left-[0.5rem] after:top-[0.25rem] after:h-0 after:w-0 after:rounded-md after:border-b-[0.5rem] after:border-l-[0.5rem] after:border-r-[0.5rem] after:border-primary after:border-l-transparent after:border-r-transparent',
+          error && 'error'
         )}
       />
     {/each}
@@ -49,6 +53,19 @@
 </SliderPrimitive.Root>
 
 <style>
+  /* .thumb::-webkit-slider-thumb {
+    
+  }
+  .thumb::-moz-range-thumb {
+    
+  }
+  .error::-webkit-slider-thumb {
+
+  }
+  .error::-moz-range-thumb {
+    
+  } */
+
   /* Base slider styles
   .color-slider {
     -webkit-appearance: none;
@@ -94,7 +111,7 @@
   } */
 
   /* Checkerboard pattern for alpha */
-  .checkerboard {
+  /* .checkerboard {
     background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
       linear-gradient(-45deg, #ccc 25%, transparent 25%),
       linear-gradient(45deg, transparent 75%, #ccc 75%),
@@ -105,5 +122,5 @@
       0 10px,
       10px -10px,
       -10px 0px;
-  }
+  } */
 </style>

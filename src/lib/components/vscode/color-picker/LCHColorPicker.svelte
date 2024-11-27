@@ -1,17 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
   import { oklch, type Oklch } from 'culori';
-
-  import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
+  import clsx from 'clsx';
 
   import { formatDecimal } from '$lib/utils/vscode/math';
+  import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
+  import { Input } from '$lib/components/ui/input';
+  import { SliderPicker } from '$lib/components/ui/slider-picker';
+
   import { isLCH_within_sRGB } from './gamut-utils.svelte';
   import { LCH_to_sRGB_string, colorToLCH } from './color-utils.svelte';
   import { getBgLightness, getBgChroma, getBgHue, getBgAlpha } from './gradients.svelte';
-
-  import { SliderPicker } from '$lib/components/ui/slider-picker';
-
-  import { Input } from '$lib/components/ui/input';
+  import TwoDMap from './2DMap.svelte';
 
   const pickerColorState = getSelectedColor();
 
@@ -19,9 +20,17 @@
     onChange?: (color: string) => void;
   }>();
 
+  let lcMap: TwoDMap;
+  let hcMap: TwoDMap;
+  let hlMap: TwoDMap;
+
   // Update color when any value changes
   function updateColor(color: Oklch) {
     onChange?.(LCH_to_sRGB_string(color, true));
+    // Update all maps
+    lcMap?.update();
+    hcMap?.update();
+    hlMap?.update();
   }
 
   let colorState = $derived(
@@ -51,6 +60,15 @@
       colorToLCH(pickerColorState().selectedColor!.color)!.alpha || 100
     ]);
   });
+
+  function handleMapChange(newColor: Oklch) {
+    pickerColorState().setPickerLightness([newColor.l]);
+    pickerColorState().setPickerChroma([newColor.c]);
+    if (newColor.h !== undefined) {
+      pickerColorState().setPickerHue([newColor.h]);
+    }
+    updateColor(newColor);
+  }
 </script>
 
 <div class="flex w-full flex-col gap-4">
@@ -59,19 +77,26 @@
     <div class="flex flex-wrap gap-4">
       <div class="relative h-12 w-full">
         <div
-          class=" pattern-isometric pattern-gray-500 pattern-bg-white pattern-size-2 pattern-opacity-20 absolute inset-0 overflow-hidden
-  rounded"
+          class="pattern-isometric pattern-gray-500 pattern-bg-white pattern-size-2 pattern-opacity-20 absolute inset-0 overflow-hidden rounded"
         ></div>
-        <!-- <div class="checkerboard absolute inset-0 rounded"></div> -->
         <div
-          class="absolute inset-0 rounded border border-dotted border-muted-foreground transition-colors"
-          class:out-of-gamut={!isLCH_within_sRGB(
-            pickerColorState().pickerLightness[0],
-            pickerColorState().pickerChroma[0],
-            pickerColorState().pickerHue[0]
+          class={clsx(
+            'absolute inset-0 rounded border border-primary-foreground transition-colors duration-100',
+            !isLCH_within_sRGB(
+              pickerColorState().pickerLightness[0],
+              pickerColorState().pickerChroma[0],
+              pickerColorState().pickerHue[0]
+            ) && 'border-2 border-destructive'
           )}
           style={`background: ${LCH_to_sRGB_string(colorState)}`}
-        ></div>
+        >
+          {#if !isLCH_within_sRGB(pickerColorState().pickerLightness[0], pickerColorState().pickerChroma[0], pickerColorState().pickerHue[0])}
+            <div
+              transition:fade={{ duration: 100 }}
+              class="pattern-diagonal-lines pattern-gray-500 pattern-bg-white pattern-size-2 pattern-opacity-20 absolute inset-0 rounded"
+            ></div>
+          {/if}
+        </div>
       </div>
       <div class="flex w-full flex-col justify-center gap-1 text-sm">
         <div class="flex items-center justify-between">
@@ -79,7 +104,9 @@
             {LCH_to_sRGB_string(colorState)}
           </div>
           {#if !isLCH_within_sRGB(pickerColorState().pickerLightness[0], pickerColorState().pickerChroma[0], pickerColorState().pickerHue[0])}
-            <span class="rounded bg-destructive px-1 text-xs text-destructive-foreground"
+            <span
+              transition:fade={{ duration: 100 }}
+              class="rounded bg-destructive px-1 text-xs text-destructive-foreground"
               >Color is out of gamut</span
             >
           {/if}
@@ -121,12 +148,20 @@
         />
       </div>
 
+      <TwoDMap
+        bind:this={lcMap}
+        type="lightness-chroma"
+        color={colorState}
+        onChange={handleMapChange}
+      />
+
       <SliderPicker
         value={pickerColorState().pickerLightness}
         onValueChange={(value) => {
           pickerColorState().setPickerLightness(value);
         }}
         onValueCommit={(value) => {
+          pickerColorState().setPickerLightness(value);
           updateColor(colorState);
         }}
         min={0}
@@ -155,12 +190,16 @@
           }}
         />
       </div>
+
+      <TwoDMap bind:this={hcMap} type="hue-chroma" color={colorState} onChange={handleMapChange} />
+
       <SliderPicker
         value={pickerColorState().pickerChroma}
         onValueChange={(value) => {
           pickerColorState().setPickerChroma(value);
         }}
         onValueCommit={(value) => {
+          pickerColorState().setPickerChroma(value);
           updateColor(colorState);
         }}
         min={0}
@@ -189,12 +228,21 @@
           }}
         />
       </div>
+
+      <TwoDMap
+        bind:this={hlMap}
+        type="hue-lightness"
+        color={colorState}
+        onChange={handleMapChange}
+      />
+
       <SliderPicker
         value={pickerColorState().pickerHue}
         onValueChange={(value) => {
           pickerColorState().setPickerHue(value);
         }}
         onValueCommit={(value) => {
+          pickerColorState().setPickerHue(value);
           updateColor(colorState);
         }}
         min={0}
@@ -230,6 +278,7 @@
           pickerColorState().setPickerAlpha(value);
         }}
         onValueCommit={(value) => {
+          pickerColorState().setPickerAlpha(value);
           updateColor(colorState);
         }}
         min={0}
@@ -243,18 +292,6 @@
 </div>
 
 <style>
-  .checkerboard {
-    background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
-      linear-gradient(-45deg, #ccc 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, #ccc 75%),
-      linear-gradient(-45deg, transparent 75%, #ccc 75%);
-    background-size: 20px 20px;
-    background-position:
-      0 0,
-      0 10px,
-      10px -10px,
-      -10px 0px;
-  }
   .out-of-gamut {
     outline: 2px solid var(--error, #d65a5a);
   }
