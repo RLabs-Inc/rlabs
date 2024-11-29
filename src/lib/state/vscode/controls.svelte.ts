@@ -6,9 +6,6 @@ import { ColorSchemes } from '$lib/types/color';
 let isDark = $state(true);
 let scheme = $state(randomEnum(Object(ColorSchemes)));
 let baseHue = $state([randomInteger(0, 360)]);
-let uiSaturation = $state([randomInteger(0, 100)]);
-let syntaxSaturation = $state([randomInteger(0, 100)]);
-let ansiSaturation = $state([randomInteger(0, 100)]);
 let themeName = $state('');
 let themeIsPublic = $state(false);
 let fewerGeneratedColors = $state(false);
@@ -25,22 +22,6 @@ export function getControls() {
 
   function setBaseHue(value: number[]) {
     baseHue = value;
-  }
-
-  function setUiSaturation(value: number[]) {
-    uiSaturation = value;
-    // const uiColorsState = getUiColors();
-    // uiColorsState().setUiSaturation(value[0]);
-  }
-
-  function setSyntaxSaturation(value: number[]) {
-    syntaxSaturation = value;
-    // const syntaxColorsState = getSyntaxColors();
-    // syntaxColorsState().setSyntaxSaturation(value[0]);
-  }
-
-  function setAnsiSaturation(value: number[]) {
-    ansiSaturation = value;
   }
 
   function setThemeName(value: string) {
@@ -61,17 +42,11 @@ export function getControls() {
 
   function generate() {
     const selectedTheme = getSelectedTheme();
-    console.log('===========================');
-    console.log(`GENERATE COLORS`);
-    console.log('===========================');
     selectedTheme().generate(fewerGeneratedColors);
   }
 
   function randomize() {
     const selectedTheme = getSelectedTheme();
-    console.log('===========================');
-    console.log(`RANDOMIZE COLORS`);
-    console.log('===========================');
     selectedTheme().randomize(fewerRandomColors);
   }
 
@@ -82,12 +57,6 @@ export function getControls() {
     setScheme,
     baseHue,
     setBaseHue,
-    uiSaturation,
-    setUiSaturation,
-    syntaxSaturation,
-    setSyntaxSaturation,
-    ansiSaturation,
-    setAnsiSaturation,
     themeName,
     setThemeName,
     themeIsPublic,

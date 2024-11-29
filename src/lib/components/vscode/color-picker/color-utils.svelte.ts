@@ -3,6 +3,7 @@ import { forceIntoGamut, isLCH_within_sRGB } from './gamut-utils.svelte';
 
 export const toRGB = converter('rgb');
 export const toOKLCH = converter('oklch');
+export const toOKHSL = converter('okhsl');
 export const toP3 = converter('p3');
 export const toRec2020 = converter('rec2020');
 
@@ -15,7 +16,7 @@ export function colorToLCH(color: string) {
 
   return {
     lightness: Math.round(parsed.l * 100), // 0-100
-    chroma: Math.round(parsed.c * 132), // Scale to match Lea's range (0-132)
+    chroma: Math.round(parsed.c), // 0-0.4
     hue: Math.round(parsed.h || 0), // 0-360
     alpha: Math.round((parsed.alpha || 1) * 100) // 0-100
   };
@@ -45,7 +46,7 @@ export function LCH_to_sRGB_string(color: Oklch, forceInGamut = false): string {
   const rgb = toRGB({
     mode: 'oklch',
     l: adjustedL / 100,
-    c: adjustedC / 132,
+    c: adjustedC,
     h: adjustedH,
     alpha: alpha / 100
   });

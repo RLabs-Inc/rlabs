@@ -46,18 +46,18 @@ export const getBgLightness = (color: Oklch) => {
     color.l,
     color.c,
     color.h || 0,
-    color.alpha || 1,
+    100,
     0
   )})`;
 };
 
 export const getBgChroma = (color: Oklch) => {
   return `linear-gradient(to right, ${slider_stops(
-    Array.from({ length: CHROMA_STOPS }, (_, i) => (i * 132) / (CHROMA_STOPS - 1)),
+    Array.from({ length: CHROMA_STOPS }, (_, i) => (i * 0.4) / (CHROMA_STOPS - 1)),
     color.l,
     color.c,
     color.h || 0,
-    color.alpha || 1,
+    100,
     1
   )})`;
 };
@@ -68,7 +68,7 @@ export const getBgHue = (color: Oklch) => {
     color.l,
     color.c,
     color.h || 0,
-    color.alpha || 1,
+    100,
     2
   )})`;
 };
@@ -79,7 +79,7 @@ export const getBgAlpha = (color: Oklch) => {
     color.l,
     color.c,
     color.h || 0,
-    color.alpha || 1,
+    color.alpha || 100,
     3
   )})`;
 };

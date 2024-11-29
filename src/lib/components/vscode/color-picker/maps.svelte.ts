@@ -1,5 +1,6 @@
 import { type Oklch } from 'culori';
 import { get_sRGB_string_for_gradient } from './color-utils.svelte';
+import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
 
 export type MapType = 'lightness-chroma' | 'hue-chroma' | 'hue-lightness';
 
@@ -19,11 +20,11 @@ export function generateMapColors(
       switch (type) {
         case 'lightness-chroma':
           color.l = (x / (width - 1)) * 100;
-          color.c = (1 - y / (height - 1)) * 132;
+          color.c = (1 - y / (height - 1)) * 0.4;
           break;
         case 'hue-chroma':
           color.h = (x / (width - 1)) * 360;
-          color.c = (1 - y / (height - 1)) * 132;
+          color.c = (1 - y / (height - 1)) * 0.4;
           break;
         case 'hue-lightness':
           color.h = (x / (width - 1)) * 360;
@@ -49,12 +50,12 @@ export function getMapPosition(
     case 'lightness-chroma':
       return {
         x: (color.l / 100) * width,
-        y: (1 - color.c / 132) * height
+        y: (1 - color.c / 0.4) * height
       };
     case 'hue-chroma':
       return {
         x: ((color.h || 0) / 360) * width,
-        y: (1 - color.c / 132) * height
+        y: (1 - color.c! / 0.4) * height
       };
     case 'hue-lightness':
       return {
@@ -64,30 +65,27 @@ export function getMapPosition(
   }
 }
 
-export function getColorFromPosition(
+export function setColorFromPosition(
   type: MapType,
   x: number,
   y: number,
   width: number,
-  height: number,
-  currentColor: Oklch
-): Oklch {
-  const newColor = { ...currentColor };
+  height: number
+): void {
+  const selectedColorState = getSelectedColor();
 
   switch (type) {
     case 'lightness-chroma':
-      newColor.l = (x / width) * 100;
-      newColor.c = (1 - y / height) * 132;
+      selectedColorState().setPickerLightness([(x / width) * 100]);
+      selectedColorState().setPickerChroma([(1 - y / height) * 0.4]);
       break;
     case 'hue-chroma':
-      newColor.h = (x / width) * 360;
-      newColor.c = (1 - y / height) * 132;
+      selectedColorState().setPickerHue([(x / width) * 360]);
+      selectedColorState().setPickerChroma([(1 - y / height) * 0.4]);
       break;
     case 'hue-lightness':
-      newColor.h = (x / width) * 360;
-      newColor.l = (1 - y / height) * 100;
+      selectedColorState().setPickerHue([(x / width) * 360]);
+      selectedColorState().setPickerLightness([(1 - y / height) * 100]);
       break;
   }
-
-  return newColor;
 }

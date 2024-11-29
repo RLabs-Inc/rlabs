@@ -13,9 +13,9 @@
 
 <Sidebar.Provider>
   <HowToSidebar />
-  <section class="py-16">
+  <section class="linedPaper py-16">
     <Sidebar.Trigger />
-    <div class="flex min-h-[calc(100vh-2rem)] flex-col items-center justify-center px-10">
+    <div class="flex min-h-[calc(100vh-2rem)] flex-col items-center justify-center px-10 pl-32">
       <div class="flex flex-col gap-4">
         <h1 class="pt-10 text-xl font-black md:text-4xl">How to use the VSCode theme generator</h1>
         <p class="text-sm text-gray-500">

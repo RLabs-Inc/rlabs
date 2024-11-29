@@ -1,7 +1,4 @@
-import {
-  generateAnsiColors,
-  updateAnsiColorsWithSaturation
-} from '$lib/utils/vscode/ansiColors.svelte';
+import { generateAnsiColors } from '$lib/utils/vscode/ansiColors.svelte';
 import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
 import { type AnsiColors } from '$lib/types/color';
@@ -34,17 +31,8 @@ export function getAnsiColors() {
     const options: AnsiColorsGenerationOptions = {
       lockedColors: lockedAnsiColors
     };
-    console.log('------------------------------');
-    console.log(`GENERATE ANSI COLORS`);
-    console.log('------------------------------');
     const { generatedAnsiColors } = generateAnsiColors(options);
     setAnsiColors(generatedAnsiColors);
-  }
-
-  function setAnsiSaturation(value: number) {
-    setAnsiColors(updateAnsiColorsWithSaturation(ansiColors, value, lockedAnsiColors));
-    const selectedTheme = getSelectedTheme();
-    selectedTheme().update();
   }
 
   return () => ({
@@ -60,7 +48,6 @@ export function getAnsiColors() {
     setAnsiColor,
     setAnsiColors,
     toggleLockedAnsiColor,
-    generate,
-    setAnsiSaturation
+    generate
   });
 }

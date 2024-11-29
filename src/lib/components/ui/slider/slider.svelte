@@ -5,8 +5,8 @@
   let {
     ref = $bindable(null),
     value = $bindable([0]),
-    class: className,
     bgColor = $bindable('#000'),
+    class: className,
     ...restProps
   }: WithoutChildrenOrChild<SliderPrimitive.RootProps & { bgColor?: string }> = $props();
 </script>
@@ -14,12 +14,21 @@
 <SliderPrimitive.Root
   bind:ref
   bind:value
-  class={cn('relative flex w-full touch-none select-none items-center', className)}
+  orientation="vertical"
+  class={cn(
+    'relative flex w-[1px] min-w-max max-w-[1px] touch-none select-none flex-col items-center',
+    className
+  )}
   {...restProps}
 >
   {#snippet children({ thumbs })}
-    <span class="relative h-2 w-full grow overflow-hidden rounded-full" style:background={bgColor}>
-      <SliderPrimitive.Range class="absolute h-full bg-transparent" />
+    <div
+      class=" pattern-isometric absolute inset-0 overflow-hidden rounded
+  pattern-bg-white pattern-gray-500 pattern-opacity-20 pattern-size-1"
+    ></div>
+
+    <span class="relative w-full grow overflow-hidden rounded-full bg-secondary">
+      <SliderPrimitive.Range class="absolute w-full bg-primary" />
     </span>
     {#each thumbs as thumb}
       <SliderPrimitive.Thumb

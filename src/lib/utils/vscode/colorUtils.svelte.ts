@@ -14,6 +14,7 @@ import {
 } from 'culori';
 
 import { ColorSchemes } from '$lib/types/color';
+import { toOKLCH } from '$lib/components/vscode/color-picker/color-utils.svelte';
 
 export const brightenColor = filterBrightness(1.2, 'rgb');
 export const darkenColor = filterBrightness(0.8, 'rgb');
@@ -61,10 +62,6 @@ export function getAlphaColor(color: string, alpha: string): string {
 }
 
 export const randomizeColor = (hue: number[], lightness: number[], chroma: number[] | null) => {
-  // const startRand = performance.now();
-  console.log('HUE: ', hue);
-  console.log('LIGHTNESS: ', lightness);
-  console.log('CHROMA: ', chroma);
   const newColor = random('oklch', {
     l: [lightness[0] / 100, lightness[1] / 100],
     c: chroma ? [chroma[0] / 100, chroma[1] / 100] : [0, 0.4],
@@ -74,7 +71,6 @@ export const randomizeColor = (hue: number[], lightness: number[], chroma: numbe
 };
 
 export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): number[] {
-  const start = performance.now();
   let result: number[];
   const goldenRatio = 0.618033988749895;
   // const fibSequence = [1, 1, 2, 3, 5, 8, 13, 21]
@@ -323,8 +319,6 @@ export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): numbe
     default:
       result = [baseHue];
   }
-  const end = performance.now();
-  console.log(`GENERATE SCHEME HUES: ${end - start} milliseconds`);
   return result;
 }
 
@@ -513,13 +507,14 @@ export function adjustCommentColor(
   backgroundColor: string,
   isDarkTheme: boolean
 ): string {
-  // const start = performance.now();
   const minContrast = isDarkTheme ? 2 : 1.5;
   const maxContrast = isDarkTheme ? 3 : 2.5;
   let comment = oklch(commentColor);
   const bgColor = oklch(backgroundColor);
+  let iterations = 0;
+  const MAX_ITERATIONS = 150;
 
-  while (true) {
+  while (iterations < MAX_ITERATIONS) {
     const contrast = wcagContrast(comment!, bgColor!);
     if (contrast < minContrast || contrast > maxContrast) {
       if (contrast > maxContrast) {
@@ -532,13 +527,8 @@ export function adjustCommentColor(
     }
 
     comment = clampChroma(comment!, 'oklch');
-    // Prevent infinite loop and ensure the color doesn't get too dark or too light
-    // if (isDarkTheme && isDark(comment!)) break;
-    // if (!isDarkTheme && !isDark(comment!)) break;
+    iterations++;
   }
-
-  // const end = performance.now();
-  // console.log(`ADJUST COMMENT COLOR: ${end - start} milliseconds`);
 
   return formatHex8(comment!);
 }
@@ -548,44 +538,21 @@ export function ensureReadability(
   background: string,
   minContrast = 5.5
 ): string {
-  // const start = performance.now();
   let color = oklch(foreground);
   const bgColor = oklch(background);
   const isDarkTheme = isDark(background);
   let iterations = 0;
   const maxIterations = 100;
-
-  if (isDarkTheme) {
-    while (wcagContrast(color!, bgColor!) < minContrast && iterations < maxIterations) {
-      // color = !isDark(formatHex8(color)) ? darkenColor(color) : brightenColor(color);
-      const newColor = clampChroma(
-        { ...oklchConverter(color)!, l: oklchConverter(color)!.l + 0.1 },
-        'oklch'
-      );
-      if (newColor) {
-        color = newColor;
-      }
-
-      iterations++;
+  let tempColor = oklch(foreground);
+  while (wcagContrast(color!, bgColor!) < minContrast && iterations < maxIterations) {
+    if (isDarkTheme) {
+      tempColor = clampChroma({ ...toOKLCH(color)!, l: toOKLCH(color)!.l + 0.1 }, 'oklch');
+    } else {
+      tempColor = clampChroma({ ...toOKLCH(color)!, l: toOKLCH(color)!.l - 0.1 }, 'oklch');
     }
-  } else {
-    while (wcagContrast(color!, bgColor!) < minContrast && iterations < maxIterations) {
-      const newColor = clampChroma(
-        { ...oklchConverter(color)!, l: oklchConverter(color)!.l - 0.1 },
-        'oklch'
-      );
-
-      if (newColor) {
-        color = newColor;
-      }
-
-      iterations++;
-    }
+    color = tempColor;
+    iterations++;
   }
-
-  // const end = performance.now();
-  // console.log(`ENSURE READABILITY: ${end - start} milliseconds`);
-
   return formatHex8(color!);
 }
 

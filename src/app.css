@@ -40,8 +40,13 @@
     --cp-input-color: #f6f6f6;
     --cp-button-hover-color: #777;
     --focus-color: black;
-
-    --sidebar-background: 0 0% 98%;
+    --bgTexture: rgba(245, 242, 235, 0.369);
+    --bgTexture1: rgb(255, 255, 255);
+    --bgPaper: #f9f8f5;
+    --margin: #67676722;
+    --margin1: #5c5c5c5d;
+    --lineColor: #cccccc3e;
+    --sidebar-background: 0 0% 99%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
@@ -89,7 +94,12 @@
     --cp-input-color: #1a1a1a;
     --cp-button-hover-color: #777;
     --focus-color: white;
-
+    --bgTexture: rgba(0, 0, 0, 0.575);
+    --bgTexture1: rgba(0, 0, 0, 0.757);
+    --bgPaper: rgb(28, 28, 28);
+    --margin: #7c7c7c69;
+    --margin1: #cdcdcda7;
+    --lineColor: #3a3a3a3a;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -112,6 +122,28 @@
   body {
     @apply bg-background text-foreground;
   }
+  body {
+    background-color: rgb(255, 255, 255);
+    background-image: radial-gradient(closest-side, var(--bgTexture) 98%, var(--bgTexture1) 99%),
+      radial-gradient(closest-side, var(--bgTexture) 98%, var(--bgTexture1) 99%);
+    background-size: 5px 5px;
+    background-position:
+      0 0,
+      2.5px 2.5px;
+  }
+}
+
+.linedPaper {
+  background-color: var(--bgPaper);
+  background-image: linear-gradient(
+      90deg,
+      transparent 79px,
+      var(--margin) 79px,
+      var(--margin1) 81px,
+      transparent 81px
+    ),
+    linear-gradient(var(--lineColor) 0.1em, transparent 0.1em);
+  background-size: 100% 1.2em;
 }
 
 /* Hide the button-like elements in the color picker */

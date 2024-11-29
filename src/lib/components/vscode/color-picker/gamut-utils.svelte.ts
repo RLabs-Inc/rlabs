@@ -4,7 +4,7 @@ export function isLCH_within_sRGB(l: number, c: number, h: number): boolean {
   const rgb = toRGB({
     mode: 'oklch',
     l: l / 100,
-    c: c / 132,
+    c: c,
     h: h
   });
 
@@ -42,7 +42,7 @@ export function forceIntoGamut(
   const originalColor = {
     mode: 'oklch' as const,
     l: l / 100,
-    c: c / 132,
+    c: c,
     h: h
   };
 
@@ -68,7 +68,7 @@ export function forceIntoGamut(
   const chromaOnlyColor = {
     mode: 'oklch' as const,
     l: l / 100,
-    c: newC / 132,
+    c: newC,
     h: h
   };
 
@@ -88,7 +88,7 @@ export function forceIntoGamut(
       const lighterColor = {
         mode: 'oklch' as const,
         l: higherL / 100,
-        c: newC / 132,
+        c: newC,
         h: h
       };
       const lighterDistance = getColorDistance(originalColor, lighterColor);
@@ -105,7 +105,7 @@ export function forceIntoGamut(
       const darkerColor = {
         mode: 'oklch' as const,
         l: lowerL / 100,
-        c: newC / 132,
+        c: newC,
         h: h
       };
       const darkerDistance = getColorDistance(originalColor, darkerColor);
@@ -116,7 +116,7 @@ export function forceIntoGamut(
     }
   }
 
-  return [Math.round(bestColor.l * 100), Math.round(bestColor.c * 132), bestColor.h];
+  return [Math.round(bestColor.l * 100), Math.round(bestColor.c), bestColor.h];
 }
 
 export function force_into_gamut(

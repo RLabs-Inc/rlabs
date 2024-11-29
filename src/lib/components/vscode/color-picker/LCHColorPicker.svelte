@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { oklch, type Oklch } from 'culori';
+  import { oklch, type Oklch, converter } from 'culori';
   import clsx from 'clsx';
 
   import { formatDecimal } from '$lib/utils/vscode/math';
@@ -13,6 +13,7 @@
   import { LCH_to_sRGB_string, colorToLCH } from './color-utils.svelte';
   import { getBgLightness, getBgChroma, getBgHue, getBgAlpha } from './gradients.svelte';
   import TwoDMap from './2DMap.svelte';
+  import { useDebounce } from '$lib/utils/useDebounce.svelte';
 
   const pickerColorState = getSelectedColor();
 
@@ -20,28 +21,35 @@
     onChange?: (color: string) => void;
   }>();
 
+  let showMaps = $state(false);
+
   let lcMap: TwoDMap;
   let hcMap: TwoDMap;
   let hlMap: TwoDMap;
 
-  // Update color when any value changes
-  function updateColor(color: Oklch) {
-    onChange?.(LCH_to_sRGB_string(color, true));
-    // Update all maps
+  function updateMaps(from: string) {
     lcMap?.update();
     hcMap?.update();
     hlMap?.update();
   }
 
-  let colorState = $derived(
-    oklch({
+  // Update color when any value changes
+  function updateColor(mapsOnly?: boolean, from?: string) {
+    console.log(`UPDATE COLOR FROM ${from}, ${mapsOnly}`);
+    onChange?.(LCH_to_sRGB_string(colorState, true));
+  }
+
+  let colorState = $derived.by(() => {
+    updateMaps('ColorState');
+    return oklch({
       mode: 'oklch',
       l: pickerColorState().pickerLightness[0],
       c: pickerColorState().pickerChroma[0],
       h: pickerColorState().pickerHue[0],
       alpha: pickerColorState().pickerAlpha[0]
-    })
-  );
+    });
+  });
+  const toOKLCH = converter('oklch');
 
   const bgLightness = $derived(getBgLightness(colorState));
   const bgChroma = $derived(getBgChroma(colorState));
@@ -49,26 +57,16 @@
   const bgAlpha = $derived(getBgAlpha(colorState));
 
   onMount(() => {
+    console.log('Selected Color: ', toOKLCH(pickerColorState().selectedColor!.color));
     pickerColorState().setPickerLightness([
-      colorToLCH(pickerColorState().selectedColor!.color)!.lightness
+      toOKLCH(pickerColorState().selectedColor!.color)!.l * 100
     ]);
-    pickerColorState().setPickerChroma([
-      colorToLCH(pickerColorState().selectedColor!.color)!.chroma
-    ]);
-    pickerColorState().setPickerHue([colorToLCH(pickerColorState().selectedColor!.color)!.hue]);
+    pickerColorState().setPickerChroma([toOKLCH(pickerColorState().selectedColor!.color)!.c]);
+    pickerColorState().setPickerHue([toOKLCH(pickerColorState().selectedColor!.color)!.h || 0]);
     pickerColorState().setPickerAlpha([
-      colorToLCH(pickerColorState().selectedColor!.color)!.alpha || 100
+      toOKLCH(pickerColorState().selectedColor!.color)!.alpha! * 100 || 100
     ]);
   });
-
-  function handleMapChange(newColor: Oklch) {
-    pickerColorState().setPickerLightness([newColor.l]);
-    pickerColorState().setPickerChroma([newColor.c]);
-    if (newColor.h !== undefined) {
-      pickerColorState().setPickerHue([newColor.h]);
-    }
-    updateColor(newColor);
-  }
 </script>
 
 <div class="flex w-full flex-col gap-4">
@@ -77,7 +75,7 @@
     <div class="flex flex-wrap gap-4">
       <div class="relative h-12 w-full">
         <div
-          class="pattern-isometric pattern-gray-500 pattern-bg-white pattern-size-2 pattern-opacity-20 absolute inset-0 overflow-hidden rounded"
+          class="pattern-isometric absolute inset-0 overflow-hidden rounded pattern-bg-white pattern-gray-500 pattern-opacity-20 pattern-size-2"
         ></div>
         <div
           class={clsx(
@@ -93,7 +91,7 @@
           {#if !isLCH_within_sRGB(pickerColorState().pickerLightness[0], pickerColorState().pickerChroma[0], pickerColorState().pickerHue[0])}
             <div
               transition:fade={{ duration: 100 }}
-              class="pattern-diagonal-lines pattern-gray-500 pattern-bg-white pattern-size-2 pattern-opacity-20 absolute inset-0 rounded"
+              class="pattern-diagonal-lines absolute inset-0 rounded pattern-bg-white pattern-gray-500 pattern-opacity-20 pattern-size-2"
             ></div>
           {/if}
         </div>
@@ -143,7 +141,7 @@
           value={pickerColorState().pickerLightness[0]}
           oninput={(e) => {
             pickerColorState().setPickerLightness([Number((e.target as HTMLInputElement).value)]);
-            updateColor(colorState);
+            updateColor(false, 'INPUT LIGHTNESS');
           }}
         />
       </div>
@@ -152,7 +150,7 @@
         bind:this={lcMap}
         type="lightness-chroma"
         color={colorState}
-        onChange={handleMapChange}
+        onChange={updateColor}
       />
 
       <SliderPicker
@@ -162,12 +160,14 @@
         }}
         onValueCommit={(value) => {
           pickerColorState().setPickerLightness(value);
-          updateColor(colorState);
+          updateColor(false, 'SLIDER COMMIT LIGHTNESS');
         }}
         min={0}
         max={100}
         step={0.1}
         bgColor={bgLightness}
+        controlledValue={true}
+        alpha={false}
       />
     </div>
 
@@ -181,17 +181,20 @@
           class="w-20"
           type="number"
           min={0}
-          max={100}
-          step={0.1}
+          max={0.4}
+          step={0.01}
           value={pickerColorState().pickerChroma[0]}
           oninput={(e) => {
             pickerColorState().setPickerChroma([Number((e.target as HTMLInputElement).value)]);
-            updateColor(colorState);
+            updateColor(false, 'INPUT CHROMA');
           }}
         />
       </div>
 
-      <TwoDMap bind:this={hcMap} type="hue-chroma" color={colorState} onChange={handleMapChange} />
+      <!-- <div class="flex items-center gap-2"> -->
+      <div class="">
+        <TwoDMap bind:this={hcMap} type="hue-chroma" color={colorState} onChange={updateColor} />
+      </div>
 
       <SliderPicker
         value={pickerColorState().pickerChroma}
@@ -200,14 +203,17 @@
         }}
         onValueCommit={(value) => {
           pickerColorState().setPickerChroma(value);
-          updateColor(colorState);
+          updateColor(false, 'SLIDER COMMIT CHROMA');
         }}
         min={0}
-        max={132}
-        step={0.1}
+        max={0.4}
+        step={0.001}
         bgColor={bgChroma}
+        controlledValue={true}
+        alpha={false}
       />
     </div>
+    <!-- </div> -->
 
     <!-- Hue Slider -->
     <div class="flex flex-col gap-2">
@@ -224,17 +230,12 @@
           value={pickerColorState().pickerHue[0]}
           oninput={(e) => {
             pickerColorState().setPickerHue([Number((e.target as HTMLInputElement).value)]);
-            updateColor(colorState);
+            updateColor(false, 'INPUT HUE');
           }}
         />
       </div>
 
-      <TwoDMap
-        bind:this={hlMap}
-        type="hue-lightness"
-        color={colorState}
-        onChange={handleMapChange}
-      />
+      <TwoDMap bind:this={hlMap} type="hue-lightness" color={colorState} onChange={updateColor} />
 
       <SliderPicker
         value={pickerColorState().pickerHue}
@@ -243,12 +244,14 @@
         }}
         onValueCommit={(value) => {
           pickerColorState().setPickerHue(value);
-          updateColor(colorState);
+          updateColor(false, 'SLIDER COMMIT HUE');
         }}
         min={0}
         max={360}
         step={0.1}
         bgColor={bgHue}
+        controlledValue={true}
+        alpha={false}
       />
     </div>
 
@@ -267,7 +270,7 @@
           value={pickerColorState().pickerAlpha[0]}
           oninput={(e) => {
             pickerColorState().setPickerAlpha([Number((e.target as HTMLInputElement).value)]);
-            updateColor(colorState);
+            updateColor(false, 'INPUT ALPHA');
           }}
         />
       </div>
@@ -279,13 +282,14 @@
         }}
         onValueCommit={(value) => {
           pickerColorState().setPickerAlpha(value);
-          updateColor(colorState);
+          updateColor(false, 'SLIDER COMMIT ALPHA');
         }}
         min={0}
         max={100}
         step={0.1}
         bgColor={bgAlpha}
-        alpha
+        controlledValue={true}
+        alpha={true}
       />
     </div>
   </div>

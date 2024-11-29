@@ -20,9 +20,6 @@ let theme = $state<Theme>({
   isDark: true,
   scheme: ColorSchemes.Analogous,
   baseHue: 128,
-  uiSaturation: 50,
-  syntaxSaturation: 50,
-  ansiSaturation: 50,
   name: '',
   isPublic: false,
   schemeHues: [],
@@ -49,9 +46,6 @@ export function getSelectedTheme() {
     controlsState().setIsDark(value.isDark);
     controlsState().setScheme(value.scheme);
     controlsState().setBaseHue([value.baseHue]);
-    controlsState().setUiSaturation([value.uiSaturation]);
-    controlsState().setSyntaxSaturation([value.syntaxSaturation]);
-    controlsState().setAnsiSaturation([value.ansiSaturation]);
     controlsState().setThemeName(value.name);
     controlsState().setThemeIsPublic(value.isPublic);
     schemeHuesState().set(value.schemeHues || []);
@@ -69,9 +63,6 @@ export function getSelectedTheme() {
     controlsState().setIsDark(true);
     controlsState().setScheme(randomEnum(Object(ColorSchemes)));
     controlsState().setBaseHue([128]);
-    controlsState().setUiSaturation([50]);
-    controlsState().setSyntaxSaturation([50]);
-    controlsState().setAnsiSaturation([50]);
     controlsState().setThemeName('');
     controlsState().setThemeIsPublic(false);
     set({
@@ -81,9 +72,6 @@ export function getSelectedTheme() {
       isDark: true,
       scheme: controlsState().scheme,
       baseHue: controlsState().baseHue[0],
-      uiSaturation: controlsState().uiSaturation[0],
-      syntaxSaturation: controlsState().syntaxSaturation[0],
-      ansiSaturation: controlsState().ansiSaturation[0],
       name: controlsState().themeName,
       isPublic: controlsState().themeIsPublic,
       schemeHues: [],
@@ -109,9 +97,6 @@ export function getSelectedTheme() {
       isDark: controlsState().isDark,
       scheme: ColorSchemes[controlsState().scheme as keyof typeof ColorSchemes],
       baseHue: controlsState().baseHue[0],
-      uiSaturation: controlsState().uiSaturation[0],
-      syntaxSaturation: controlsState().syntaxSaturation[0],
-      ansiSaturation: controlsState().ansiSaturation[0],
       isPublic: controlsState().themeIsPublic,
       schemeHues: schemeHuesState().schemeHues,
       uiColors: uiColorsState().uiColors,
@@ -143,9 +128,6 @@ export function getSelectedTheme() {
       isDark: controlsState().isDark,
       scheme: ColorSchemes[controlsState().scheme as keyof typeof ColorSchemes],
       baseHue: controlsState().baseHue[0],
-      uiSaturation: controlsState().uiSaturation[0],
-      syntaxSaturation: controlsState().syntaxSaturation[0],
-      ansiSaturation: controlsState().ansiSaturation[0],
       name: controlsState().themeName,
       isPublic: controlsState().themeIsPublic,
       schemeHues: schemeHuesState().schemeHues,
@@ -163,9 +145,6 @@ export function getSelectedTheme() {
     selectedColorState().setSelectedColor(null);
     controlsState().setScheme(randomEnum(Object(ColorSchemes)));
     controlsState().setBaseHue([randomInteger(0, 360)]);
-    controlsState().setUiSaturation([randomInteger(20, 100)]);
-    controlsState().setSyntaxSaturation([randomInteger(20, 100)]);
-    controlsState().setAnsiSaturation([randomInteger(20, 100)]);
     controlsState().setThemeName('');
     controlsState().setThemeIsPublic(false);
     schemeHuesState().generate();
@@ -179,9 +158,6 @@ export function getSelectedTheme() {
       isDark: controlsState().isDark,
       scheme: ColorSchemes[controlsState().scheme as keyof typeof ColorSchemes],
       baseHue: controlsState().baseHue[0],
-      uiSaturation: controlsState().uiSaturation[0],
-      syntaxSaturation: controlsState().syntaxSaturation[0],
-      ansiSaturation: controlsState().ansiSaturation[0],
       name: controlsState().themeName,
       isPublic: controlsState().themeIsPublic,
       schemeHues: schemeHuesState().schemeHues,

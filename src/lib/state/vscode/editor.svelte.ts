@@ -9,10 +9,18 @@ type SelectedColor = {
 
 let file = $state(exampleFiles[0]);
 let selectedColor = $state<SelectedColor | null>(null);
+
 let pickerLightness = $state([0]);
 let pickerChroma = $state([0]);
 let pickerHue = $state([0]);
 let pickerAlpha = $state([100]);
+const currentColor = $derived({
+  mode: 'oklch',
+  l: pickerLightness[0] / 100,
+  c: pickerChroma[0],
+  h: pickerHue[0],
+  alpha: pickerAlpha[0] / 100
+});
 
 let isEditing = $state(false);
 
@@ -57,7 +65,8 @@ export function getSelectedColor() {
     pickerHue,
     setPickerHue,
     pickerAlpha,
-    setPickerAlpha
+    setPickerAlpha,
+    currentColor
   });
 }
 

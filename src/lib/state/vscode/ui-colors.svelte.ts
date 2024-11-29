@@ -1,4 +1,4 @@
-import { generateUIColors, updateUIColorsWithSaturation } from '$lib/utils/vscode/uiColors.svelte';
+import { generateUIColors } from '$lib/utils/vscode/uiColors.svelte';
 import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
 import { type UIColors } from '$lib/types/color';
@@ -32,17 +32,8 @@ export function getUiColors() {
       few: fewerColors,
       lockedColors: lockedUIColors
     };
-    console.log('------------------------------');
-    console.log(`GENERATE UI COLORS`);
-    console.log('------------------------------');
     const { generatedUIColors } = generateUIColors(options);
     setUiColors(generatedUIColors);
-  }
-
-  function setUiSaturation(value: number) {
-    setUiColors(updateUIColorsWithSaturation(uiColors, value, lockedUIColors));
-    const selectedTheme = getSelectedTheme();
-    selectedTheme().update();
   }
 
   return () => ({
@@ -58,7 +49,6 @@ export function getUiColors() {
     setUiColor,
     setUiColors,
     toggleLockedUIColor,
-    generate,
-    setUiSaturation
+    generate
   });
 }

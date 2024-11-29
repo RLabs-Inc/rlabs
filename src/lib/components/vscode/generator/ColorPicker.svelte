@@ -6,6 +6,7 @@
   import { getAnsiColors } from '$lib/state/vscode/ansi-colors.svelte';
 
   import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/color';
+  import { Button } from '$lib/components/ui/button';
 
   const selectedColorState = getSelectedColor();
   const uiColorsState = getUiColors();
@@ -38,12 +39,31 @@
 </script>
 
 {#if selectedColor}
-  <div
-    class="flex w-full flex-col items-center justify-center gap-2 rounded-md border border-border p-2 text-xs shadow-sm"
-  >
-    <span class="text-sm font-black capitalize drop-shadow-sm">{selectedColor.name}</span>
-    {#key selectedColor.name}
-      <LCHColorPicker onChange={handleColorChange} />
-    {/key}
-  </div>
+  <section class="rounded border border-border shadow-sm">
+    <div class="flex max-h-4 w-full items-start justify-end">
+      <Button
+        variant="ghost"
+        size="icon"
+        onclick={() => selectedColorState().setSelectedColor(null)}
+      >
+        <span class="sr-only">Close</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-4 w-4"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </Button>
+    </div>
+    <div class="flex w-full flex-col items-center justify-center gap-2 p-2 text-xs">
+      <span class="text-sm font-black capitalize drop-shadow-sm">{selectedColor.name}</span>
+      {#key selectedColor.name}
+        <LCHColorPicker onChange={handleColorChange} />
+      {/key}
+    </div>
+  </section>
 {/if}
