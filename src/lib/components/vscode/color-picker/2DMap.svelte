@@ -13,10 +13,9 @@
   let container: HTMLDivElement;
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
-  let width = 0;
-  let height = 0;
+  let width = $state(0);
+  let height = $state(0);
   let isDragging = false;
-  let resizeObserver: ResizeObserver;
   let worker: Worker;
   let currentMessageId = 0;
   let isUpdateScheduled = false;
@@ -24,16 +23,14 @@
   onMount(() => {
     const rect = container.getBoundingClientRect();
     width = rect.width;
-    height = rect.height; // 2:1 aspect ratio
+    height = rect.height;
     canvas.width = width;
     canvas.height = height;
-
-    // Initialize canvas context
-    ctx = canvas.getContext('2d')!;
+    ctx = canvas.getContext('2d', { alpha: false })!;
+    scheduleUpdate();
 
     // Initialize Web Worker
     worker = new colorWorker();
-
     worker.onmessage = (e) => {
       if (e.data.type === 'colorsGenerated' && e.data.mapType === type) {
         // Only update if this is the response to our latest request
@@ -45,26 +42,9 @@
         isUpdateScheduled = false;
       }
     };
-
-    // Setup resize observer
-    resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        width = entry.contentRect.width;
-        height = entry.contentRect.height;
-        canvas.width = width;
-        canvas.height = height;
-        scheduleUpdate();
-      }
-    });
-
-    resizeObserver.observe(container);
-
-    // Initial draw
-    scheduleUpdate();
   });
 
   onDestroy(() => {
-    resizeObserver.disconnect();
     worker.terminate();
   });
 
@@ -147,7 +127,7 @@
 >
   <canvas
     bind:this={canvas}
-    class="h-full w-full cursor-crosshair rounded"
+    class="h-full w-full cursor-pointer rounded"
     onmousedown={handleMouseDown}
     onmousemove={handleMouseMove}
     onmouseup={handleMouseUp}
