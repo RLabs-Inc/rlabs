@@ -13,7 +13,6 @@
   import { LCH_to_sRGB_string, colorToLCH } from './color-utils.svelte';
   import { getBgLightness, getBgChroma, getBgHue, getBgAlpha } from './gradients.svelte';
   import TwoDMap from './2DMap.svelte';
-  import { useDebounce } from '$lib/utils/useDebounce.svelte';
 
   const pickerColorState = getSelectedColor();
 

@@ -2,8 +2,6 @@
   import { onMount } from 'svelte';
   import { type Oklch } from 'culori';
   import { getMapPosition, setColorFromPosition, type MapType } from './maps.svelte';
-  import { is } from 'drizzle-orm';
-  import { useDebounce } from '$lib/utils/useDebounce.svelte';
 
   const { type, color, onChange } = $props<{
     type: MapType;
