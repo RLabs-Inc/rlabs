@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { oklch, type Oklch, converter } from 'culori';
+  import { oklch, converter } from 'culori';
   import clsx from 'clsx';
 
   import { formatDecimal } from '$lib/utils/vscode/math';
@@ -10,7 +10,7 @@
   import { SliderPicker } from '$lib/components/ui/slider-picker';
 
   import { isLCH_within_sRGB } from './gamut-utils.svelte';
-  import { LCH_to_sRGB_string, colorToLCH } from './color-utils.svelte';
+  import { LCH_to_sRGB_string } from './color-utils.svelte';
   import { getBgLightness, getBgChroma, getBgHue, getBgAlpha } from './gradients.svelte';
   import TwoDMap from './2DMap.svelte';
 
@@ -68,7 +68,7 @@
 
 <div class="flex w-full flex-col gap-4">
   <!-- Color Preview -->
-  <div class="flex flex-col gap-2">
+  <div class="flex w-[280px] flex-col gap-2">
     <div class="flex flex-wrap gap-4">
       <div class="relative h-12 w-full">
         <div
@@ -76,7 +76,7 @@
         ></div>
         <div
           class={clsx(
-            'absolute inset-0 rounded border border-primary-foreground transition-colors duration-100',
+            'absolute inset-0 w-full rounded border border-primary-foreground transition-colors duration-100',
             !isLCH_within_sRGB(
               pickerColorState().pickerLightness[0],
               pickerColorState().pickerChroma[0],
@@ -124,7 +124,7 @@
   <!-- Sliders -->
   <div class="flex flex-col gap-4">
     <!-- Lightness Slider -->
-    <div class="flex flex-col gap-2">
+    <div class="flex w-[280px] flex-col gap-2">
       <div class="flex items-center justify-between">
         <label for="lightness-slider" class="text-xs"
           >Lightness: {formatDecimal(pickerColorState().pickerLightness[0])}%</label
@@ -167,6 +167,7 @@
         bgColor={bgLightness}
         controlledValue={true}
         alpha={false}
+        class="w-[280px]"
       />
     </div>
 
@@ -211,6 +212,7 @@
         bgColor={bgChroma}
         controlledValue={true}
         alpha={false}
+        class="w-[280px]"
       />
     </div>
 
@@ -253,6 +255,7 @@
         bgColor={bgHue}
         controlledValue={true}
         alpha={false}
+        class="w-[280px]"
       />
     </div>
 
@@ -291,6 +294,7 @@
         bgColor={bgAlpha}
         controlledValue={true}
         alpha={true}
+        class="w-[280px]"
       />
     </div>
   </div>

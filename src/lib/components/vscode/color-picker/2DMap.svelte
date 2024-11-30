@@ -44,6 +44,15 @@
     };
   });
 
+  $effect(() => {
+    const rect = container.getBoundingClientRect();
+    width = rect.width;
+    height = rect.height;
+    canvas.width = width;
+    canvas.height = height;
+    ctx = canvas.getContext('2d', { alpha: false })!;
+  });
+
   onDestroy(() => {
     worker.terminate();
   });
@@ -122,12 +131,14 @@
 </script>
 
 <div
-  class="relative aspect-[2/1] w-full rounded border border-border dark:border-primary-foreground"
+  class="relative aspect-[2/1] h-[140px] w-[280px] overflow-hidden rounded border border-border dark:border-primary-foreground"
   bind:this={container}
 >
   <canvas
+    width="280"
+    height="140"
     bind:this={canvas}
-    class="h-full w-full cursor-pointer rounded"
+    class="cursor-pointer rounded"
     onmousedown={handleMouseDown}
     onmousemove={handleMouseMove}
     onmouseup={handleMouseUp}
