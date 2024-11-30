@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { type Oklch } from 'culori';
   import { getMapPosition, setColorFromPosition, type MapType } from './maps.svelte';
+  import colorWorker from './colorWorker.ts?worker';
 
   const { type, color, onChange } = $props<{
     type: MapType;
     color: Oklch;
-    onChange?: (mapsOnly?: boolean) => void;
+    onChange?: (mapsOnly?: boolean, from?: string) => void;
   }>();
 
   let container: HTMLDivElement;
@@ -17,11 +18,13 @@
   let isDragging = false;
   let resizeObserver: ResizeObserver;
   let worker: Worker;
+  let currentMessageId = 0;
+  let isUpdateScheduled = false;
 
   onMount(() => {
     const rect = container.getBoundingClientRect();
     width = rect.width;
-    height = width / 2; // 2:1 aspect ratio
+    height = rect.height; // 2:1 aspect ratio
     canvas.width = width;
     canvas.height = height;
 
@@ -29,13 +32,17 @@
     ctx = canvas.getContext('2d')!;
 
     // Initialize Web Worker
-    worker = new Worker(new URL('./colorWorker.ts', import.meta.url), { type: 'module' });
+    worker = new colorWorker();
 
     worker.onmessage = (e) => {
-      if (e.data.type === 'colorsGenerated') {
-        const imageData = new ImageData(new Uint8ClampedArray(e.data.imageData), width, height);
-        ctx.putImageData(imageData, 0, 0);
-        drawCursor();
+      if (e.data.type === 'colorsGenerated' && e.data.mapType === type) {
+        // Only update if this is the response to our latest request
+        if (e.data.messageId === currentMessageId) {
+          const imageData = new ImageData(new Uint8ClampedArray(e.data.imageData), width, height);
+          ctx.putImageData(imageData, 0, 0);
+          drawCursor();
+        }
+        isUpdateScheduled = false;
       }
     };
 
@@ -43,34 +50,42 @@
     resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         width = entry.contentRect.width;
-        height = width / 2;
+        height = entry.contentRect.height;
         canvas.width = width;
         canvas.height = height;
-
-        requestAnimationFrame(drawMap);
+        scheduleUpdate();
       }
     });
 
     resizeObserver.observe(container);
 
     // Initial draw
-    requestAnimationFrame(drawMap);
-
-    return () => {
-      resizeObserver.disconnect();
-      worker.terminate();
-    };
+    scheduleUpdate();
   });
 
-  function drawMap() {
-    if (!ctx || width === 0 || height === 0) return;
+  onDestroy(() => {
+    resizeObserver.disconnect();
+    worker.terminate();
+  });
 
-    worker.postMessage({
-      type: 'generateColors',
-      color,
-      mapType: type,
-      width,
-      height
+  function scheduleUpdate() {
+    if (isUpdateScheduled) return;
+    isUpdateScheduled = true;
+
+    requestAnimationFrame(() => {
+      if (!ctx || width === 0 || height === 0) {
+        isUpdateScheduled = false;
+        return;
+      }
+
+      currentMessageId++;
+      worker.postMessage({
+        type: 'generateColors',
+        color,
+        mapType: type,
+        width,
+        height
+      });
     });
   }
 
@@ -97,9 +112,9 @@
 
   function handleMouseDown(event: MouseEvent) {
     isDragging = true;
+    updateColor(event);
   }
 
-  let timer: NodeJS.Timeout;
   const handleMouseMove = (event: MouseEvent) => {
     if (!isDragging) return;
     updateColor(event);
@@ -115,12 +130,14 @@
     const rect = canvas.getBoundingClientRect();
     const x = Math.max(0, Math.min(width, event.clientX - rect.left));
     const y = Math.max(0, Math.min(height, event.clientY - rect.top));
+
     setColorFromPosition(type, x, y, width, height);
+    scheduleUpdate();
   }
 
   // Export update method for parent component
-  export function update() {
-    requestAnimationFrame(drawMap);
+  export function update(changedParam?: 'lightness' | 'chroma' | 'hue') {
+    scheduleUpdate();
   }
 </script>
 

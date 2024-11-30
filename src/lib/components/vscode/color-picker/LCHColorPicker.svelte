@@ -26,20 +26,17 @@
   let hcMap: TwoDMap;
   let hlMap: TwoDMap;
 
-  function updateMaps(from: string) {
+  function updateMaps(changedParam?: 'lightness' | 'chroma' | 'hue') {
     lcMap?.update();
     hcMap?.update();
     hlMap?.update();
   }
-
   // Update color when any value changes
-  function updateColor(mapsOnly?: boolean, from?: string) {
-    console.log(`UPDATE COLOR FROM ${from}, ${mapsOnly}`);
+  function updateColor() {
     onChange?.(LCH_to_sRGB_string(colorState, true));
   }
 
   let colorState = $derived.by(() => {
-    updateMaps('ColorState');
     return oklch({
       mode: 'oklch',
       l: pickerColorState().pickerLightness[0],
@@ -65,6 +62,7 @@
     pickerColorState().setPickerAlpha([
       toOKLCH(pickerColorState().selectedColor!.color)!.alpha! * 100 || 100
     ]);
+    updateMaps(); // Initial map update
   });
 </script>
 
@@ -140,7 +138,8 @@
           value={pickerColorState().pickerLightness[0]}
           oninput={(e) => {
             pickerColorState().setPickerLightness([Number((e.target as HTMLInputElement).value)]);
-            updateColor(false, 'INPUT LIGHTNESS');
+            updateMaps('lightness');
+            updateColor();
           }}
         />
       </div>
@@ -156,10 +155,11 @@
         value={pickerColorState().pickerLightness}
         onValueChange={(value) => {
           pickerColorState().setPickerLightness(value);
+          updateMaps('lightness');
         }}
         onValueCommit={(value) => {
           pickerColorState().setPickerLightness(value);
-          updateColor(false, 'SLIDER COMMIT LIGHTNESS');
+          updateColor();
         }}
         min={0}
         max={100}
@@ -185,12 +185,12 @@
           value={pickerColorState().pickerChroma[0]}
           oninput={(e) => {
             pickerColorState().setPickerChroma([Number((e.target as HTMLInputElement).value)]);
-            updateColor(false, 'INPUT CHROMA');
+            updateMaps('chroma');
+            updateColor();
           }}
         />
       </div>
 
-      <!-- <div class="flex items-center gap-2"> -->
       <div class="">
         <TwoDMap bind:this={hcMap} type="hue-chroma" color={colorState} onChange={updateColor} />
       </div>
@@ -199,10 +199,11 @@
         value={pickerColorState().pickerChroma}
         onValueChange={(value) => {
           pickerColorState().setPickerChroma(value);
+          updateMaps('chroma');
         }}
         onValueCommit={(value) => {
           pickerColorState().setPickerChroma(value);
-          updateColor(false, 'SLIDER COMMIT CHROMA');
+          updateColor();
         }}
         min={0}
         max={0.4}
@@ -212,7 +213,6 @@
         alpha={false}
       />
     </div>
-    <!-- </div> -->
 
     <!-- Hue Slider -->
     <div class="flex flex-col gap-2">
@@ -229,7 +229,8 @@
           value={pickerColorState().pickerHue[0]}
           oninput={(e) => {
             pickerColorState().setPickerHue([Number((e.target as HTMLInputElement).value)]);
-            updateColor(false, 'INPUT HUE');
+            updateMaps('hue');
+            updateColor();
           }}
         />
       </div>
@@ -240,10 +241,11 @@
         value={pickerColorState().pickerHue}
         onValueChange={(value) => {
           pickerColorState().setPickerHue(value);
+          updateMaps('hue');
         }}
         onValueCommit={(value) => {
           pickerColorState().setPickerHue(value);
-          updateColor(false, 'SLIDER COMMIT HUE');
+          updateColor();
         }}
         min={0}
         max={360}
@@ -269,7 +271,7 @@
           value={pickerColorState().pickerAlpha[0]}
           oninput={(e) => {
             pickerColorState().setPickerAlpha([Number((e.target as HTMLInputElement).value)]);
-            updateColor(false, 'INPUT ALPHA');
+            updateColor();
           }}
         />
       </div>
@@ -281,7 +283,7 @@
         }}
         onValueCommit={(value) => {
           pickerColorState().setPickerAlpha(value);
-          updateColor(false, 'SLIDER COMMIT ALPHA');
+          updateColor();
         }}
         min={0}
         max={100}
