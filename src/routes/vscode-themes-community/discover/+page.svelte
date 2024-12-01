@@ -3,7 +3,7 @@
   import VSCEditor from '$lib/components/vscode/preview/vsc-mock/VSCEditor.svelte';
   import ThemeCard from '$lib/components/vscode/theme/ThemeCard.svelte';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
-  import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
+  import { getIsEditing, getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import type { Theme } from '$lib/types/theme';
   import { randomInteger } from '$lib/utils/vscode/math';
   import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
@@ -11,6 +11,7 @@
   const { data }: { data: { themes: Theme[] } } = $props();
   const selectedTheme = getSelectedTheme();
   const selectedFile = getSelectedFile();
+  const isEditing = getIsEditing();
   selectedTheme().set(data.themes[0]);
 
   let randomThemeInterval: NodeJS.Timeout;
@@ -32,8 +33,10 @@
 
   const stopRandomizingSelectedTheme = () => {
     clearInterval(randomThemeInterval);
-    selectedTheme().reset();
     selectedFile().set('typescript.js');
+    if (!isEditing().isEditing) {
+      selectedTheme().reset();
+    }
   };
 </script>
 

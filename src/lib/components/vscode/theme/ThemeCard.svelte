@@ -1,15 +1,18 @@
 <script lang="ts">
-  import { invalidateAll } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import { enhance, applyAction } from '$app/forms';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import DownloadButton from '$lib/components/vscode/theme/DownloadButton.svelte';
   import ShareButton from '$lib/components/vscode/theme/ShareButton.svelte';
+  import EditButtonPublic from './EditButtonPublic.svelte';
   import type { Theme } from '$lib/types/theme';
   import clsx from 'clsx';
+  import { getIsEditing } from '$lib/state/vscode/editor.svelte';
 
   const { theme, stopRandomizing }: { theme: Theme; stopRandomizing: () => void } = $props();
 
   const selectedTheme = getSelectedTheme();
+  const isEditing = getIsEditing();
 
   let styleVars = $derived(` 
     --color-background: ${theme.uiColors.BG1}; 
@@ -23,11 +26,24 @@
   `);
   let isDownloading = $state(false);
   let isSharing = $state(false);
+  let isEditLoading = $state(false);
 
   async function shareTheme() {
     isSharing = true;
     setTimeout(() => {
       isSharing = false;
+    }, 3000);
+  }
+
+  async function editTheme() {
+    stopRandomizing();
+    isEditing().setIsEditing(true);
+    isEditLoading = true;
+    selectedTheme().setPublic(theme);
+    goto(`/vscode-themes-community/theme-generator`);
+    setTimeout(() => {
+      isEditLoading = false;
+      isEditing().setIsEditing(false);
     }, 3000);
   }
 
@@ -46,10 +62,12 @@
   )}
   style={styleVars}
   onclick={() => {
+    if (isEditLoading) return;
     handleClick();
   }}
   onkeydown={(event) => {
     if (event.key === 'Enter') {
+      if (isEditLoading) return;
       handleClick();
     }
   }}
@@ -75,6 +93,12 @@
     </div>
 
     <div class="flex items-center gap-2">
+      <EditButtonPublic
+        {editTheme}
+        isEditing={isEditLoading}
+        fg1={theme.uiColors.FG1}
+        ac1={theme.uiColors.AC1}
+      />
       <ShareButton
         count={theme.shares || 0}
         {shareTheme}

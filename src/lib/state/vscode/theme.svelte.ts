@@ -58,8 +58,22 @@ export function getSelectedTheme() {
     );
   }
 
+  function setPublic(value: Theme) {
+    set({
+      ...value,
+      id: 0,
+      userId: '',
+      userName: '',
+      name: '',
+      isPublic: false,
+      shares: 0,
+      downloads: 0,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+  }
+
   function reset() {
-    const controlsState = getControls();
     controlsState().setIsDark(true);
     controlsState().setScheme(randomEnum(Object(ColorSchemes)));
     controlsState().setBaseHue([128]);
@@ -176,6 +190,7 @@ export function getSelectedTheme() {
       return theme;
     },
     set,
+    setPublic,
     reset,
     update,
     generate,
