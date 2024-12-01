@@ -122,14 +122,6 @@
                 </li>
                 <li>
                   <p>
-                    <span class="font-bold">c.</span> After setting the base hue, you can, optionally,
-                    ajust the saturation sliders to set the base saturation for the UI, the Syntax and
-                    Ansi colors that will be generated, these saturation controls can be used to adjust
-                    the already in place generated colors to your liking.
-                  </p>
-                </li>
-                <li>
-                  <p>
                     <span class="font-bold">d.</span> You can now click the
                     <strong>Generate</strong>
                     button or press
@@ -146,17 +138,6 @@
             <code>Crtl + g</code> shortcut will re-generate new colors based on the current selected
             options.
           </p>
-          <p class="ml-4 mt-4">
-            The currently generated for UI, Syntax and Ansi color groups saturation can be
-            fine-tuned by adjusting the sliders that are inside the accordion, there is one slider
-            for each group.
-          </p>
-          <p class="ml-4 mt-4">
-            If after setting the saturation sliders the <strong>Generate</strong> button, or
-            <code>Ctrl + g</code> shortcut, is used, the recently selected saturation values will also
-            be used as base saturation for each color group to generate the new set of colors.
-          </p>
-
           <h3 id="use-fewer-colors" class="mt-4 pt-16 text-lg font-black md:text-xl">
             Use fewer colors
           </h3>
