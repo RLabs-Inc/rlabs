@@ -39,7 +39,9 @@
 </script>
 
 {#if selectedColor}
-  <section class="rounded border border-border shadow-sm">
+  <section
+    class="max-w-[300px] rounded-md border border-border bg-background shadow-sm dark:border-primary-foreground dark:bg-background/40"
+  >
     <div class="flex max-h-4 w-full items-start justify-end">
       <Button
         variant="ghost"

@@ -8,10 +8,12 @@
     class: className,
     bgColor = $bindable('#000'),
     alpha = $bindable(false),
+    bgThumb = $bindable('#000'),
     ...restProps
   }: WithoutChildrenOrChild<
-    SliderPrimitive.RootProps & { bgColor?: string; alpha?: boolean }
+    SliderPrimitive.RootProps & { bgColor?: string; alpha?: boolean; bgThumb?: string }
   > = $props();
+  $inspect(bgThumb);
 </script>
 
 <SliderPrimitive.Root
@@ -29,7 +31,7 @@
     ></div>
     {#if alpha}
       <div
-        class=" pattern-isometric absolute inset-0 overflow-hidden rounded
+        class="pattern-isometric absolute inset-0 overflow-hidden rounded
   pattern-bg-white pattern-gray-500 pattern-opacity-20 pattern-size-1"
       ></div>
     {:else}{/if}
@@ -47,8 +49,9 @@
         index={thumb}
         class={cn(
           'before:absolute before:-left-[0.525rem] before:top-[0.125rem] before:h-0 before:w-0 before:rounded-md before:border-b-[0.6rem] before:border-l-[0.55rem] before:border-r-[0.55rem] before:border-primary-foreground before:border-l-transparent before:border-r-transparent  focus-visible:outline-none before:focus-visible:border-primary-foreground  before:focus-visible:border-l-transparent before:focus-visible:border-r-transparent before:focus-visible:outline-none before:disabled:pointer-events-none before:disabled:opacity-50',
-          'thumb focus-visible:border-offset-2 focus-visible:border-offset-2 top-[0.75rem] block h-0 w-0 rounded-lg border-b-[0.8rem] border-l-[0.7rem] border-r-[0.7rem] border-primary border-l-transparent border-r-transparent ring-offset-background transition-colors focus-visible:border-b-[0.8rem] disabled:pointer-events-none disabled:opacity-50',
-          'after:absolute after:-left-[0.5rem] after:top-[0.25rem] after:h-0 after:w-0 after:rounded-md after:border-b-[0.5rem] after:border-l-[0.5rem] after:border-r-[0.5rem] after:border-primary after:border-l-transparent after:border-r-transparent'
+          'test focus-visible:border-offset-2 focus-visible:border-offset-2 top-[0.75rem] block h-0 w-0 rounded-lg border-b-[0.8rem] border-l-[0.7rem] border-r-[0.7rem] border-primary border-l-transparent border-r-transparent ring-offset-background transition-colors focus-visible:border-b-[0.8rem] disabled:pointer-events-none disabled:opacity-50',
+          'after:absolute after:-left-[0.5rem] after:top-[0.25rem] after:h-0 after:w-0 after:rounded-md after:border-b-[0.5rem] after:border-l-[0.5rem] after:border-r-[0.5rem] after:border-primary after:border-l-transparent after:border-r-transparent',
+          'thumb'
         )}
       />
     {/each}
@@ -56,13 +59,13 @@
 </SliderPrimitive.Root>
 
 <style>
-  /* .thumb::-webkit-slider-thumb {
-    
+  /* .color-slider {
+    border-bottom-color: --bgThumb;
   }
-  .thumb::-moz-range-thumb {
-    
-  }
-  .error::-webkit-slider-thumb {
+  .thumb {
+    border-bottom-color: --bgThumb;
+  } */
+  /* .error::-webkit-slider-thumb {
 
   }
   .error::-moz-range-thumb {

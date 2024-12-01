@@ -65,11 +65,13 @@
 <section class="flex w-full flex-col gap-5 md:flex-row md:items-center lg:w-[300px] lg:flex-col">
   <div class="flex w-full flex-col gap-5">
     {#if selectedColorState().selectedColor}
-      <div class="w-full py-3">
+      <div class="border- w-full rounded border py-3">
         <ColorPicker />
       </div>
     {:else}
-      <div class="flex items-center justify-between rounded-md border border-border p-2 shadow-sm">
+      <div
+        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+      >
         <Label>Dark theme?</Label>
         <Switch checked={controls().isDark} onCheckedChange={controls().setIsDark} />
       </div>
@@ -80,7 +82,9 @@
       >
 
       <div class="flex flex-col items-center gap-1">
-        <div class="w-full rounded-md border border-border px-2 py-1 shadow-sm">
+        <div
+          class="w-full rounded-md border border-border bg-background px-2 py-1 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+        >
           <span class="text-sm font-black drop-shadow-sm"
             >Randomize a new {controls().isDark ? 'dark' : 'light'} theme</span
           >
@@ -106,7 +110,7 @@
           for all colors for the theme. Without this option, a set of scheme hues is generated from the base color, then after the UI colors 
           are generated two new sets of scheme hues are generated from both AC1 and AC2 colors and added to the initial scheme hues set. 
           This larger set of scheme hues is then used to generate the syntax colors. 
-        -->
+          -->
             </div>
             <div class="flex items-center gap-1 self-start">
               <Checkbox
@@ -120,7 +124,9 @@
           </div>
         </div>
         <span class="text-xs text-muted-foreground">or</span>
-        <div class="flex w-full flex-col gap-1 rounded-md border border-border px-2 py-2 shadow-sm">
+        <div
+          class="flex w-full flex-col gap-1 rounded-md border border-border bg-background px-2 py-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+        >
           <p class="leading-none">
             <span class="text-sm font-black drop-shadow-sm"
               >Generate {controls().isDark ? 'dark' : 'light'} theme</span
@@ -192,10 +198,12 @@
         </div>
       </div>
     {/if}
-    <div class="w-full rounded-md border border-border p-2 shadow-sm">
+    <div class="w-full p-2 shadow-sm">
       <Export />
     </div>
-    <div class="w-full rounded-md border border-border p-2 shadow-sm">
+    <div
+      class="w-full rounded-md border border-border bg-background p-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+    >
       <LoadSaveTheme {userId} themes={themes || []} />
     </div>
   </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { oklch, converter } from 'culori';
+  import { oklch, converter, type Oklch } from 'culori';
   import clsx from 'clsx';
 
   import { formatDecimal } from '$lib/utils/vscode/math';
@@ -47,10 +47,15 @@
   });
   const toOKLCH = converter('oklch');
 
+  const getBGThumb = (color: Oklch) => {
+    return LCH_to_sRGB_string(color, true);
+  };
+
   const bgLightness = $derived(getBgLightness(colorState));
   const bgChroma = $derived(getBgChroma(colorState));
   const bgHue = $derived(getBgHue(colorState));
   const bgAlpha = $derived(getBgAlpha(colorState));
+  const bgThumb = $derived(getBGThumb(colorState));
 
   onMount(() => {
     console.log('Selected Color: ', toOKLCH(pickerColorState().selectedColor!.color));
@@ -168,11 +173,12 @@
         controlledValue={true}
         alpha={false}
         class="w-[280px]"
+        {bgThumb}
       />
     </div>
 
     <!-- Chroma Slider -->
-    <div class="flex flex-col gap-2">
+    <div class="flex w-[280px] flex-col gap-2">
       <div class="flex items-center justify-between">
         <label for="chroma-slider" class="text-xs"
           >Chroma: {formatDecimal(pickerColorState().pickerChroma[0])}</label
@@ -213,11 +219,12 @@
         controlledValue={true}
         alpha={false}
         class="w-[280px]"
+        {bgThumb}
       />
     </div>
 
     <!-- Hue Slider -->
-    <div class="flex flex-col gap-2">
+    <div class="flex w-[280px] flex-col gap-2">
       <div class="flex items-center justify-between">
         <label for="hue-slider" class="text-xs"
           >Hue: {formatDecimal(pickerColorState().pickerHue[0])}°</label
@@ -256,11 +263,12 @@
         controlledValue={true}
         alpha={false}
         class="w-[280px]"
+        {bgThumb}
       />
     </div>
 
     <!-- Alpha Slider -->
-    <div class="flex flex-col gap-2">
+    <div class="flex w-[280px] flex-col gap-2">
       <div class="flex items-center justify-between">
         <label for="alpha-slider" class="text-xs"
           >Alpha: {formatDecimal(pickerColorState().pickerAlpha[0])}%</label
@@ -295,6 +303,7 @@
         controlledValue={true}
         alpha={true}
         class="w-[280px]"
+        {bgThumb}
       />
     </div>
   </div>
