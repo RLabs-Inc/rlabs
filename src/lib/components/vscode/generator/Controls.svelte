@@ -64,13 +64,7 @@
       <div
         class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
       >
-        <Label>Dark theme?</Label>
-        <Switch checked={controls().isDark} onCheckedChange={controls().setIsDark} />
-      </div>
-      <div
-        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
-      >
-        <Label>Font:</Label>
+        <Label>Editor font:</Label>
         <div class="flex items-center gap-2">
           <div class="w-24">
             <Select
@@ -107,6 +101,12 @@
             />
           </div>
         </div>
+      </div>
+      <div
+        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+      >
+        <Label>Dark theme?</Label>
+        <Switch checked={controls().isDark} onCheckedChange={controls().setIsDark} />
       </div>
       <span class="text-center text-xs text-foreground"
         ><span class="font-bold">Be careful</span>, it is almost
