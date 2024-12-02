@@ -57,7 +57,7 @@
 <section class="flex w-full flex-col gap-5 md:flex-row md:items-center lg:w-[300px] lg:flex-col">
   <div class="flex w-full flex-col gap-5">
     {#if selectedColorState().selectedColor}
-      <div class="border- w-full rounded border py-3">
+      <div class="w-full">
         <ColorPicker />
       </div>
     {:else}
