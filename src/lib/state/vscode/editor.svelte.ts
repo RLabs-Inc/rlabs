@@ -9,6 +9,8 @@ type SelectedColor = {
 
 let file = $state(exampleFiles[0]);
 let selectedColor = $state<SelectedColor | null>(null);
+let weight = $state('300');
+let size = $state(13);
 
 let pickerLightness = $state([0]);
 let pickerChroma = $state([0]);
@@ -34,6 +36,22 @@ export function getSelectedFile() {
   return () => ({
     file,
     set
+  });
+}
+
+export function getFont() {
+  function setWeight(value: string) {
+    weight = value;
+  }
+  function setSize(value: number) {
+    size = value;
+  }
+
+  return () => ({
+    size,
+    weight,
+    setSize,
+    setWeight
   });
 }
 

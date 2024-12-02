@@ -1,13 +1,20 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { getMonacoEditor } from './monaco.svelte';
-  const { theme, lang, snippet }: { theme: string; lang: string; snippet: string } = $props();
+  const {
+    theme,
+    lang,
+    snippet,
+    fontSize,
+    fontWeight
+  }: { theme: string; lang: string; snippet: string; fontSize: number; fontWeight: string } =
+    $props();
 
   const monacoEditor = getMonacoEditor();
   let editorContainer: HTMLDivElement;
 
   onMount(async () => {
-    monacoEditor.initMonaco(theme, snippet, lang, editorContainer);
+    monacoEditor.initMonaco(theme, snippet, lang, fontSize, fontWeight, editorContainer);
   });
 
   onDestroy(() => {

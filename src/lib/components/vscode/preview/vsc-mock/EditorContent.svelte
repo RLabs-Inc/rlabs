@@ -4,8 +4,13 @@
   import MonacoEditor from '../../monaco-editor/MonacoEditor.svelte';
   import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
+  import { getFont } from '$lib/state/vscode/editor.svelte';
 
   const selectedTheme = getSelectedTheme();
+  const fontState = getFont();
+
+  const fontWeight = $derived(fontState().weight);
+  const fontSize = $derived(fontState().size);
 
   const themeJSON = $derived(
     generateSemanticThemeJSON(
@@ -24,5 +29,7 @@
     theme={themeJSON}
     lang={selectedFile().file.language || 'typescript'}
     snippet={selectedFile().file.snippet || 'console.log("Hello, world!");'}
+    {fontWeight}
+    {fontSize}
   />
 </div>

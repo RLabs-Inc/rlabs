@@ -49,6 +49,8 @@ function getMonacoEditor() {
     theme: string,
     snippet: string,
     lang: string,
+    fontSize: number,
+    fontWeight: string,
     editorContainer: HTMLDivElement
   ) => {
     monaco = (await import('./monaco-worker')).default;
@@ -64,7 +66,8 @@ function getMonacoEditor() {
       theme: 'theme',
       readOnly: true,
       fontFamily: "'Recursive', monospace",
-      fontSize: 13,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
       'semanticHighlighting.enabled': true,
       minimap: { enabled: false }
     });
@@ -83,6 +86,10 @@ function getMonacoEditor() {
     editor.setModel(model);
   };
 
+  const changeFont = (fontSize: number, fontWeight: string) => {
+    editor?.updateOptions({ fontSize: fontSize, fontWeight: fontWeight });
+  };
+
   const changeTheme = (theme: string) => {
     if (highlighter) {
       highlighter.setTheme(JSON.parse(theme));
@@ -98,7 +105,8 @@ function getMonacoEditor() {
     model,
     dispose,
     changeModel,
-    changeTheme
+    changeTheme,
+    changeFont
   };
 }
 

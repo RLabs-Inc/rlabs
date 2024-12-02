@@ -1,9 +1,8 @@
 <script lang="ts">
   import { getControls } from '$lib/state/vscode/controls.svelte';
-  import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
-  import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
-  import { getAnsiColors } from '$lib/state/vscode/ansi-colors.svelte';
   import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
+  import { getFont } from '$lib/state/vscode/editor.svelte';
+  import { getMonacoEditor } from '$lib/components/vscode/monaco-editor/monaco.svelte';
 
   import { Label } from '$lib/components/ui/label';
   import { Button } from '$lib/components/ui/button';
@@ -24,10 +23,13 @@
   import type { Theme } from '$lib/types/theme';
   import Export from './Export.svelte';
   import { SliderPicker } from '$lib/components/ui/slider-picker';
+  import { Input } from '$lib/components/ui/input';
 
   const { userId, themes }: { userId: string | null; themes: Theme[] } = $props();
   const controls = getControls();
   const selectedColorState = getSelectedColor();
+  const fontState = getFont();
+  const monacoEditor = getMonacoEditor();
   const getSaturationGradient = (hue: number) => `
   linear-gradient(to right,
     okhsl(70% 0 ${hue}),
@@ -64,6 +66,47 @@
       >
         <Label>Dark theme?</Label>
         <Switch checked={controls().isDark} onCheckedChange={controls().setIsDark} />
+      </div>
+      <div
+        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+      >
+        <Label>Font:</Label>
+        <div class="flex items-center gap-2">
+          <div class="w-24">
+            <Select
+              value={fontState().weight}
+              onValueChange={(value) => {
+                fontState().setWeight(value);
+                monacoEditor.changeFont(fontState().size, value);
+              }}
+              type="single"
+            >
+              <SelectTrigger>
+                {fontState().weight === '300' ? 'Thin' : 'Normal'}
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="300">Thin</SelectItem>
+                  <SelectItem value="400">Normal</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div class="w-16">
+            <Input
+              type="number"
+              value={fontState().size}
+              oninput={(e) => {
+                fontState().setSize(Number((e.target as HTMLInputElement).value));
+                monacoEditor.changeFont(
+                  Number((e.target as HTMLInputElement).value),
+                  fontState().weight
+                );
+              }}
+            />
+          </div>
+        </div>
       </div>
       <span class="text-center text-xs text-foreground"
         ><span class="font-bold">Be careful</span>, it is almost
