@@ -7,7 +7,6 @@
 
   import { Label } from '$lib/components/ui/label';
   import { Button } from '$lib/components/ui/button';
-  import { Slider } from '$lib/components/ui/slider';
   import { Switch } from '$lib/components/ui/switch';
   import { Checkbox } from '$lib/components/ui/checkbox';
   import {
@@ -17,12 +16,6 @@
     SelectItem,
     SelectGroup
   } from '$lib/components/ui/select';
-  import {
-    Accordion,
-    AccordionItem,
-    AccordionTrigger,
-    AccordionContent
-  } from '$lib/components/ui/accordion';
 
   import ColorPicker from '$lib/components/vscode/generator/ColorPicker.svelte';
   import LoadSaveTheme from './LoadSaveTheme.svelte';
@@ -34,9 +27,6 @@
 
   const { userId, themes }: { userId: string | null; themes: Theme[] } = $props();
   const controls = getControls();
-  const uiColorsState = getUiColors();
-  const syntaxColorsState = getSyntaxColors();
-  const ansiColorsState = getAnsiColors();
   const selectedColorState = getSelectedColor();
   const getSaturationGradient = (hue: number) => `
   linear-gradient(to right,

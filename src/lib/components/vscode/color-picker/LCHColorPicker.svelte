@@ -58,7 +58,6 @@
   const bgThumb = $derived(getBGThumb(colorState));
 
   onMount(() => {
-    console.log('Selected Color: ', toOKLCH(pickerColorState().selectedColor!.color));
     pickerColorState().setPickerLightness([
       toOKLCH(pickerColorState().selectedColor!.color)!.l * 100
     ]);
