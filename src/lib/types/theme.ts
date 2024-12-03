@@ -10,6 +10,9 @@ import {
 } from './color';
 import { ColorSchemes } from './color';
 
+// Token types
+export type Colors = Record<string, string>;
+
 export type TokenColor = {
   name?: string;
   scope: string[] | string;
@@ -20,9 +23,22 @@ export type TokenColor = {
   };
 };
 
-export type SemanticTokenColor = {
-  [key: string]: string | { foreground: string; fontStyle?: string };
-};
+export type SemanticToken = Record<
+  string,
+  {
+    foreground: string;
+    fontStyle?: string;
+  }
+>;
+
+export type SemanticTokenColor = Record<
+  string,
+  | string
+  | {
+      foreground: string;
+      fontStyle?: string;
+    }
+>;
 
 export type TokenColors = {
   colors: UIColors;
@@ -30,6 +46,18 @@ export type TokenColors = {
   ansiColors: AnsiColors;
 };
 
+// Theme types
+export type VSCodeTheme = {
+  name?: string;
+  type: 'light' | 'dark';
+  semanticClass: string;
+  semanticHighlighting: boolean;
+  colors: Colors;
+  tokenColors: TokenColor[];
+  semanticTokenColors: SemanticTokenColor;
+};
+
+// Database schema types
 export const ThemeSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -63,31 +91,11 @@ export type UIColorsGenerationOptions = {
   few?: boolean;
   lockedColors: Partial<UIColors>;
 };
+
 export type SyntaxColorsGenerationOptions = {
   lockedColors: Partial<SyntaxColors>;
 };
+
 export type AnsiColorsGenerationOptions = {
   lockedColors: Partial<AnsiColors>;
-};
-
-export type VSCodeTheme = {
-  name?: string;
-  type: 'light' | 'dark';
-  semanticClass: string;
-  semanticHighlighting: boolean;
-  colors: {
-    [key: string]: string;
-  };
-  tokenColors: {
-    name?: string;
-    scope: string[] | string;
-    settings: {
-      foreground?: string;
-      background?: string;
-      fontStyle?: string;
-    };
-  }[];
-  semanticTokenColors: {
-    [key: string]: string | { foreground: string; fontStyle?: string };
-  };
 };

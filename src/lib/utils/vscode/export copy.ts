@@ -1,4 +1,4 @@
-import { wcagLuminance } from 'culori';
+import Color from 'color';
 
 import type { TokenColors, VSCodeTheme } from '$lib/types/theme';
 import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/color';
@@ -14,38 +14,38 @@ export function generateSemanticThemeJSON(
   const tokenColors: TokenColors = { colors, syntaxColors, ansiColors };
 
   const getAC1Foreground = () => {
-    if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.AC1) < 0.5 ? colors.FG1 : colors.FG3;
+    if (Color(colors.BG1).isDark()) {
+      return Color(colors.AC1).isDark() ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.AC1) < 0.5 ? colors.FG3 : colors.FG1;
+      return Color(colors.AC1).isDark() ? colors.FG3 : colors.FG1;
     }
   };
   const getAC2Foreground = () => {
-    if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.AC2) < 0.5 ? colors.FG1 : colors.FG3;
+    if (Color(colors.BG1).isDark()) {
+      return Color(colors.AC2).isDark() ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.AC2) < 0.5 ? colors.FG3 : colors.FG1;
+      return Color(colors.AC2).isDark() ? colors.FG3 : colors.FG1;
     }
   };
   const getINFOForeground = () => {
-    if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.INFO) < 0.5 ? colors.FG1 : colors.FG3;
+    if (Color(colors.BG1).isDark()) {
+      return Color(colors.INFO).isDark() ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.INFO) < 0.5 ? colors.FG3 : colors.FG1;
+      return Color(colors.INFO).isDark() ? colors.FG3 : colors.FG1;
     }
   };
   const getWARNINGForeground = () => {
-    if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.WARNING) < 0.5 ? colors.FG1 : colors.FG3;
+    if (Color(colors.BG1).isDark()) {
+      return Color(colors.WARNING).isDark() ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.WARNING) < 0.5 ? colors.FG3 : colors.FG1;
+      return Color(colors.WARNING).isDark() ? colors.FG3 : colors.FG1;
     }
   };
   const getERRORForeground = () => {
-    if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.ERROR) < 0.5 ? colors.FG1 : colors.FG3;
+    if (Color(colors.BG1).isDark()) {
+      return Color(colors.ERROR).isDark() ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.ERROR) < 0.5 ? colors.FG3 : colors.FG1;
+      return Color(colors.ERROR).isDark() ? colors.FG3 : colors.FG1;
     }
   };
 
@@ -59,10 +59,7 @@ export function generateSemanticThemeJSON(
 
   const theme = {
     name: name,
-    type:
-      wcagLuminance(colors.BG1) < 0.5
-        ? ('dark' as 'dark' | 'light')
-        : ('light' as 'dark' | 'light'),
+    type: Color(colors.BG1).isDark() ? ('dark' as 'dark' | 'light') : ('light' as 'dark' | 'light'),
     semanticClass: 'theme.rlabs',
     semanticHighlighting: true,
     colors: {
@@ -119,7 +116,7 @@ export function generateSemanticThemeJSON(
       'widget.border': colors.BORDER, // Border color of widgets such as Find/Replace inside the editor.
       // "widget.shadow": colors.FG2, // Shadow color of widgets such as Find/Replace inside the editor
       'selection.background': colors.selection, // Background color of text selections in the workbench (for input fields or text areas, does not apply to selections within the editor and the terminal)
-      // 'selection.foreground': Color(colors.AC2) < 0.5 ? colors.FG1 : colors.FG3, // Foreground color of text selections in the workbench
+      // 'selection.foreground': Color(colors.AC2).isDark() ? colors.FG1 : colors.FG3, // Foreground color of text selections in the workbench
       descriptionForeground: colors.FG2, // Foreground color for description text providing additional information, for example for a label.
       errorForeground: colors.ERROR, // Overall foreground color for error messages (this color is only used if not overridden by a component)
       // 'icon.foreground': colors.FG1, // The default color for icons in the workbench.
