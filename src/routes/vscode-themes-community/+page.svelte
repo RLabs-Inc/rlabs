@@ -64,7 +64,7 @@
   style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '60')}; transition-property: all; transition-duration: 350ms;`}
 >
   <section
-    class="sticky -top-[6rem] z-10 w-full border-b border-border shadow-sm backdrop-blur-3xl md:-top-[7rem]"
+    class="sticky -top-[6rem] z-10 w-full border-b border-border shadow-xs backdrop-blur-3xl md:-top-[7rem]"
     style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '80')}; transition-property: all; transition-duration: 350ms;`}
   >
     <h1
@@ -87,15 +87,15 @@
         <VSCEditor />
         <div class="flex flex-row items-baseline justify-end gap-1 px-0.5">
           <span
-            class="text-base font-black drop-shadow-sm lg:text-lg"
+            class="text-base font-black drop-shadow-xs lg:text-lg"
             style={`color: ${selectedTheme().theme?.uiColors.AC1}; transition-property: all; transition-duration: 200ms;`}
             >{selectedTheme().theme?.name}</span
           >
           <span
             style={`color: ${selectedTheme().theme?.uiColors.FG1}; transition-property: all; transition-duration: 200ms;`}
           >
-            <span class="text-xs font-normal drop-shadow-sm md:text-sm">by</span>
-            <span class="text-xs font-semibold drop-shadow-sm md:text-sm">
+            <span class="text-xs font-normal drop-shadow-xs md:text-sm">by</span>
+            <span class="text-xs font-semibold drop-shadow-xs md:text-sm">
               {selectedTheme().theme?.userName}
             </span>
           </span>

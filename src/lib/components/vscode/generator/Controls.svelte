@@ -62,7 +62,7 @@
       </div>
     {:else}
       <div
-        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-xs dark:border-primary-foreground dark:bg-background/40"
       >
         <Label>Editor font:</Label>
         <div class="flex items-center gap-2">
@@ -103,7 +103,7 @@
         </div>
       </div>
       <div
-        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-xs dark:border-primary-foreground dark:bg-background/40"
       >
         <Label>Dark theme?</Label>
         <Switch checked={controls().isDark} onCheckedChange={controls().setIsDark} />
@@ -116,9 +116,9 @@
 
       <div class="flex flex-col items-center gap-1">
         <div
-          class="w-full rounded-md border border-border bg-background px-2 py-1 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+          class="w-full rounded-md border border-border bg-background px-2 py-1 shadow-xs dark:border-primary-foreground dark:bg-background/40"
         >
-          <span class="text-sm font-black drop-shadow-sm"
+          <span class="text-sm font-black drop-shadow-xs"
             >Randomize a new {controls().isDark ? 'dark' : 'light'} theme</span
           >
           <div class="flex flex-col gap-2 py-2">
@@ -158,10 +158,10 @@
         </div>
         <span class="text-xs text-muted-foreground">or</span>
         <div
-          class="flex w-full flex-col gap-1 rounded-md border border-border bg-background px-2 py-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+          class="flex w-full flex-col gap-1 rounded-md border border-border bg-background px-2 py-2 shadow-xs dark:border-primary-foreground dark:bg-background/40"
         >
           <p class="leading-none">
-            <span class="text-sm font-black drop-shadow-sm"
+            <span class="text-sm font-black drop-shadow-xs"
               >Generate {controls().isDark ? 'dark' : 'light'} theme</span
             >
             <span class="text-xs text-muted-foreground"
@@ -231,11 +231,11 @@
         </div>
       </div>
     {/if}
-    <div class="w-full p-2 shadow-sm">
+    <div class="w-full p-2 shadow-xs">
       <Export />
     </div>
     <div
-      class="w-full rounded-md border border-border bg-background p-2 shadow-sm dark:border-primary-foreground dark:bg-background/40"
+      class="w-full rounded-md border border-border bg-background p-2 shadow-xs dark:border-primary-foreground dark:bg-background/40"
     >
       <LoadSaveTheme {userId} themes={themes || []} />
     </div>

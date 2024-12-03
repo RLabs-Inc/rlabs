@@ -45,7 +45,7 @@
       Your saved themes
     </h1>
     <div
-      class="sticky top-14 z-10 flex w-full flex-col items-center justify-center gap-5 p-5 pb-24 shadow-sm backdrop-blur-xl sm:pb-12"
+      class="sticky top-14 z-10 flex w-full flex-col items-center justify-center gap-5 p-5 pb-24 shadow-xs backdrop-blur-xl sm:pb-12"
     >
       <div class="h-[20rem] w-full drop-shadow-md sm:h-[30rem] lg:w-2/3 xl:w-1/2">
         <VSCEditor />
@@ -53,14 +53,14 @@
           class="mt-2 flex flex-col items-center justify-start gap-0 pb-4 md:flex-row md:items-baseline md:justify-end md:gap-2"
           style={`color: ${selectedTheme().theme?.uiColors.AC1}`}
         >
-          <h3 class="text-xl font-black drop-shadow-sm lg:text-2xl">
+          <h3 class="text-xl font-black drop-shadow-xs lg:text-2xl">
             {selectedTheme().theme?.name}
           </h3>
           <p
-            class="text-xs font-bold drop-shadow-sm"
+            class="text-xs font-bold drop-shadow-xs"
             style={`color: ${selectedTheme().theme?.uiColors.FG1}`}
           >
-            <!-- <span class="text-xs font-normal drop-shadow-sm">by</span>
+            <!-- <span class="text-xs font-normal drop-shadow-xs">by</span>
           {selectedTheme().theme?.userName} -->
           </p>
         </div>

@@ -40,7 +40,7 @@
 
 {#if selectedColor}
   <section
-    class="max-w-[300px] rounded-md border border-border bg-background shadow-sm dark:border-primary-foreground dark:bg-background/40"
+    class="border-border bg-background dark:border-primary-foreground dark:bg-background/40 rounded-md border shadow-xs lg:max-w-[300px]"
   >
     <div class="flex max-h-4 w-full items-start justify-end">
       <Button
@@ -62,7 +62,7 @@
       </Button>
     </div>
     <div class="flex w-full flex-col items-center justify-center gap-2 p-2 text-xs">
-      <span class="text-sm font-black capitalize drop-shadow-sm">{selectedColor.name}</span>
+      <span class="text-sm font-black capitalize drop-shadow-xs">{selectedColor.name}</span>
       {#key selectedColor.name}
         <LCHColorPicker onChange={handleColorChange} />
       {/key}

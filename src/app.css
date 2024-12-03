@@ -1,8 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Recursive:wght,CASL,CRSV,MONO@300..400,1,0,1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght,CASL,CRSV,MONO@300..400,1,0,1&display=swap')
+layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../tailwind.config.ts';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 @layer base {
   :root {
@@ -153,7 +172,7 @@
 
 /* Clerk Shadcn theme */
 .cl-formButtonPrimary {
-  @apply inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-3 font-medium text-primary-foreground !shadow-none ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  @apply inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md bg-primary px-3 font-medium text-primary-foreground shadow-none! ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
 }
 
 .cl-card,
@@ -213,7 +232,7 @@ p[data-localization-key='userProfile.profilePage.successMessage'] {
 .cl-formFieldInput[type='text'],
 .cl-formFieldInput[type='email'],
 .cl-formFieldInput[type='password'] {
-  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cl-footerActionLink {
@@ -221,7 +240,7 @@ p[data-localization-key='userProfile.profilePage.successMessage'] {
 }
 
 .cl-otpCodeFieldInput {
-  @apply !border !border-input text-foreground;
+  @apply border! border-input! text-foreground;
 }
 
 .cl-formResendCodeLink {
@@ -229,7 +248,7 @@ p[data-localization-key='userProfile.profilePage.successMessage'] {
 }
 
 .cl-selectSearchInput__countryCode {
-  @apply flex h-10 w-full rounded-md border border-b border-input bg-background text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply flex h-10 w-full rounded-md border border-b border-input bg-background text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cl-selectOptionsContainer__countryCode {
@@ -281,7 +300,7 @@ button[data-localization-key='userProfile.start.dangerSection.deleteAccountButto
 }
 
 .cl-badge {
-  @apply rounded-full border border-input bg-background px-2.5 py-0.5 text-xs text-foreground !shadow-none;
+  @apply rounded-full border border-input bg-background px-2.5 py-0.5 text-xs text-foreground shadow-none!;
 }
 
 .cl-badge[data-localization-key='badge__unverified'] {
@@ -293,10 +312,10 @@ button[data-localization-key='userProfile.start.dangerSection.deleteAccountButto
 }
 
 .cl-footer {
-  @apply rounded-b-lg border-x border-b bg-background bg-gradient-to-t from-background to-background text-muted-foreground;
+  @apply rounded-b-lg border-x border-b bg-background bg-linear-to-t from-background to-background text-muted-foreground;
 }
 .cl-userButtonPopoverFooter {
-  @apply rounded-b-lg bg-gradient-to-t from-background to-background;
+  @apply rounded-b-lg bg-linear-to-t from-background to-background;
 }
 
 .cl-signIn-start,
@@ -308,27 +327,27 @@ button[data-localization-key='userProfile.start.dangerSection.deleteAccountButto
 }
 
 .cl-cardBox {
-  @apply rounded-lg shadow-sm;
+  @apply rounded-lg shadow-xs;
 }
 
 .cl-socialButtonsBlockButton {
-  @apply h-10 !border;
+  @apply h-10 border!;
 }
 
 .cl-alternativeMethods .cl-alternativeMethodsBlockButton {
-  @apply h-10 !border border-input text-muted-foreground;
+  @apply h-10 border! border-input text-muted-foreground;
 }
 
 .cl-alternativeMethodsBlockButton {
-  @apply h-10 !shadow-none;
+  @apply h-10 shadow-none!;
 }
 
 .cl-navbar {
-  @apply rounded-lg border-y border-l bg-gradient-to-t from-background to-background;
+  @apply rounded-lg border-y border-l bg-linear-to-t from-background to-background;
 }
 
 .cl-scrollBox {
-  @apply rounded-lg rounded-l-none border border-input bg-gradient-to-t from-background to-background;
+  @apply rounded-lg rounded-l-none border border-input bg-linear-to-t from-background to-background;
 }
 
 h1[data-localization-key='userProfile.navbar.title'] {
@@ -361,7 +380,7 @@ h1[data-localization-key='userProfile.navbar.title'] {
 }
 
 .cl-avatarImageActionsUpload {
-  @apply !border border-input text-foreground;
+  @apply border! border-input text-foreground;
 }
 
 .cl-userButtonPopoverMain {

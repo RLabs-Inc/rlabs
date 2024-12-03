@@ -70,29 +70,33 @@
   });
 </script>
 
-<div class="flex w-full flex-col gap-4">
+<div
+  class="lg:gap=4 grid grid-cols-1 place-items-center items-center gap-4 md:w-full md:grid-cols-2 md:gap-10 lg:grid-cols-1"
+>
   <!-- Color Preview -->
-  <div class="flex w-[280px] flex-col gap-2">
+  <div
+    class="order-1 flex h-full w-[280px] flex-col justify-between gap-2 place-self-center md:order-3 lg:order-1"
+  >
     <div class="flex flex-wrap gap-4">
       <div class="relative h-12 w-full">
         <div
-          class="pattern-isometric absolute inset-0 overflow-hidden rounded pattern-bg-white pattern-gray-500 pattern-opacity-20 pattern-size-2"
+          class="pattern-isometric pattern-bg-white pattern-gray-500 pattern-opacity-20 pattern-size-2 absolute inset-0 overflow-hidden rounded"
         ></div>
         <div
           class={clsx(
-            'absolute inset-0 w-full rounded border border-primary-foreground transition-colors duration-100',
+            'border-primary-foreground absolute inset-0 w-full rounded border transition-colors duration-100',
             !isLCH_within_sRGB(
               pickerColorState().pickerLightness[0],
               pickerColorState().pickerChroma[0],
               pickerColorState().pickerHue[0]
-            ) && 'border-2 border-destructive'
+            ) && 'border-destructive border-2'
           )}
           style={`background: ${LCH_to_sRGB_string(colorState)}`}
         >
           {#if !isLCH_within_sRGB(pickerColorState().pickerLightness[0], pickerColorState().pickerChroma[0], pickerColorState().pickerHue[0])}
             <div
               transition:fade={{ duration: 100 }}
-              class="pattern-diagonal-lines absolute inset-0 rounded pattern-bg-white pattern-gray-500 pattern-opacity-20 pattern-size-2"
+              class="pattern-diagonal-lines pattern-bg-white pattern-gray-500 pattern-opacity-20 pattern-size-2 absolute inset-0 rounded"
             ></div>
           {/if}
         </div>
@@ -105,13 +109,13 @@
           {#if !isLCH_within_sRGB(pickerColorState().pickerLightness[0], pickerColorState().pickerChroma[0], pickerColorState().pickerHue[0])}
             <span
               transition:fade={{ duration: 100 }}
-              class="rounded bg-destructive px-1 text-xs text-destructive-foreground"
+              class="bg-destructive text-destructive-foreground rounded px-1 text-xs"
               >Color is out of gamut</span
             >
           {/if}
         </div>
         <div class="flex items-center gap-2">
-          <span class="text-xs text-muted-foreground">LCH:</span>
+          <span class="text-muted-foreground text-xs">LCH:</span>
           <span class="font-mono">
             {formatDecimal(pickerColorState().pickerLightness[0])}%,
             {formatDecimal(pickerColorState().pickerChroma[0])},
@@ -123,149 +127,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Sliders -->
-  <div class="flex flex-col gap-4">
-    <!-- Lightness Slider -->
-    <div class="flex w-[280px] flex-col gap-2">
-      <div class="flex items-center justify-between">
-        <label for="lightness-slider" class="text-xs"
-          >Lightness: {formatDecimal(pickerColorState().pickerLightness[0])}%</label
-        >
-        <Input
-          class="w-20"
-          type="number"
-          min={0}
-          max={100}
-          step={0.1}
-          value={pickerColorState().pickerLightness[0]}
-          oninput={(e) => {
-            pickerColorState().setPickerLightness([Number((e.target as HTMLInputElement).value)]);
-            updateMaps('lightness');
-            updateColor();
-          }}
-        />
-      </div>
-
-      <TwoDMap
-        bind:this={lcMap}
-        type="lightness-chroma"
-        color={colorState}
-        onChange={updateColor}
-      />
-
-      <SliderPicker
-        value={pickerColorState().pickerLightness}
-        onValueChange={(value) => {
-          pickerColorState().setPickerLightness(value);
-          updateMaps('lightness');
-        }}
-        onValueCommit={(value) => {
-          pickerColorState().setPickerLightness(value);
-          updateColor();
-        }}
-        min={0}
-        max={100}
-        step={0.1}
-        bgColor={bgLightness}
-        controlledValue={true}
-        alpha={false}
-        class="w-[280px]"
-        {bgThumb}
-      />
-    </div>
-
-    <!-- Chroma Slider -->
-    <div class="flex w-[280px] flex-col gap-2">
-      <div class="flex items-center justify-between">
-        <label for="chroma-slider" class="text-xs"
-          >Chroma: {formatDecimal(pickerColorState().pickerChroma[0])}</label
-        >
-        <Input
-          class="w-20"
-          type="number"
-          min={0}
-          max={0.4}
-          step={0.01}
-          value={pickerColorState().pickerChroma[0]}
-          oninput={(e) => {
-            pickerColorState().setPickerChroma([Number((e.target as HTMLInputElement).value)]);
-            updateMaps('chroma');
-            updateColor();
-          }}
-        />
-      </div>
-
-      <div class="">
-        <TwoDMap bind:this={hcMap} type="hue-chroma" color={colorState} onChange={updateColor} />
-      </div>
-
-      <SliderPicker
-        value={pickerColorState().pickerChroma}
-        onValueChange={(value) => {
-          pickerColorState().setPickerChroma(value);
-          updateMaps('chroma');
-        }}
-        onValueCommit={(value) => {
-          pickerColorState().setPickerChroma(value);
-          updateColor();
-        }}
-        min={0}
-        max={0.4}
-        step={0.001}
-        bgColor={bgChroma}
-        controlledValue={true}
-        alpha={false}
-        class="w-[280px]"
-        {bgThumb}
-      />
-    </div>
-
-    <!-- Hue Slider -->
-    <div class="flex w-[280px] flex-col gap-2">
-      <div class="flex items-center justify-between">
-        <label for="hue-slider" class="text-xs"
-          >Hue: {formatDecimal(pickerColorState().pickerHue[0])}°</label
-        >
-        <Input
-          class="w-20"
-          type="number"
-          min={0}
-          max={360}
-          step={0.1}
-          value={pickerColorState().pickerHue[0]}
-          oninput={(e) => {
-            pickerColorState().setPickerHue([Number((e.target as HTMLInputElement).value)]);
-            updateMaps('hue');
-            updateColor();
-          }}
-        />
-      </div>
-
-      <TwoDMap bind:this={hlMap} type="hue-lightness" color={colorState} onChange={updateColor} />
-
-      <SliderPicker
-        value={pickerColorState().pickerHue}
-        onValueChange={(value) => {
-          pickerColorState().setPickerHue(value);
-          updateMaps('hue');
-        }}
-        onValueCommit={(value) => {
-          pickerColorState().setPickerHue(value);
-          updateColor();
-        }}
-        min={0}
-        max={360}
-        step={0.1}
-        bgColor={bgHue}
-        controlledValue={true}
-        alpha={false}
-        class="w-[280px]"
-        {bgThumb}
-      />
-    </div>
-
     <!-- Alpha Slider -->
     <div class="flex w-[280px] flex-col gap-2">
       <div class="flex items-center justify-between">
@@ -305,6 +166,140 @@
         {bgThumb}
       />
     </div>
+  </div>
+
+  <!-- Lightness Slider -->
+  <div class="order-2 flex w-[280px] flex-col gap-2 md:order-1 lg:order-2">
+    <div class="flex items-center justify-between">
+      <label for="lightness-slider" class="text-xs"
+        >Lightness: {formatDecimal(pickerColorState().pickerLightness[0])}%</label
+      >
+      <Input
+        class="w-20"
+        type="number"
+        min={0}
+        max={100}
+        step={0.1}
+        value={pickerColorState().pickerLightness[0]}
+        oninput={(e) => {
+          pickerColorState().setPickerLightness([Number((e.target as HTMLInputElement).value)]);
+          updateMaps('lightness');
+          updateColor();
+        }}
+      />
+    </div>
+
+    <TwoDMap bind:this={lcMap} type="lightness-chroma" color={colorState} onChange={updateColor} />
+
+    <SliderPicker
+      value={pickerColorState().pickerLightness}
+      onValueChange={(value) => {
+        pickerColorState().setPickerLightness(value);
+        updateMaps('lightness');
+      }}
+      onValueCommit={(value) => {
+        pickerColorState().setPickerLightness(value);
+        updateColor();
+      }}
+      min={0}
+      max={100}
+      step={0.1}
+      bgColor={bgLightness}
+      controlledValue={true}
+      alpha={false}
+      class="w-[280px]"
+      {bgThumb}
+    />
+  </div>
+
+  <!-- Chroma Slider -->
+  <div class="order-3 flex w-[280px] flex-col gap-2 md:order-2 lg:order-3">
+    <div class="flex items-center justify-between">
+      <label for="chroma-slider" class="text-xs"
+        >Chroma: {formatDecimal(pickerColorState().pickerChroma[0])}</label
+      >
+      <Input
+        class="w-20"
+        type="number"
+        min={0}
+        max={0.4}
+        step={0.01}
+        value={pickerColorState().pickerChroma[0]}
+        oninput={(e) => {
+          pickerColorState().setPickerChroma([Number((e.target as HTMLInputElement).value)]);
+          updateMaps('chroma');
+          updateColor();
+        }}
+      />
+    </div>
+
+    <div class="">
+      <TwoDMap bind:this={hcMap} type="hue-chroma" color={colorState} onChange={updateColor} />
+    </div>
+
+    <SliderPicker
+      value={pickerColorState().pickerChroma}
+      onValueChange={(value) => {
+        pickerColorState().setPickerChroma(value);
+        updateMaps('chroma');
+      }}
+      onValueCommit={(value) => {
+        pickerColorState().setPickerChroma(value);
+        updateColor();
+      }}
+      min={0}
+      max={0.4}
+      step={0.001}
+      bgColor={bgChroma}
+      controlledValue={true}
+      alpha={false}
+      class="w-[280px]"
+      {bgThumb}
+    />
+  </div>
+
+  <!-- Hue Slider -->
+  <div class="order-4 flex w-[280px] flex-col gap-2">
+    <div class="flex items-center justify-between">
+      <label for="hue-slider" class="text-xs"
+        >Hue: {formatDecimal(pickerColorState().pickerHue[0])}°</label
+      >
+      <Input
+        class="w-20"
+        type="number"
+        min={0}
+        max={360}
+        step={0.1}
+        value={pickerColorState().pickerHue[0]}
+        oninput={(e) => {
+          pickerColorState().setPickerHue([Number((e.target as HTMLInputElement).value)]);
+          updateMaps('hue');
+          updateColor();
+        }}
+      />
+    </div>
+
+    <TwoDMap bind:this={hlMap} type="hue-lightness" color={colorState} onChange={updateColor} />
+
+    <SliderPicker
+      value={pickerColorState().pickerHue}
+      onValueChange={(value) => {
+        pickerColorState().setPickerHue(value);
+        updateMaps('hue');
+      }}
+      onValueCommit={(value) => {
+        pickerColorState().setPickerHue(value);
+        updateColor();
+      }}
+      min={0}
+      max={360}
+      step={0.1}
+      bgColor={bgHue}
+      controlledValue={true}
+      alpha={false}
+      class="w-[280px]"
+      {bgThumb}
+    />
   </div>
 </div>
 

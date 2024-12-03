@@ -110,7 +110,7 @@ export function generateSemanticThemeJSON(
       foreground: colors.FG1, // Overall foreground color. This color is only used if not overridden by a component
       disabledForeground: syntaxColors.comment, // Overall foreground for disabled elements. This color is only used if not overridden by a component.
       'widget.border': colors.BORDER, // Border color of widgets such as Find/Replace inside the editor.
-      // "widget.shadow": colors.FG2, // Shadow color of widgets such as Find/Replace inside the editor
+      // "widget.shadow-sm": colors.FG2, // Shadow color of widgets such as Find/Replace inside the editor
       'selection.background': getColorWithOpacity(colors.AC2, '50'), // Background color of text selections in the workbench (for input fields or text areas, does not apply to selections within the editor and the terminal)
       // 'selection.foreground': Color(colors.AC2).isDark() ? colors.FG1 : colors.FG3, // Foreground color of text selections in the workbench
       descriptionForeground: colors.FG2, // Foreground color for description text providing additional information, for example for a label.
@@ -177,7 +177,7 @@ export function generateSemanticThemeJSON(
       'inputValidation.errorBorder': colors.ERROR, // Input validation border color for error severity
 
       //# Scroll Bar Control
-      // "scrollbar.shadow": //# Scroll Bar shadow to indicate that the view is scrolled
+      // "scrollbar.shadow-sm": //# Scroll Bar shadow to indicate that the view is scrolled
       // "scrollbarSlider.activeBackground": //# Slider background color when active
       // "scrollbarSlider.background": //# Slider background color
       // "scrollbarSlider.hoverBackground": //# Slider background color when hovering
@@ -224,7 +224,7 @@ export function generateSemanticThemeJSON(
       'listFilterWidget.background': colors.BG3, //# Background color of the type filter widget in lists and trees.
       'listFilterWidget.outline': colors.BORDER, //# Outline color of the type filter widget in lists and trees.
       'listFilterWidget.noMatchesOutline': colors.ERROR, //# Outline color of the type filter widget in lists and trees, when there are no matches.
-      // "listFilterWidget.shadow": "#2d4026", //# Shadow color of the type filter widget in lists and tree.
+      // "listFilterWidget.shadow-sm": "#2d4026", //# Shadow color of the type filter widget in lists and tree.
 
       //# Activity Bar
       //# The Activity Bar is usually displayed either on the far left or right of the workbench and allows fast switching between views of the Side Bar.
@@ -265,7 +265,7 @@ export function generateSemanticThemeJSON(
       'sideBarActivityBarTop.border': colors.BORDER, // Border color between the activity bar at the top/bottom and the views.
       'sideBarStickyScroll.background': colors.BG1, // Background color of sticky scroll in the side bar.
       'sideBarStickyScroll.border': colors.BORDER, // Border color of sticky scroll in the side bar.
-      'sideBarStickyScroll.shadow': colors.BORDER, // Shadow color of sticky scroll in the side bar.
+      'sideBarStickyScroll.shadow-sm': colors.BORDER, // Shadow color of sticky scroll in the side bar.
 
       //# Minimap
       // #The Minimap shows a minified version of the current file.

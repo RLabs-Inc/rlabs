@@ -119,7 +119,7 @@
 <section class="flex flex-col gap-2">
   {#if user}
     {#if themes.length > 0}
-      <Label class="text-sm font-black drop-shadow-sm">Load / Save theme</Label>
+      <Label class="text-sm font-black drop-shadow-xs">Load / Save theme</Label>
       <Select
         value={selectThemeValue}
         onValueChange={handleThemeSelect}

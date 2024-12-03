@@ -29,7 +29,7 @@
   style="color: var(--fg3); transition-property: all; transition-duration: 350ms;"
 >
   <div
-    class="flex h-7 w-9 flex-shrink-0 items-center justify-center"
+    class="flex h-7 w-9 shrink-0 items-center justify-center"
     style="color: var(--fgAc1); background-color: var(--ac1); transition-property: all; transition-duration: 350ms;"
   >
     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
