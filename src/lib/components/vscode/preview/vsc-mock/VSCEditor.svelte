@@ -66,7 +66,7 @@
     >
       <input
         type="text"
-        class="h-5 w-72 rounded-md border p-1 text-xs focus:outline-none"
+        class="h-5 w-72 rounded-md border p-1 text-xs focus:outline-hidden"
         style={`background: var(--bg1); color: var(--fg1); border-color: var(--comment); transition-property: all; transition-duration: 350ms;`}
       />
     </div>
@@ -79,7 +79,7 @@
       <SideBar />
       <EditorGroup />
     </div>
-    <div class="flex-shrink-0">
+    <div class="shrink-0">
       <StatusBar />
     </div>
   </div>

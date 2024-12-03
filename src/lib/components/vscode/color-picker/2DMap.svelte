@@ -131,7 +131,7 @@
 </script>
 
 <div
-  class="relative aspect-[2/1] h-[140px] w-[280px] overflow-hidden rounded border border-border dark:border-primary-foreground"
+  class="relative aspect-2/1 h-[140px] w-[280px] overflow-hidden rounded border border-border dark:border-primary-foreground"
   bind:this={container}
 >
   <canvas

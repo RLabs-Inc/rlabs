@@ -48,7 +48,7 @@
       <SliderPrimitive.Thumb
         index={thumb}
         class={cn(
-          'before:absolute before:-left-[0.525rem] before:top-[0.125rem] before:h-0 before:w-0 before:rounded-md before:border-b-[0.6rem] before:border-l-[0.55rem] before:border-r-[0.55rem] before:border-primary-foreground before:border-l-transparent before:border-r-transparent  focus-visible:outline-none before:focus-visible:border-primary-foreground  before:focus-visible:border-l-transparent before:focus-visible:border-r-transparent before:focus-visible:outline-none before:disabled:pointer-events-none before:disabled:opacity-50',
+          'before:absolute before:-left-[0.525rem] before:top-[0.125rem] before:h-0 before:w-0 before:rounded-md before:border-b-[0.6rem] before:border-l-[0.55rem] before:border-r-[0.55rem] before:border-primary-foreground before:border-l-transparent before:border-r-transparent  focus-visible:outline-hidden focus-visible:before:border-primary-foreground  focus-visible:before:border-l-transparent focus-visible:before:border-r-transparent focus-visible:before:outline-hidden disabled:before:pointer-events-none disabled:before:opacity-50',
           'test focus-visible:border-offset-2 focus-visible:border-offset-2 top-[0.75rem] block h-0 w-0 rounded-lg border-b-[0.8rem] border-l-[0.7rem] border-r-[0.7rem] border-primary border-l-transparent border-r-transparent ring-offset-background transition-colors focus-visible:border-b-[0.8rem] disabled:pointer-events-none disabled:opacity-50',
           'after:absolute after:-left-[0.5rem] after:top-[0.25rem] after:h-0 after:w-0 after:rounded-md after:border-b-[0.5rem] after:border-l-[0.5rem] after:border-r-[0.5rem] after:border-primary after:border-l-transparent after:border-r-transparent',
           'thumb'

@@ -65,7 +65,7 @@
     <h2 class="text-center text-3xl font-black drop-shadow-md">Discover new themes</h2>
   </div>
   <div
-    class="sticky top-14 z-10 flex w-full flex-col items-center justify-center gap-5 p-5 pb-12 shadow-sm backdrop-blur-3xl"
+    class="sticky top-14 z-10 flex w-full flex-col items-center justify-center gap-5 p-5 pb-12 shadow-xs backdrop-blur-3xl"
   >
     <div
       class="h-[17rem] w-full drop-shadow-md md:h-[20rem] md:w-5/6 lg:h-[17rem] lg:w-2/3 xl:h-[20rem] xl:w-1/2 2xl:h-[23rem]"
@@ -76,13 +76,13 @@
         style={`color: ${selectedTheme().theme?.uiColors.AC1}`}
       >
         <span
-          class="text-base font-black drop-shadow-sm lg:text-lg"
+          class="text-base font-black drop-shadow-xs lg:text-lg"
           style={`color: ${selectedTheme().theme?.uiColors.AC1}`}
           >{selectedTheme().theme?.name}</span
         >
         <span style={`color: ${selectedTheme().theme?.uiColors.FG1}`}>
-          <span class="text-xs font-normal drop-shadow-sm md:text-sm">by</span>
-          <span class="text-xs font-semibold drop-shadow-sm md:text-sm">
+          <span class="text-xs font-normal drop-shadow-xs md:text-sm">by</span>
+          <span class="text-xs font-semibold drop-shadow-xs md:text-sm">
             {selectedTheme().theme?.userName}
           </span>
         </span>

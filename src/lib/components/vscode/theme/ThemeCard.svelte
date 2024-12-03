@@ -55,7 +55,7 @@
 
 <div
   class={clsx(
-    'theme-card flex w-full max-w-xs cursor-pointer flex-col gap-1 place-self-center overflow-hidden rounded-md outline-none focus:outline-none',
+    'theme-card flex w-full max-w-xs cursor-pointer flex-col gap-1 place-self-center overflow-hidden rounded-md outline-hidden focus:outline-hidden',
     selectedTheme().theme?.name === theme.name
       ? 'active shadow-lg'
       : 'hover:scale-105 hover:shadow-md focus:scale-105'

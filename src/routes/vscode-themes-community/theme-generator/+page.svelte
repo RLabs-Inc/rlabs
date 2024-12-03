@@ -52,7 +52,7 @@
       </div>
       <div class="flex w-full flex-col gap-5">
         <div class="flex flex-wrap gap-5 xl:flex-nowrap">
-          <div class="max-w-3/6 max-h-[40.4rem] flex-1">
+          <div class="max-h-[40.4rem] flex-1">
             <VSCEditor />
           </div>
           <div class="flex w-full flex-col gap-5 md:flex-row xl:w-auto xl:flex-col">
