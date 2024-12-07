@@ -46,7 +46,7 @@ async function generateMapColors(
   const imageData = new Uint8ClampedArray(width * height * 4);
 
   // Process rows in smaller chunks to avoid blocking
-  const CHUNK_SIZE = 10;
+  const CHUNK_SIZE = 32;
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const color = { ...currentColor };

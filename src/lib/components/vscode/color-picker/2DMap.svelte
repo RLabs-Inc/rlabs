@@ -21,12 +21,18 @@
   let isUpdateScheduled = false;
 
   onMount(() => {
+    const dpr = window.devicePixelRatio;
     const rect = container.getBoundingClientRect();
-    width = rect.width;
-    height = rect.height;
+    width = rect.width * dpr;
+    height = rect.height * dpr;
     canvas.width = width;
     canvas.height = height;
     ctx = canvas.getContext('2d', { alpha: false })!;
+    // ctx.scale(dpr, dpr);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    canvas.style.width = `${rect.width}px`;
+    canvas.style.height = `${rect.height}px`;
     scheduleUpdate();
 
     // Initialize Web Worker
@@ -45,12 +51,18 @@
   });
 
   $effect(() => {
+    const dpr = window.devicePixelRatio;
     const rect = container.getBoundingClientRect();
-    width = rect.width;
-    height = rect.height;
+    width = rect.width * dpr;
+    height = rect.height * dpr;
     canvas.width = width;
     canvas.height = height;
     ctx = canvas.getContext('2d', { alpha: false })!;
+    // ctx.scale(dpr, dpr);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    canvas.style.width = `${rect.width}px`;
+    canvas.style.height = `${rect.height}px`;
   });
 
   onDestroy(() => {
@@ -84,16 +96,16 @@
 
     // Draw x axis
     ctx.beginPath();
-    ctx.moveTo(0, Math.abs(pos.y));
-    ctx.lineTo(width, Math.abs(pos.y));
+    ctx.moveTo(0, pos.y);
+    ctx.lineTo(width, pos.y);
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 0.5;
     ctx.stroke();
 
     // Draw y axis
     ctx.beginPath();
-    ctx.moveTo(Math.abs(pos.x), 0);
-    ctx.lineTo(Math.abs(pos.x), height);
+    ctx.moveTo(pos.x, 0);
+    ctx.lineTo(pos.x, height);
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 0.5;
     ctx.stroke();
@@ -116,9 +128,10 @@
   }
 
   function updateColor(event: MouseEvent) {
+    const dpr = window.devicePixelRatio;
     const rect = canvas.getBoundingClientRect();
-    const x = Math.max(0, Math.min(width, event.clientX - rect.left));
-    const y = Math.max(0, Math.min(height, event.clientY - rect.top));
+    const x = Math.max(0, Math.min(width, event.clientX - rect.left)) * dpr;
+    const y = Math.max(0, Math.min(height, event.clientY - rect.top)) * dpr;
 
     setColorFromPosition(type, x, y, width, height);
     scheduleUpdate();
