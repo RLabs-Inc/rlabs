@@ -64,11 +64,11 @@
   style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '60')}; transition-property: all; transition-duration: 350ms;`}
 >
   <section
-    class="sticky -top-[6rem] z-10 w-full border-b border-border shadow-xs backdrop-blur-3xl md:-top-[7rem]"
+    class="border-border sticky -top-[6rem] z-10 w-full border-b shadow-xs backdrop-blur-3xl md:-top-[7rem]"
     style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '80')}; transition-property: all; transition-duration: 350ms;`}
   >
     <h1
-      class="text-bass px-5 pt-[4rem] text-center font-black drop-shadow-md sm:text-lg md:pt-[5rem] md:text-xl lg:text-xl 2xl:text-2xl"
+      class="px-5 pt-[4rem] text-center font-black drop-shadow-md sm:text-lg md:pt-[5rem] md:text-xl lg:text-xl 2xl:text-2xl"
     >
       Welcome to VSCode Themes Community
     </h1>
@@ -80,7 +80,7 @@
         Discover new themes
       </h2>
     </div>
-    <div class="flex w-full flex-col items-center justify-center gap-5 px-5 pb-8 pt-5">
+    <div class="flex w-full flex-col items-center justify-center gap-5 px-5 pt-5 pb-8">
       <div
         class="mt-1 h-[17rem] w-full drop-shadow-md md:h-[20rem] md:w-5/6 lg:h-[17rem] lg:w-2/3 xl:h-[20rem] xl:w-1/2 2xl:h-[23rem]"
       >

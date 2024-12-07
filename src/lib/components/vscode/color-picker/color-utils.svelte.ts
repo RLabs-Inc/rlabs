@@ -33,7 +33,7 @@ export function LCH_to_sRGB_string(color: Oklch, forceInGamut = false): string {
   const l = color.l;
   const c = color.c;
   const h = color.h || 0;
-  const alpha = color.alpha || 100;
+  const alpha = color.alpha;
 
   let adjustedL = l;
   let adjustedC = c;
@@ -48,7 +48,7 @@ export function LCH_to_sRGB_string(color: Oklch, forceInGamut = false): string {
     l: adjustedL / 100,
     c: adjustedC,
     h: adjustedH,
-    alpha: alpha / 100
+    alpha: alpha ? alpha / 100 : 0
   });
 
   return formatHex8(rgb);

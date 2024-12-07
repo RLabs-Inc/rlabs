@@ -8,8 +8,8 @@ let scheme = $state(randomEnum(Object(ColorSchemes)));
 let baseHue = $state([randomInteger(0, 360)]);
 let themeName = $state('');
 let themeIsPublic = $state(false);
-let fewerGeneratedColors = $state(false);
-let fewerRandomColors = $state(false);
+let fewerGeneratedColors = $state(true);
+let fewerRandomColors = $state(true);
 
 export function getControls() {
   function setIsDark(value: boolean) {

@@ -35,39 +35,55 @@
   </div>
 {:else}
   <section
-    class="min-h-[calc(100vh-2rem)]"
-    style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, 'aa')}; transition-property: all; transition-duration: 200ms;`}
+    class="min-h-[calc(100vh-2rem)] w-full flex-col items-center"
+    style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '60')}; transition-property: all; transition-duration: 200ms;`}
   >
-    <h1
-      class="px-5 pt-20 text-center text-3xl font-black drop-shadow-md md:text-6xl"
-      style={`color: ${selectedTheme().theme?.uiColors.FG1}`}
+    <section
+      class="border-border sticky top-10 z-10 w-full border-b shadow-xs backdrop-blur-3xl md:top-[3rem]"
+      style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '80')}; transition-property: all; transition-duration: 350ms;`}
     >
-      Your saved themes
-    </h1>
-    <div
-      class="sticky top-14 z-10 flex w-full flex-col items-center justify-center gap-5 p-5 pb-24 shadow-xs backdrop-blur-xl sm:pb-12"
-    >
-      <div class="h-[20rem] w-full drop-shadow-md sm:h-[30rem] lg:w-2/3 xl:w-1/2">
-        <VSCEditor />
+      <div class="flex w-full flex-row items-center justify-center gap-5 px-5 pt-10 pb-8">
         <div
-          class="mt-2 flex flex-col items-center justify-start gap-0 pb-4 md:flex-row md:items-baseline md:justify-end md:gap-2"
-          style={`color: ${selectedTheme().theme?.uiColors.AC1}`}
+          class="mt-1 h-[17rem] w-full drop-shadow-md md:h-[20rem] md:w-5/6 lg:h-[17rem] lg:w-4/7 xl:h-[20rem] 2xl:h-[23rem] 2xl:w-3/7"
         >
-          <h3 class="text-xl font-black drop-shadow-xs lg:text-2xl">
-            {selectedTheme().theme?.name}
-          </h3>
-          <p
-            class="text-xs font-bold drop-shadow-xs"
-            style={`color: ${selectedTheme().theme?.uiColors.FG1}`}
+          <VSCEditor />
+        </div>
+        <div
+          class="flex h-[17rem] flex-col justify-end gap-1 md:h-[20rem] lg:h-[17rem] xl:h-[20rem] 2xl:h-[23rem]"
+        >
+          <span
+            class="text-lg font-black drop-shadow-md md:text-xl"
+            style={`color: ${selectedTheme().theme?.uiColors.AC1}; transition-property: all; transition-duration: 200ms;`}
+            >{selectedTheme().theme?.name}</span
           >
-            <!-- <span class="text-xs font-normal drop-shadow-xs">by</span>
-          {selectedTheme().theme?.userName} -->
-          </p>
+          <span
+            class="text-xs drop-shadow-md md:text-sm"
+            style={`color: ${selectedTheme().theme?.uiColors.FG1}; transition-property: all; transition-duration: 200ms;`}
+          >
+            Updated {selectedTheme().theme?.updatedAt.toLocaleString()}
+          </span>
+          <span
+            class="text-xs drop-shadow-md md:text-sm"
+            style={`color: ${selectedTheme().theme?.uiColors.FG1}; transition-property: all; transition-duration: 200ms;`}
+          >
+            {selectedTheme().theme?.downloads !== undefined &&
+            selectedTheme().theme?.downloads === 1
+              ? `${selectedTheme().theme?.downloads} download`
+              : `${selectedTheme().theme?.downloads} downloads`}
+          </span>
+          <span
+            class="text-xs drop-shadow-md md:text-sm"
+            style={`color: ${selectedTheme().theme?.uiColors.FG1}; transition-property: all; transition-duration: 200ms;`}
+          >
+            {selectedTheme().theme?.shares !== undefined && selectedTheme().theme?.shares === 1
+              ? `${selectedTheme().theme?.shares} share`
+              : `${selectedTheme().theme?.shares} shares`}
+          </span>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="grid grid-cols-1 gap-10 p-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div class="grid grid-cols-1 gap-10 p-15 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {#each data.themes as theme, index (theme.id)}
         <ThemeCardUser {theme} />
       {/each}
