@@ -84,16 +84,16 @@
 
     // Draw x axis
     ctx.beginPath();
-    ctx.moveTo(0, pos.y);
-    ctx.lineTo(width, pos.y);
+    ctx.moveTo(0, Math.abs(pos.y));
+    ctx.lineTo(width, Math.abs(pos.y));
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 0.5;
     ctx.stroke();
 
     // Draw y axis
     ctx.beginPath();
-    ctx.moveTo(pos.x, 0);
-    ctx.lineTo(pos.x, height);
+    ctx.moveTo(Math.abs(pos.x), 0);
+    ctx.lineTo(Math.abs(pos.x), height);
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 0.5;
     ctx.stroke();
@@ -131,7 +131,7 @@
 </script>
 
 <div
-  class="relative aspect-2/1 h-[140px] w-[280px] overflow-hidden rounded border border-border dark:border-primary-foreground"
+  class="border-border dark:border-primary-foreground relative aspect-2/1 h-[140px] w-[280px] overflow-hidden rounded border"
   bind:this={container}
 >
   <canvas
@@ -144,7 +144,7 @@
     onmouseup={handleMouseUp}
   >
   </canvas>
-  <div class="absolute inset-0 -z-10 h-full overflow-hidden rounded bg-muted"></div>
+  <div class="bg-muted absolute inset-0 -z-10 h-full overflow-hidden rounded"></div>
 </div>
 
 <style>
