@@ -1,4 +1,4 @@
-import { randomInteger } from '$lib/utils/vscode/math';
+import { randomInteger } from '$lib/utils/common/math';
 import {
   ensureReadability,
   adjustCommentColor,

@@ -1,5 +1,5 @@
 import { oklch } from 'culori';
-import { randomInteger } from '$lib/utils/vscode/math';
+import { randomInteger } from '$lib/utils/common/math';
 import { ensureReadability, randomizeColor } from '$lib/utils/vscode/colorUtils.svelte';
 import { getControls } from '$lib/state/vscode/controls.svelte';
 import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';

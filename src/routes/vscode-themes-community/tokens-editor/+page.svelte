@@ -31,8 +31,6 @@
       };
     })
   );
-
-  $inspect(resolvedTokens);
 </script>
 
 <section class="min-h-[calc(100vh-2rem)]">
@@ -40,7 +38,7 @@
     <h1 class="text-2xl font-bold">Tokens Editor</h1>
     <div class="flex gap-5">
       <div class="">
-        <pre class="text-wrap text-xs">{JSON.stringify(data.parsedTheme, null, 2)}</pre>
+        <pre class="text-xs text-wrap">{JSON.stringify(data.parsedTheme, null, 2)}</pre>
       </div>
       <div>
         <Input

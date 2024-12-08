@@ -1,4 +1,4 @@
-import { randomInteger, randomEnum } from '$lib/utils/vscode/math';
+import { randomInteger, randomEnum } from '$lib/utils/common/math';
 import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
 import { ColorSchemes } from '$lib/types/color';

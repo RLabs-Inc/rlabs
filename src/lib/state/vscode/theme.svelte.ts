@@ -1,4 +1,4 @@
-import { randomInteger, randomEnum } from '$lib/utils/vscode/math';
+import { randomInteger, randomEnum } from '$lib/utils/common/math';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
 
 import { getSelectedColor } from './editor.svelte';

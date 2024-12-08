@@ -560,6 +560,187 @@ export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): numbe
     case ColorSchemes.VoidPatterns:
       result = [baseHue, ...schemeFunctions.getVoidPatterns(baseHue)];
       break;
+    case ColorSchemes.KleinBottle:
+      result = [baseHue, ...schemeFunctions.getKleinBottle(baseHue)];
+      break;
+    case ColorSchemes.CalabiYau:
+      result = [baseHue, ...schemeFunctions.getCalabiYau(baseHue)];
+      break;
+    case ColorSchemes.HopfFibration:
+      result = [baseHue, ...schemeFunctions.getHopfFibration(baseHue)];
+      break;
+    case ColorSchemes.RiemannZeta:
+      result = [baseHue, ...schemeFunctions.getRiemannZeta(baseHue)];
+      break;
+    case ColorSchemes.ModularForms:
+      result = [baseHue, ...schemeFunctions.getModularForms(baseHue)];
+      break;
+    case ColorSchemes.BanachTarski:
+      result = [baseHue, ...schemeFunctions.getBanachTarski(baseHue)];
+      break;
+    case ColorSchemes.MinkowskiSpacetime:
+      result = [baseHue, ...schemeFunctions.getMinkowskiSpacetime(baseHue)];
+      break;
+    case ColorSchemes.PenroseTiling:
+      result = [baseHue, ...schemeFunctions.getPenroseTiling(baseHue)];
+      break;
+    case ColorSchemes.LanglandsProgram:
+      result = [baseHue, ...schemeFunctions.getLanglandsProgram(baseHue)];
+      break;
+    case ColorSchemes.QuantumKnots:
+      result = [baseHue, ...schemeFunctions.getQuantumKnots(baseHue)];
+      break;
+    case ColorSchemes.StringTheoryBranes:
+      result = [baseHue, ...schemeFunctions.getStringTheoryBranes(baseHue)];
+      break;
+    case ColorSchemes.BlackHoleSingularity:
+      result = [baseHue, ...schemeFunctions.getBlackHoleSingularity(baseHue)];
+      break;
+    case ColorSchemes.HolomorphicForms:
+      result = [baseHue, ...schemeFunctions.getHolomorphicForms(baseHue)];
+      break;
+    case ColorSchemes.AlgebraicVariety:
+      result = [baseHue, ...schemeFunctions.getAlgebraicVariety(baseHue)];
+      break;
+    case ColorSchemes.ToroidalCompactification:
+      result = [baseHue, ...schemeFunctions.getToroidalCompactification(baseHue)];
+      break;
+    case ColorSchemes.SupersymmetricOrbifolds:
+      result = [baseHue, ...schemeFunctions.getSupersymmetricOrbifolds(baseHue)];
+      break;
+    case ColorSchemes.AdiabaticInvariants:
+      result = [baseHue, ...schemeFunctions.getAdiabaticInvariants(baseHue)];
+      break;
+    case ColorSchemes.ChernSimons:
+      result = [baseHue, ...schemeFunctions.getChernSimons(baseHue)];
+      break;
+    case ColorSchemes.YangMillsFields:
+      result = [baseHue, ...schemeFunctions.getYangMillsFields(baseHue)];
+      break;
+    case ColorSchemes.EinsteinManifold:
+      result = [baseHue, ...schemeFunctions.getEinsteinManifold(baseHue)];
+      break;
+    case ColorSchemes.PyramidHarmonics:
+      result = [baseHue, ...schemeFunctions.getPyramidHarmonics(baseHue)];
+      break;
+    case ColorSchemes.ZigguratLevels:
+      result = [baseHue, ...schemeFunctions.getZigguratLevels(baseHue)];
+      break;
+    case ColorSchemes.ParthenonProportions:
+      result = [baseHue, ...schemeFunctions.getParthenonProportions(baseHue)];
+      break;
+    case ColorSchemes.GothicArchVaults:
+      result = [baseHue, ...schemeFunctions.getGothicArchVaults(baseHue)];
+      break;
+    case ColorSchemes.SacredMandala:
+      result = [baseHue, ...schemeFunctions.getSacredMandala(baseHue)];
+      break;
+    case ColorSchemes.NautilusSpiral:
+      result = [baseHue, ...schemeFunctions.getNautilusSpiral(baseHue)];
+      break;
+    case ColorSchemes.PineConeFibonacci:
+      result = [baseHue, ...schemeFunctions.getPineConeFibonacci(baseHue)];
+      break;
+    case ColorSchemes.SunflowerPhyllotaxis:
+      result = [baseHue, ...schemeFunctions.getSunflowerPhyllotaxis(baseHue)];
+      break;
+    case ColorSchemes.CrystalLattice:
+      result = [baseHue, ...schemeFunctions.getCrystalLattice(baseHue)];
+      break;
+    case ColorSchemes.PlatinumTriangle:
+      result = [baseHue, ...schemeFunctions.getPlatinumTriangle(baseHue)];
+      break;
+    case ColorSchemes.SolomonSeal:
+      result = [baseHue, ...schemeFunctions.getSolomonSeal(baseHue)];
+      break;
+    case ColorSchemes.TreeOfLifePaths:
+      result = [baseHue, ...schemeFunctions.getTreeOfLifePaths(baseHue)];
+      break;
+    case ColorSchemes.ChakraFrequencies:
+      result = [baseHue, ...schemeFunctions.getChakraFrequencies(baseHue)];
+      break;
+    case ColorSchemes.TaoistBagua:
+      result = [baseHue, ...schemeFunctions.getTaoistBagua(baseHue)];
+      break;
+    case ColorSchemes.IslamicTessellation:
+      result = [baseHue, ...schemeFunctions.getIslamicTessellation(baseHue)];
+      break;
+    case ColorSchemes.SriChakra:
+      result = [baseHue, ...schemeFunctions.getSriChakra(baseHue)];
+      break;
+    case ColorSchemes.CelticSpiral:
+      result = [baseHue, ...schemeFunctions.getCelticSpiral(baseHue)];
+      break;
+    case ColorSchemes.MayanCalendar:
+      result = [baseHue, ...schemeFunctions.getMayanCalendar(baseHue)];
+      break;
+    case ColorSchemes.EgyptianFractions:
+      result = [baseHue, ...schemeFunctions.getEgyptianFractions(baseHue)];
+      break;
+    case ColorSchemes.AztecSunstone:
+      result = [baseHue, ...schemeFunctions.getAztecSunstone(baseHue)];
+      break;
+    case ColorSchemes.PythagoreanTuning:
+      result = [baseHue, ...schemeFunctions.getPythagoreanTuning(baseHue)];
+      break;
+    case ColorSchemes.ZodiacHarmonics:
+      result = [baseHue, ...schemeFunctions.getZodiacHarmonics(baseHue)];
+      break;
+    case ColorSchemes.SacredDanceSpirals:
+      result = [baseHue, ...schemeFunctions.getSacredDanceSpirals(baseHue)];
+      break;
+    case ColorSchemes.AlchemicalSeals:
+      result = [baseHue, ...schemeFunctions.getAlchemicalSeals(baseHue)];
+      break;
+    case ColorSchemes.VedicSquares:
+      result = [baseHue, ...schemeFunctions.getVedicSquares(baseHue)];
+      break;
+    case ColorSchemes.SoundMandala:
+      result = [baseHue, ...schemeFunctions.getSoundMandala(baseHue)];
+      break;
+    case ColorSchemes.HermeticSymbols:
+      result = [baseHue, ...schemeFunctions.getHermeticSymbols(baseHue)];
+      break;
+    case ColorSchemes.DruidOgham:
+      result = [baseHue, ...schemeFunctions.getDruidOgham(baseHue)];
+      break;
+    case ColorSchemes.RunicArrays:
+      result = [baseHue, ...schemeFunctions.getRunicArrays(baseHue)];
+      break;
+    case ColorSchemes.SacredButterfly:
+      result = [baseHue, ...schemeFunctions.getSacredButterfly(baseHue)];
+      break;
+    case ColorSchemes.LotusUnfolding:
+      result = [baseHue, ...schemeFunctions.getLotusUnfolding(baseHue)];
+      break;
+    case ColorSchemes.LabyrinthalPaths:
+      result = [baseHue, ...schemeFunctions.getLabyrinthalPaths(baseHue)];
+      break;
+    case ColorSchemes.StonehengeAlignment:
+      result = [baseHue, ...schemeFunctions.getStonehengeAlignment(baseHue)];
+      break;
+    case ColorSchemes.AngelonicSeals:
+      result = [baseHue, ...schemeFunctions.getAngelonicSeals(baseHue)];
+      break;
+    case ColorSchemes.SacredKnots:
+      result = [baseHue, ...schemeFunctions.getSacredKnots(baseHue)];
+      break;
+    case ColorSchemes.MusicOfSpheres:
+      result = [baseHue, ...schemeFunctions.getMusicOfSpheres(baseHue)];
+      break;
+    case ColorSchemes.VortexMathematics:
+      result = [baseHue, ...schemeFunctions.getVortexMathematics(baseHue)];
+      break;
+    case ColorSchemes.HebrewLetters:
+      result = [baseHue, ...schemeFunctions.getHebrewLetters(baseHue)];
+      break;
+
+    case ColorSchemes.SacredRainbow:
+      result = [baseHue, ...schemeFunctions.getSacredRainbow(baseHue)];
+      break;
+    case ColorSchemes.DervishSpirals:
+      result = [baseHue, ...schemeFunctions.getDervishSpirals(baseHue)];
+      break;
     default:
       result = [baseHue];
       break;

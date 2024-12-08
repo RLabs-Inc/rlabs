@@ -4,7 +4,7 @@
   import { oklch, converter, type Oklch } from 'culori';
   import clsx from 'clsx';
 
-  import { formatDecimal } from '$lib/utils/vscode/math';
+  import { formatDecimal } from '$lib/utils/common/math';
   import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
   import { Input } from '$lib/components/ui/input';
   import { SliderPicker } from '$lib/components/ui/slider-picker';

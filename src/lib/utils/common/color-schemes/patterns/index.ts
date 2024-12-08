@@ -15,6 +15,9 @@ import * as patterns7 from './newPatterns7';
 import * as patterns8 from './newPatterns8';
 import * as patterns9 from './newPatterns9';
 import * as patterns10 from './newPatterns10';
+import * as patterns11 from './newPatterns11';
+import * as patterns12 from './newPatterns12';
+import * as patterns13 from './newPatterns13';
 
 export const schemeFunctions = {
   ...patterns,
@@ -27,7 +30,10 @@ export const schemeFunctions = {
   ...patterns7,
   ...patterns8,
   ...patterns9,
-  ...patterns10
+  ...patterns10,
+  ...patterns11,
+  ...patterns12,
+  ...patterns13
 };
 
 export { ColorSchemes, type ColorScheme } from '$lib/types/sacred-geometry-schemes';
