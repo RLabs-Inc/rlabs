@@ -5,7 +5,7 @@
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import { getIsEditing, getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import type { Theme } from '$lib/types/theme';
-  import { randomInteger } from '$lib/utils/vscode/math';
+  import { randomInteger } from '$lib/utils/common/math';
   import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
 
   const { data }: { data: { themes: Theme[] } } = $props();
