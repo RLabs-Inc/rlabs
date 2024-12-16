@@ -132,7 +132,9 @@
         </SelectTrigger>
         <SelectContent>
           {#each themes as theme}
-            <SelectItem value={theme.id?.toString() || ''}>{theme.name}</SelectItem>
+            <SelectItem data-umami-event="Load theme" value={theme.id?.toString() || ''}
+              >{theme.name}</SelectItem
+            >
           {/each}
         </SelectContent>
       </Select>
@@ -144,7 +146,12 @@
         placeholder="Theme name"
         disabled={isPending}
       />
-      <Button variant="outline" onclick={handleSaveTheme} disabled={isPending}>
+      <Button
+        variant="outline"
+        data-umami-event="Saved theme"
+        onclick={handleSaveTheme}
+        disabled={isPending}
+      >
         {#if isPending}
           <LoaderPinwheel class="animate-spin" />
         {:else}
@@ -153,13 +160,14 @@
       </Button>
     </div>
     {#if nameError}
-      <p class="text-xs text-destructive">{nameError}</p>
+      <p class="text-destructive text-xs">{nameError}</p>
     {/if}
     <div class="flex items-center gap-2">
       <Checkbox
         disabled={isPending}
         checked={controlsState().themeIsPublic}
         onCheckedChange={handleThemeIsPublicChange}
+        data-umami-event="Public theme"
       />
       <Label>Public theme</Label>
     </div>

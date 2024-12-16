@@ -1,6 +1,7 @@
 import type * as Monaco from 'monaco-editor-core';
 import { createHighlighter, type Highlighter } from 'shiki';
 import { shikiToMonaco } from '@shikijs/monaco';
+
 // Import the workers in a production-safe way.
 // This is different than in Monaco's documentation for Vite,
 // but avoids a weird error ("Unexpected usage") at runtime

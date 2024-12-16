@@ -50,7 +50,12 @@
   <input type="text" hidden name="uiColors" value={JSON.stringify(uiColors)} />
   <input type="text" hidden name="syntaxColors" value={JSON.stringify(syntaxColors)} />
   <input type="text" hidden name="ansiColors" value={JSON.stringify(ansiColors)} />
-  <Button class="w-full" type="submit" formaction="?/downloadTheme">
+  <Button
+    class="w-full"
+    data-umami-event="Export Button"
+    type="submit"
+    formaction="?/downloadTheme"
+  >
     {#if isDownloading}
       <LoaderPinwheel class="h-4 w-4 animate-spin" />
     {:else}

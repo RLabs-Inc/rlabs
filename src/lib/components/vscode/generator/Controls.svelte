@@ -62,7 +62,7 @@
       </div>
     {:else}
       <div
-        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-xs dark:border-primary-foreground dark:bg-background/40"
+        class="border-border bg-background dark:border-primary-foreground dark:bg-background/40 flex items-center justify-between rounded-md border p-2 shadow-xs"
       >
         <Label>Editor font:</Label>
         <div class="flex items-center gap-2">
@@ -81,8 +81,8 @@
 
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="300">Thin</SelectItem>
-                  <SelectItem value="400">Normal</SelectItem>
+                  <SelectItem data-umami-event="FONTS THIN" value="300">Thin</SelectItem>
+                  <SelectItem data-umami-event="FONTS NORMAL" value="400">Normal</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -98,17 +98,22 @@
                   fontState().weight
                 );
               }}
+              data-umami-event="Font size"
             />
           </div>
         </div>
       </div>
       <div
-        class="flex items-center justify-between rounded-md border border-border bg-background p-2 shadow-xs dark:border-primary-foreground dark:bg-background/40"
+        class="border-border bg-background dark:border-primary-foreground dark:bg-background/40 flex items-center justify-between rounded-md border p-2 shadow-xs"
       >
         <Label>Dark theme?</Label>
-        <Switch checked={controls().isDark} onCheckedChange={controls().setIsDark} />
+        <Switch
+          checked={controls().isDark}
+          data-umami-event="Dark theme?"
+          onCheckedChange={controls().setIsDark}
+        />
       </div>
-      <span class="text-center text-xs text-foreground"
+      <span class="text-foreground text-center text-xs"
         ><span class="font-bold">Be careful</span>, it is almost
         <span class="underline">impossible</span> to generate the same set of colors twice, if you
         liked it, <span class="font-bold">save it</span> before generating a new one.</span
@@ -116,14 +121,18 @@
 
       <div class="flex flex-col items-center gap-1">
         <div
-          class="w-full rounded-md border border-border bg-background px-2 py-1 shadow-xs dark:border-primary-foreground dark:bg-background/40"
+          class="border-border bg-background dark:border-primary-foreground dark:bg-background/40 w-full rounded-md border px-2 py-1 shadow-xs"
         >
           <span class="text-sm font-black drop-shadow-xs"
             >Randomize a new {controls().isDark ? 'dark' : 'light'} theme</span
           >
           <div class="flex flex-col gap-2 py-2">
             <div class="flex w-full items-center gap-2">
-              <Button class="w-full text-sm" size="sm" onclick={controls().randomize}
+              <Button
+                class="w-full text-sm"
+                size="sm"
+                data-umami-event="Randomize Button Clicked"
+                onclick={controls().randomize}
                 >Randomize
               </Button>
 
@@ -151,24 +160,25 @@
                 onCheckedChange={(checked) => {
                   controls().setFewerRandomColors(checked as boolean);
                 }}
+                data-umami-event="Use fewer color variation Randomize"
               />
               <Label class="text-xs">Use fewer color variation?</Label>
             </div>
           </div>
         </div>
-        <span class="text-xs text-muted-foreground">or</span>
+        <span class="text-muted-foreground text-xs">or</span>
         <div
-          class="flex w-full flex-col gap-1 rounded-md border border-border bg-background px-2 py-2 shadow-xs dark:border-primary-foreground dark:bg-background/40"
+          class="border-border bg-background dark:border-primary-foreground dark:bg-background/40 flex w-full flex-col gap-1 rounded-md border px-2 py-2 shadow-xs"
         >
           <p class="leading-none">
             <span class="text-sm font-black drop-shadow-xs"
               >Generate {controls().isDark ? 'dark' : 'light'} theme</span
             >
-            <span class="text-xs text-muted-foreground"
+            <span class="text-muted-foreground text-xs"
               >by choosing a color scheme and selecting the base hue.</span
             >
           </p>
-          <div class="flex flex-col gap-3 pb-1 pt-2">
+          <div class="flex flex-col gap-3 pt-2 pb-1">
             <Select value={controls().scheme} onValueChange={controls().setScheme} type="single">
               <SelectTrigger>
                 {controls().scheme || 'Select a scheme'}
@@ -192,12 +202,18 @@
                   max={360}
                   bgColor={baseHueGradient}
                   controlledValue={true}
+                  data-umami-event="Base hue slider changed"
                 />
               </div>
             </div>
             <div class="flex flex-col gap-2">
               <div class="flex w-full items-center gap-2">
-                <Button class="w-full text-wrap text-sm" size="sm" onclick={controls().generate}>
+                <Button
+                  class="w-full text-sm text-wrap"
+                  size="sm"
+                  data-umami-event="Generate Button"
+                  onclick={controls().generate}
+                >
                   Re-generate colors
                 </Button>
                 <span class="text-xs">or</span>
@@ -223,6 +239,7 @@
                   onCheckedChange={(checked) => {
                     controls().setFewerGeneratedColors(checked as boolean);
                   }}
+                  data-umami-event="Use fewer color variation Generate"
                 />
                 <Label class="text-xs">Use fewer color variation?</Label>
               </div>
@@ -235,7 +252,7 @@
       <Export />
     </div>
     <div
-      class="w-full rounded-md border border-border bg-background p-2 shadow-xs dark:border-primary-foreground dark:bg-background/40"
+      class="border-border bg-background dark:border-primary-foreground dark:bg-background/40 w-full rounded-md border p-2 shadow-xs"
     >
       <LoadSaveTheme {userId} themes={themes || []} />
     </div>
