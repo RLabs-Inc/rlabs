@@ -18,7 +18,12 @@
 </script>
 
 <div class="share-btn flex items-center gap-1 transition-colors" style={styleVars}>
-  <button class="cursor-pointer" onclick={shareTheme} disabled={isSharing}>
+  <button
+    data-umami-event="Share Button"
+    class="cursor-pointer"
+    onclick={shareTheme}
+    disabled={isSharing}
+  >
     {#if isSharing}
       <LoaderPinwheel class="h-4 w-4 animate-spin" />
     {:else}

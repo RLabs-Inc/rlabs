@@ -20,7 +20,12 @@
 
 <div class="download-btn flex items-center gap-1 transition-colors" style={styleVars}>
   <input type="hidden" name="themeId" value={themeId} />
-  <button class="cursor-pointer" disabled={isDownloading} formaction="?/downloadTheme">
+  <button
+    data-umami-event="Download Button"
+    class="cursor-pointer"
+    disabled={isDownloading}
+    formaction="?/downloadTheme"
+  >
     {#if isDownloading}
       <LoaderPinwheel class="h-4 w-4 animate-spin" />
     {:else}
