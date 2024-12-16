@@ -70,7 +70,7 @@ function getMonacoEditor() {
       fontSize: fontSize,
       fontWeight: fontWeight,
       'semanticHighlighting.enabled': true,
-      minimap: { enabled: false }
+      minimap: { enabled: true }
     });
     model = monaco.editor.createModel(snippet, lang);
     editor.setModel(model);

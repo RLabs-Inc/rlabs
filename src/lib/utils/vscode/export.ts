@@ -263,15 +263,15 @@ export function generateSemanticThemeJSON(
       // # The Side Bar contains views like the Explorer and Search.
       'sideBar.border': colors.BORDER, //# Side Bar border color on the side separating the editor
       'sideBar.foreground': colors.FG2, //# Side Bar foreground color. The Side Bar is the container for views like Explorer and Search
-      'sideBar.background': colors.BG1, //# Side Bar background color
+      'sideBar.background': colors.BG3, //# Side Bar background color
       //"sideBar.dropBackground": //# Drag and drop feedback color for the side bar sections. The color should have transparency so that the side bar sections can still shine through.
       'sideBarTitle.foreground': colors.FG1, //# Side Bar title foreground color
-      'sideBarTitle.background': colors.BG1, //# Side bar title background color. The side bar is the container for views like explorer and search.
+      'sideBarTitle.background': colors.BG3, //# Side bar title background color. The side bar is the container for views like explorer and search.
       'sideBarSectionHeader.background': colors.BG2, //# Side Bar section header background color
       //sideBarSectionHeader.foreground: // # Side Bar section header foreground color
       'sideBarSectionHeader.border': colors.BORDER, // Side bar section header border color
       'sideBarActivityBarTop.border': colors.BORDER, // Border color between the activity bar at the top/bottom and the views.
-      'sideBarStickyScroll.background': colors.BG1, // Background color of sticky scroll in the side bar.
+      'sideBarStickyScroll.background': colors.BG3, // Background color of sticky scroll in the side bar.
       'sideBarStickyScroll.border': colors.BORDER, // Border color of sticky scroll in the side bar.
       'sideBarStickyScroll.shadow-sm': colors.BORDER, // Shadow color of sticky scroll in the side bar.
 
@@ -281,7 +281,7 @@ export function generateSemanticThemeJSON(
       // minimap.selectionHighlight: //# Highlight color for the editor selection.
       // minimap.errorHighlight: //# Highlight color for errors within the editor.
       // minimap.warningHighlight: //# Highlight color for warnings within the editor.
-      // minimap.background: //# Minimap background color.
+      'minimap.background': colors.BG2, //# Minimap background color.
       // minimap.selectionOccurrenceHighlight: //# Minimap marker color for repeating editor selections.
       // minimap.foregroundOpacity: //# Opacity of foreground elements rendered in the minimap. For example, "#000000c0" will render the elements with 75% opacity.
       // minimap.infoHighlight: //# Minimap marker color for infos.
@@ -314,7 +314,7 @@ export function generateSemanticThemeJSON(
       'tab.selectedBackground': colors.lineHighlight, //# Background of a selected tab. Tabs are the containers for editors in the editor area. Multiple tabs can be opened in one editor group. There can be multiple editor groups.
       // tab.selectedForeground: //# Foreground of a selected tab. Tabs are the containers for editors in the editor area. Multiple tabs can be opened in one editor group. There can be multiple editor groups.
       // tab.dragAndDropBorder: //# Border between tabs to indicate that a tab can be inserted between two tabs. Tabs are the containers for editors in the editor area. Multiple tabs can be opened in one editor group. There can be multiple editor groups.
-      'tab.inactiveBackground': colors.BG1, //# Inactive Tab background color
+      'tab.inactiveBackground': colors.BG3, //# Inactive Tab background color
       'tab.inactiveForeground': syntaxColors.comment, //# Inactive Tab foreground color in an active group
       // "tab.unfocusedActiveBorder": colors.BORDER, //# A border drawn to the bottom of the active tab in an editor group that is not focused
       // "tab.unfocusedActiveForeground": colors.FG1, //# Active tab foreground color in an inactive editor group

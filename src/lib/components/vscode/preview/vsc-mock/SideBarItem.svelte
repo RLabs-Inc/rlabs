@@ -79,7 +79,7 @@
     transition-duration: 350ms;
   }
   .item {
-    background-color: var(--bg1);
+    background-color: var(--bg3);
     color: var(--fg2);
     transition-property: all;
     transition-duration: 350ms;

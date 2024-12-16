@@ -42,6 +42,7 @@
     ` 
       --bg1: ${selectedThemeState().theme?.uiColors.BG1};
       --bg2: ${selectedThemeState().theme?.uiColors.BG2};
+      --bg3: ${selectedThemeState().theme?.uiColors.BG3};
       --fg1: ${selectedThemeState().theme?.uiColors.FG1};
       --fg2: ${selectedThemeState().theme?.uiColors.FG2};
       --fg3: ${selectedThemeState().theme?.uiColors.FG3};
@@ -72,7 +73,7 @@
     </div>
 
     <div
-      class="no-scrollbar flex flex-1 overflow-y-hidden overflow-x-scroll text-sm"
+      class="no-scrollbar flex flex-1 overflow-x-scroll overflow-y-hidden text-sm"
       style={`background: var(--bg1); color: var(--fg1); transition-property: all; transition-duration: 350ms;`}
     >
       <ActivityBar />

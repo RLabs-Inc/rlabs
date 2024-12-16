@@ -48,7 +48,7 @@
     transition-duration: 350ms;
   }
   .tab {
-    background: var(--bg1);
+    background: var(--bg3);
     color: var(--comment);
     border-color: var(--border);
     transition-property: all;

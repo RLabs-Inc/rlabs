@@ -32,7 +32,7 @@
 
 <div
   class="sideBar flex w-12 flex-col sm:w-36 2xl:w-40"
-  style="background-color: var(--bg1); border-right: 1px solid var(--border); color: var(--fg2); transition-property: all; transition-duration: 350ms;"
+  style="background-color: var(--bg3); border-right: 1px solid var(--border); color: var(--fg2); transition-property: all; transition-duration: 350ms;"
 >
   <div class="flex items-center justify-between p-2">
     <span

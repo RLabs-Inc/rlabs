@@ -33,7 +33,7 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
       lockedColors?.BG3 ||
       randomizeColor(
         [schemeHuesState().schemeHues[randomInteger(0, schemeHuesState().schemeHues.length - 1)]],
-        controlsState().isDark ? [0, 25] : [85, 100],
+        controlsState().isDark ? [0, 30] : [90, 100],
         [0, 3]
       ),
     FG1:
