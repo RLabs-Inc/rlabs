@@ -40,7 +40,7 @@
   <Button
     variant="ghost"
     size="icon"
-    class="h-4 w-4 hover:bg-transparent hover:text-inherit focus:bg-transparent"
+    class="h-4 w-4 transition-all duration-100 hover:bg-transparent hover:text-inherit focus:bg-transparent"
     onclick={() => {
       uiColorsState().toggleLockedUIColor(name, color);
     }}
@@ -52,10 +52,7 @@
       />
     {/if}
     {#if !isLocked}
-      <Unlock
-        class="size-4"
-        style={`fill: ${textColor}; transition-property: all; transition-duration: 100ms;`}
-      />
+      <Unlock class="size-4" style={`transition-property: all; transition-duration: 100ms;`} />
     {/if}
   </Button>
 </div>

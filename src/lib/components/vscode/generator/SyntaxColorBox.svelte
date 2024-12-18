@@ -38,16 +38,19 @@
     <Button
       variant="ghost"
       size="icon"
-      class="h-4 w-4 hover:bg-transparent hover:text-inherit focus:bg-transparent"
+      class="h-4 w-4 transition-all duration-100 hover:bg-transparent hover:text-inherit focus:bg-transparent"
       onclick={() => {
         syntaxColorsState().toggleLockedSyntaxColor(name, color);
       }}
     >
       {#if isLocked}
-        <Lock class="size-4" style={`fill: ${color};`} />
+        <Lock
+          class="size-4"
+          style={`fill: ${color}; transition-property: all; transition-duration: 100ms;`}
+        />
       {/if}
       {#if !isLocked}
-        <Unlock class="size-4" />
+        <Unlock class="size-4" style={`transition-property: all; transition-duration: 100ms;`} />
       {/if}
     </Button>
   </div>

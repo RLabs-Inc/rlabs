@@ -34,7 +34,7 @@
     <Button
       variant="ghost"
       size="icon"
-      class="h-4 w-4 hover:bg-transparent hover:text-inherit focus:bg-transparent"
+      class="h-4 w-4 transition-all duration-100 hover:bg-transparent hover:text-inherit focus:bg-transparent"
       onclick={() => {
         ansiColorsState().toggleLockedAnsiColor(name, color);
       }}
