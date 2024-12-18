@@ -12,7 +12,7 @@
 <div class="flex flex-col">
   <div
     class="flex"
-    style="background-color: var(--bg1); transition-property: all; transition-duration: 350ms;"
+    style="background-color: var(--bg1); transition-property: all; transition-duration: 100ms;"
   >
     <EditorTab name={selectedFile().file.name} active={true} />
     {#each tabs as tab}
@@ -21,7 +21,7 @@
   </div>
   <div
     class="flex h-[1.25rem] w-full items-center"
-    style="background-color: var(--bg2); transition-property: all; transition-duration: 350ms;"
+    style="background-color: var(--bg2); transition-property: all; transition-duration: 100ms;"
   >
     <span class="w-full px-4 text-xs">
       <span class="breadcrumb"> src ></span>
@@ -36,11 +36,11 @@
     color: var(--comment);
     cursor: pointer;
     transition-property: all;
-    transition-duration: 200ms;
+    transition-duration: 100ms;
   }
   .breadcrumb:hover {
     color: var(--fg1);
     transition-property: all;
-    transition-duration: 200ms;
+    transition-duration: 150ms;
   }
 </style>

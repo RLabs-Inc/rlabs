@@ -5,7 +5,7 @@
 
 <div
   class="flex h-full flex-1 flex-col"
-  style="background-color: var(--bg1); transition-property: all; transition-duration: 200ms;"
+  style="background-color: var(--bg1); transition-property: all; transition-duration: 100ms;"
 >
   <EditorTabs />
   <EditorContent />

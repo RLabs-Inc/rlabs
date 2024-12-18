@@ -70,24 +70,24 @@
     background-color: var(--listHover);
     color: var(--fg1);
     transition-property: all;
-    transition-duration: 350ms;
+    transition-duration: 100ms;
   }
   .item.active {
     background-color: var(--listActive);
     color: var(--fg1);
     transition-property: all;
-    transition-duration: 350ms;
+    transition-duration: 100ms;
   }
   .item {
     background-color: var(--bg3);
     color: var(--fg2);
     transition-property: all;
-    transition-duration: 350ms;
+    transition-duration: 100ms;
   }
   .item.main {
     background-color: var(--bg2);
     color: var(--fg2);
     transition-property: all;
-    transition-duration: 350ms;
+    transition-duration: 100ms;
   }
 </style>

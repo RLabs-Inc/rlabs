@@ -14,11 +14,11 @@
     color: var(--fg1);
     border-color: var(--comment);
     transition-property: all;
-    transition-duration: 350ms;
+    transition-duration: 100ms;
   }
   .top-bar {
     background-color: var(--bg2);
     transition-property: all;
-    transition-duration: 350ms;
+    transition-duration: 100ms;
   }
 </style>

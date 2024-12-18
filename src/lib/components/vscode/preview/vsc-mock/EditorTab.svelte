@@ -6,7 +6,7 @@
 
 <div
   class={clsx(
-    'tab cursor-pointer items-center px-2 py-[0.37rem] text-sm transition-colors duration-200 md:px-4',
+    'tab cursor-pointer items-center px-2 py-[0.37rem] text-sm md:px-4',
     active ? 'active flex border-t' : 'hidden border-r md:flex'
   )}
 >
@@ -38,26 +38,26 @@
     color: var(--fg1);
     border-color: var(--ac1);
     transition-property: all;
-    transition-duration: 350ms;
+    transition-duration: 100ms;
   }
   .tab.active:hover {
     background: var(--bg2);
     color: var(--fg1);
     border-color: var(--ac1);
     transition-property: all;
-    transition-duration: 350ms;
+    transition-duration: 100ms;
   }
   .tab {
     background: var(--bg3);
     color: var(--comment);
     border-color: var(--border);
     transition-property: all;
-    transition-duration: 350ms;
+    transition-duration: 100ms;
   }
   .tab:hover {
     background: var(--tabHover);
     color: var(--fg1);
     transition-property: all;
-    transition-duration: 200ms;
+    transition-duration: 150ms;
   }
 </style>
