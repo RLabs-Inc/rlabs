@@ -1,4 +1,5 @@
 import { generateSchemeHues } from '$lib/utils/common/color-schemes/index.svelte';
+import { generateSchemeHuesWithLocks } from '$lib/utils/common/color-schemes/locked-schemes';
 import { getControls } from '$lib/state/vscode/controls.svelte';
 
 import { ColorSchemes } from '$lib/types/color';
@@ -19,6 +20,18 @@ export function getSchemeHues() {
       )
     );
   }
+
+  function generateWithLocks(uiLockedColors: Record<string, string> = {}, syntaxLockedColors: Record<string, string> = {}) {
+    set(
+      generateSchemeHuesWithLocks({
+        baseHue: controlsState().baseHue[0],
+        scheme: ColorSchemes[controlsState().scheme as keyof typeof ColorSchemes],
+        uiLockedColors,
+        syntaxLockedColors
+      })
+    );
+  }
+
   function generateAdditionalHues(baseHue: number, scheme: string) {
     const additionalHues = generateSchemeHues(
       baseHue,
@@ -33,6 +46,7 @@ export function getSchemeHues() {
     },
     set,
     generate,
+    generateWithLocks,
     generateAdditionalHues
   });
 }
