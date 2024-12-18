@@ -24,7 +24,7 @@
 
 <div
   class="flex w-full cursor-pointer items-center justify-between rounded-md p-2 text-xs capitalize shadow-md"
-  style={`background-color: ${color}; color: ${textColor};`}
+  style={`background-color: ${color}; color: ${textColor}; transition-property: all; transition-duration: 100ms;`}
   onclick={() => {
     selectedColorState().setSelectedColor({ name, color, type: 'ui' });
   }}
@@ -46,10 +46,16 @@
     }}
   >
     {#if isLocked}
-      <Lock class="size-4" style={`fill: ${textColor};`} />
+      <Lock
+        class="size-4"
+        style={`fill: ${textColor}; transition-property: all; transition-duration: 100ms;`}
+      />
     {/if}
     {#if !isLocked}
-      <Unlock class="size-4" />
+      <Unlock
+        class="size-4"
+        style={`fill: ${textColor}; transition-property: all; transition-duration: 100ms;`}
+      />
     {/if}
   </Button>
 </div>

@@ -12,10 +12,13 @@
   });
 </script>
 
-<div class="rounded-md px-2 py-1 shadow-md" style={`background-color: ${bg};`}>
+<div
+  class="rounded-md px-2 py-1 shadow-md"
+  style={`background-color: ${bg}; transition-property: all; transition-duration: 100ms;`}
+>
   <div
     class="flex w-full cursor-pointer items-center justify-between border-l px-2 py-1 text-xs capitalize"
-    style={`color: ${color}; border-color: ${color};`}
+    style={`color: ${color}; border-color: ${color}; transition-property: all; transition-duration: 100ms;`}
     onclick={() => {
       selectedColorState().setSelectedColor({ name, color, type: 'ansi' });
     }}
@@ -37,10 +40,13 @@
       }}
     >
       {#if isLocked}
-        <Lock class="size-4" style={`fill: ${color};`} />
+        <Lock
+          class="size-4"
+          style={`fill: ${color}; transition-property: all; transition-duration: 100ms;`}
+        />
       {/if}
       {#if !isLocked}
-        <Unlock class="size-4" />
+        <Unlock class="size-4" style={`transition-property: all; transition-duration: 100ms;`} />
       {/if}
     </Button>
   </div>
