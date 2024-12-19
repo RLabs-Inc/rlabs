@@ -102,7 +102,12 @@ export function getMonacoEditor() {
       'semanticHighlighting.enabled': true,
       minimap: {
         enabled: true
-      }
+      },
+      quickSuggestions: false,
+      parameterHints: { enabled: false },
+      suggestOnTriggerCharacters: false,
+      acceptSuggestionOnEnter: 'off',
+      tabCompletion: 'off'
     });
     model = monaco.editor.createModel(snippet, lang);
     editor.setModel(model);
