@@ -29,27 +29,7 @@
     --color-hover: ${ac1};
   `);
 
-  async function handleShare() {
-    // try {
-    //   const searchParams = new URLSearchParams(window.location.search);
-    //   searchParams.set('theme', theme.id.toString());
-    //   const shareUrl = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
-    //   const shareData = {
-    //     title: `${theme.name} - VSCode Theme`,
-    //     text: `Check out this awesome VSCode theme: ${theme.name}`,
-    //     url: shareUrl
-    //   };
-    //   if (navigator.share && navigator.canShare(shareData)) {
-    //     await navigator.share(shareData);
-    //   } else {
-    //     // Show desktop share menu by default
-    //     return shareUrl;
-    //   }
-    // } catch (error) {
-    //   console.error('Error sharing theme:', error);
-    //   toast.error('Failed to share theme');
-    // }
-  }
+  async function handleShare() {}
 
   async function copyToClipboard(url: string) {
     try {

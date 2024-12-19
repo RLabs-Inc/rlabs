@@ -1,15 +1,13 @@
 import type * as Monaco from 'monaco-editor-core';
-import { createHighlighter, type Highlighter } from 'shiki';
+import { browser } from '$app/environment';
+import { createHighlighterCore, type HighlighterCore } from 'shiki/core';
+import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
 import { shikiToMonaco } from '@shikijs/monaco';
-
-// Import the workers in a production-safe way.
-// This is different than in Monaco's documentation for Vite,
-// but avoids a weird error ("Unexpected usage") at runtime
 
 let editor: Monaco.editor.IStandaloneCodeEditor;
 let model: Monaco.editor.ITextModel | null;
 let monaco: typeof Monaco;
-let highlighter: Highlighter;
+let highlighter: HighlighterCore;
 
 const languages = [
   'typescript',
@@ -31,7 +29,7 @@ const languages = [
   'python',
   'rust',
   'swift',
-  'cpp',
+  // 'cpp',
   'c',
   'lua',
   'sql',
@@ -41,7 +39,9 @@ const languages = [
   'markdown'
 ];
 
-function getMonacoEditor() {
+export function getMonacoEditor() {
+  if (!browser) return;
+
   const registerLanguages = () => {
     languages.forEach((lang) => monaco?.languages.register({ id: lang }));
   };
@@ -54,11 +54,41 @@ function getMonacoEditor() {
     fontWeight: string,
     editorContainer: HTMLDivElement
   ) => {
+    if (!browser) return;
     monaco = (await import('./monaco-worker')).default;
     registerLanguages();
-    highlighter = await createHighlighter({
-      themes: [JSON.parse(theme), 'catppuccin-mocha', 'dracula'],
-      langs: languages
+    highlighter = await createHighlighterCore({
+      themes: [JSON.parse(theme)],
+      langs: [
+        import('shiki/langs/javascript.mjs'),
+        import('shiki/langs/typescript.mjs'),
+        import('shiki/langs/html.mjs'),
+        import('shiki/langs/css.mjs'),
+        import('shiki/langs/scss.mjs'),
+        import('shiki/langs/vue.mjs'),
+        import('shiki/langs/vue-html.mjs'),
+        import('shiki/langs/svelte.mjs'),
+        import('shiki/langs/tsx.mjs'),
+        import('shiki/langs/ruby.mjs'),
+        import('shiki/langs/php.mjs'),
+        import('shiki/langs/go.mjs'),
+        import('shiki/langs/java.mjs'),
+        import('shiki/langs/kotlin.mjs'),
+        import('shiki/langs/dart.mjs'),
+        import('shiki/langs/csharp.mjs'),
+        import('shiki/langs/python.mjs'),
+        import('shiki/langs/rust.mjs'),
+        import('shiki/langs/swift.mjs'),
+        // import('shiki/langs/cpp.mjs'),
+        import('shiki/langs/c.mjs'),
+        import('shiki/langs/lua.mjs'),
+        import('shiki/langs/sql.mjs'),
+        import('shiki/langs/yaml.mjs'),
+        import('shiki/langs/json.mjs'),
+        import('shiki/langs/bash.mjs'),
+        import('shiki/langs/markdown.mjs')
+      ], // no languages
+      engine: createOnigurumaEngine(import('shiki/wasm'))
     });
     shikiToMonaco(highlighter, monaco);
     editor = monaco.editor.create(editorContainer, {
@@ -70,7 +100,9 @@ function getMonacoEditor() {
       fontSize: fontSize,
       fontWeight: fontWeight,
       'semanticHighlighting.enabled': true,
-      minimap: { enabled: true }
+      minimap: {
+        enabled: true
+      }
     });
     model = monaco.editor.createModel(snippet, lang);
     editor.setModel(model);
@@ -110,5 +142,3 @@ function getMonacoEditor() {
     changeFont
   };
 }
-
-export { getMonacoEditor };

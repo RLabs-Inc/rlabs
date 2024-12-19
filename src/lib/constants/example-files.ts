@@ -2886,126 +2886,126 @@ struct ProductDetailView: View {
     }
 } `
   },
-  {
-    name: 'cpp.cpp',
-    isFolder: false,
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg',
-    language: 'cpp',
-    displayName: 'C++',
-    snippet: `#include <memory>
-#include <variant>
-#include <optional>
-#include <string_view>
-#include <unordered_map>
+  //   {
+  //     name: 'cpp.cpp',
+  //     isFolder: false,
+  //     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg',
+  //     language: 'cpp',
+  //     displayName: 'C++',
+  //     snippet: `#include <memory>
+  // #include <variant>
+  // #include <optional>
+  // #include <string_view>
+  // #include <unordered_map>
 
-namespace trading::engine {
+  // namespace trading::engine {
 
-template<typename T>
-class ThreadSafeOrderBook {
-private:
-    struct OrderInfo {
-        std::string_view client_id;
-        double price;
-        size_t quantity;
-        std::chrono::system_clock::time_point timestamp;
-        bool is_buy;
-    };
+  // template<typename T>
+  // class ThreadSafeOrderBook {
+  // private:
+  //     struct OrderInfo {
+  //         std::string_view client_id;
+  //         double price;
+  //         size_t quantity;
+  //         std::chrono::system_clock::time_point timestamp;
+  //         bool is_buy;
+  //     };
 
-    using OrderId = uint64_t;
-    using OrderPtr = std::shared_ptr<OrderInfo>;
-    
-    struct OrderComparator {
-        bool operator()(const OrderPtr& lhs, const OrderPtr& rhs) const {
-            return lhs->price < rhs->price || 
-                   (lhs->price == rhs->price && 
-                    lhs->timestamp < rhs->timestamp);
-        }
-    };
+  //     using OrderId = uint64_t;
+  //     using OrderPtr = std::shared_ptr<OrderInfo>;
 
-    mutable std::shared_mutex book_mutex;
-    std::map<OrderId, OrderPtr> orders;
-    std::multiset<OrderPtr, OrderComparator> buy_orders;
-    std::multiset<OrderPtr, OrderComparator> sell_orders;
+  //     struct OrderComparator {
+  //         bool operator()(const OrderPtr& lhs, const OrderPtr& rhs) const {
+  //             return lhs->price < rhs->price ||
+  //                    (lhs->price == rhs->price &&
+  //                     lhs->timestamp < rhs->timestamp);
+  //         }
+  //     };
 
-public:
-    extern "C++" OrderId submit_order(
-        std::string_view client_id,
-        double price,
-        size_t quantity,
-        bool is_buy
-    ) {
-        auto order = std::make_shared<OrderInfo>(
-            OrderInfo{client_id, price, quantity, 
-                     std::chrono::system_clock::now(), is_buy}
-        );
+  //     mutable std::shared_mutex book_mutex;
+  //     std::map<OrderId, OrderPtr> orders;
+  //     std::multiset<OrderPtr, OrderComparator> buy_orders;
+  //     std::multiset<OrderPtr, OrderComparator> sell_orders;
 
-        std::unique_lock<std::shared_mutex> lock(book_mutex);
-        OrderId order_id = generate_order_id();
-        orders[order_id] = order;
-        
-        if (is_buy) {
-            buy_orders.insert(order);
-            match_buy_order(order);
-        } else {
-            sell_orders.insert(order);
-            match_sell_order(order);
-        }
+  // public:
+  //     extern "C++" OrderId submit_order(
+  //         std::string_view client_id,
+  //         double price,
+  //         size_t quantity,
+  //         bool is_buy
+  //     ) {
+  //         auto order = std::make_shared<OrderInfo>(
+  //             OrderInfo{client_id, price, quantity,
+  //                      std::chrono::system_clock::now(), is_buy}
+  //         );
 
-        return order_id;
-    }
+  //         std::unique_lock<std::shared_mutex> lock(book_mutex);
+  //         OrderId order_id = generate_order_id();
+  //         orders[order_id] = order;
 
-    std::optional<T> cancel_order(OrderId order_id) {
-        std::unique_lock<std::shared_mutex> lock(book_mutex);
-        auto it = orders.find(order_id);
-        if (it == orders.end()) return std::nullopt;
+  //         if (is_buy) {
+  //             buy_orders.insert(order);
+  //             match_buy_order(order);
+  //         } else {
+  //             sell_orders.insert(order);
+  //             match_sell_order(order);
+  //         }
 
-        auto order = it->second;
-        if (order->is_buy) {
-            buy_orders.erase(order);
-        } else {
-            sell_orders.erase(order);
-        }
-        
-        orders.erase(it);
-        return T{order->price, order->quantity};
-    }
+  //         return order_id;
+  //     }
 
-private:
-    void match_buy_order(const OrderPtr& buy_order) {
-        auto sell_it = sell_orders.begin();
-        while (sell_it != sell_orders.end() && 
-               (*sell_it)->price <= buy_order->price) {
-            // Match logic here
-            execute_trade(buy_order, *sell_it);
-            sell_it = sell_orders.erase(sell_it);
-        }
-    }
+  //     std::optional<T> cancel_order(OrderId order_id) {
+  //         std::unique_lock<std::shared_mutex> lock(book_mutex);
+  //         auto it = orders.find(order_id);
+  //         if (it == orders.end()) return std::nullopt;
 
-    void match_sell_order(const OrderPtr& sell_order) {
-        auto buy_it = buy_orders.rbegin();
-        while (buy_it != buy_orders.rend() && 
-               (*buy_it)->price >= sell_order->price) {
-            // Match logic here
-            execute_trade(*buy_it, sell_order);
-            buy_it = std::make_reverse_iterator(
-                buy_orders.erase(std::next(buy_it).base())
-            );
-        }
-    }
+  //         auto order = it->second;
+  //         if (order->is_buy) {
+  //             buy_orders.erase(order);
+  //         } else {
+  //             sell_orders.erase(order);
+  //         }
 
-    void execute_trade(const OrderPtr& buy_order, 
-                      const OrderPtr& sell_order) {
-        // Trade execution logic
-    }
+  //         orders.erase(it);
+  //         return T{order->price, order->quantity};
+  //     }
 
-    static OrderId generate_order_id() {
-        static std::atomic<OrderId> next_id{1};
-        return next_id++;
-    }
-};
+  // private:
+  //     void match_buy_order(const OrderPtr& buy_order) {
+  //         auto sell_it = sell_orders.begin();
+  //         while (sell_it != sell_orders.end() &&
+  //                (*sell_it)->price <= buy_order->price) {
+  //             // Match logic here
+  //             execute_trade(buy_order, *sell_it);
+  //             sell_it = sell_orders.erase(sell_it);
+  //         }
+  //     }
 
-} // namespace trading::engine`
-  },
+  //     void match_sell_order(const OrderPtr& sell_order) {
+  //         auto buy_it = buy_orders.rbegin();
+  //         while (buy_it != buy_orders.rend() &&
+  //                (*buy_it)->price >= sell_order->price) {
+  //             // Match logic here
+  //             execute_trade(*buy_it, sell_order);
+  //             buy_it = std::make_reverse_iterator(
+  //                 buy_orders.erase(std::next(buy_it).base())
+  //             );
+  //         }
+  //     }
+
+  //     void execute_trade(const OrderPtr& buy_order,
+  //                       const OrderPtr& sell_order) {
+  //         // Trade execution logic
+  //     }
+
+  //     static OrderId generate_order_id() {
+  //         static std::atomic<OrderId> next_id{1};
+  //         return next_id++;
+  //     }
+  // };
+
+  // } // namespace trading::engine`
+  //   },
   {
     name: 'c.c',
     isFolder: false,

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import VSCEditor from '$lib/components/vscode/preview/vsc-mock/VSCEditor.svelte';
+  const VSCEditor = () => import('$lib/components/vscode/preview/vsc-mock/VSCEditor.svelte');
 </script>
 
 <VSCEditor />

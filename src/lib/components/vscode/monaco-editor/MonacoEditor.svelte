@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { browser } from '$app/environment';
   import { getMonacoEditor } from './monaco.svelte';
+
   const {
     theme,
     lang,
@@ -10,16 +12,23 @@
   }: { theme: string; lang: string; snippet: string; fontSize: number; fontWeight: string } =
     $props();
 
-  const monacoEditor = getMonacoEditor();
-  let editorContainer: HTMLDivElement;
+  let editorContainer: HTMLDivElement | null = $state(null);
+  let monacoEditor: any;
 
   onMount(async () => {
-    monacoEditor.initMonaco(theme, snippet, lang, fontSize, fontWeight, editorContainer);
+    if (browser) {
+      monacoEditor = await getMonacoEditor();
+      await monacoEditor.initMonaco(theme, snippet, lang, fontSize, fontWeight, editorContainer);
+    }
   });
 
   onDestroy(() => {
-    monacoEditor.dispose();
+    if (browser && monacoEditor) {
+      monacoEditor.dispose();
+    }
   });
 </script>
 
-<div bind:this={editorContainer} class="h-full w-full"></div>
+{#if browser}
+  <div bind:this={editorContainer} class="h-full w-full"></div>
+{/if}

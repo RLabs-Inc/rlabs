@@ -10,7 +10,6 @@
   import { randomInteger } from '$lib/utils/common/math';
   import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
 
-  import { mode } from 'mode-watcher';
   import clsx from 'clsx';
 
   const { data }: { data: { themes: Theme[] } } = $props();

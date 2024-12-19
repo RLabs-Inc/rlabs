@@ -1,7 +1,8 @@
 import { read } from '$app/server';
-import type { PageServerLoad, Actions } from './$types';
+import type { Config } from '@sveltejs/adapter-vercel';
+import type { Actions, PageServerLoad } from './$types';
 import { getUserThemes } from '$lib/server/vscode/themes';
-import AdmZip from 'adm-zip';
+import { zipSync } from 'fflate';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
 import logoURL from '../../../../vsix-template/images/RLabs-Lamp.png';
 
@@ -25,6 +26,10 @@ export const load: PageServerLoad = async ({ locals, url }) => {
   return { userId, themes: themes, id };
 };
 
+export const config: Config = {
+  runtime: 'nodejs20.x'
+};
+
 export const actions: Actions = {
   downloadTheme: async ({ request }) => {
     const formData = await request.formData();
@@ -37,7 +42,7 @@ export const actions: Actions = {
       return { success: false, error: 'No color sets provided' };
     }
 
-    const zip = new AdmZip();
+    const zipObj: Record<string, Uint8Array> = {};
 
     for (const [filePath, fileData] of Object.entries(vsixTemplateFiles)) {
       if (filePath === '/vsix-template/package.json') {
@@ -45,17 +50,17 @@ export const actions: Actions = {
         jsonData = jsonData.replace(/\${themeName}/g, 'Generated Theme');
         jsonData = jsonData.replace(/\${themeNameKebab}/g, 'generated-theme');
         jsonData = jsonData.replace(/\${uiTheme}/g, isDark ? 'vs-dark' : 'vs');
-        zip.addFile('extension/package.json', Buffer.from(jsonData), 'utf-8');
+        zipObj['extension/package.json'] = Buffer.from(jsonData);
       } else if (filePath === '/vsix-template/README.md') {
         let readme = fileData as string;
         readme = readme.replace(/\${themeName}/g, 'Generated Theme');
-        zip.addFile('extension/README.md', Buffer.from(readme), 'utf-8');
+        zipObj['extension/README.md'] = Buffer.from(readme);
       } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
-        zip.addFile('extension/images/RLabs-Lamp.png', Buffer.from(logo));
+        zipObj['extension/images/RLabs-Lamp.png'] = Buffer.from(logo);
       } else if (filePath === '/vsix-template/LICENSE') {
         let license = fileData as string;
         license = license.replace(/\${year}/g, new Date().getFullYear().toString());
-        zip.addFile('extension/LICENSE', Buffer.from(license), 'utf-8');
+        zipObj['extension/LICENSE'] = Buffer.from(license);
       }
     }
 
@@ -66,8 +71,8 @@ export const actions: Actions = {
       ansiColors
     );
 
-    zip.addFile('extension/themes/theme.json', Buffer.from(JSON.stringify(themeObject, null, 2)));
-    const vsixBuffer = await zip.toBufferPromise();
+    zipObj['extension/themes/theme.json'] = Buffer.from(JSON.stringify(themeObject, null, 2));
+    const vsixBuffer = Buffer.from(zipSync(zipObj));
 
     return { vsixBuffer: vsixBuffer, success: true };
   }
