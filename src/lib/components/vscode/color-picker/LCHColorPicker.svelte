@@ -118,7 +118,7 @@
           <span class="text-muted-foreground text-xs">LCH:</span>
           <span class="font-mono">
             {formatDecimal(pickerColorState().pickerLightness[0])}%,
-            {formatDecimal(pickerColorState().pickerChroma[0])},
+            {pickerColorState().pickerChroma[0]},
             {formatDecimal(pickerColorState().pickerHue[0])}°
             {#if pickerColorState().pickerAlpha[0] !== 100}
               - {formatDecimal(pickerColorState().pickerAlpha[0])}%
