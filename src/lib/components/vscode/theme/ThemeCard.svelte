@@ -117,14 +117,14 @@
         fg1={theme.uiColors.FG1}
         ac1={theme.uiColors.AC1}
       />
-      <ShareButton
+      <!-- <ShareButton
         {theme}
         count={theme.shares || 0}
         {shareTheme}
         {isSharing}
         fg1={theme.uiColors.FG1}
         ac1={theme.uiColors.AC1}
-      />
+      /> -->
       <form
         method="post"
         use:enhance={() => {
