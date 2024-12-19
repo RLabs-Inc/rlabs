@@ -27,6 +27,9 @@
           href="/vscode-themes-community"
           variant="link">VSCode Themes Community</Button
         >
+        <Button href="https://shadcn.rlabs.art/generate" variant="link"
+          >Shadcn UI theme generator</Button
+        >
       </div>
 
       <div class="flex items-center gap-2">
@@ -148,6 +151,9 @@
                 >Login</Button
               >
             </SignedOut>
+            <Button href="https://shadcn.rlabs.art/generate" variant="link"
+              >Shadcn UI theme generator</Button
+            >
           </div>
         </div>
       </SheetContent>

@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+
+  import { Alert, AlertDescription, AlertTitle } from '$lib/components/ui/alert';
   import VSCEditor from '$lib/components/vscode/preview/vsc-mock/VSCEditor.svelte';
   import ThemeCard from '$lib/components/vscode/theme/ThemeCard.svelte';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
@@ -55,7 +57,7 @@
   <title>VSCode Themes Community</title>
   <meta
     name="description"
-    content="Create, share and discover new VSCode themes using our visual studio code theme generator based on both color theory and sacred geometry patterns to create aesthesic color themes."
+    content="Create, share and discover new VSCode themes using our visual studio code theme generator based on both color theory and sacred geometry patterns to create aesthesic color themes. Try out the new Shadcn UI theme generator that uses the same algorithm to create aesthesic color themes for your next Shadcn UI project."
   />
 </svelte:head>
 
@@ -63,12 +65,27 @@
   class={clsx('flex min-h-[calc(100vh-2rem)] w-full flex-col items-center')}
   style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '60')}; transition-property: all; transition-duration: 350ms;`}
 >
+  <div class="px-4 pt-16 pb-2">
+    <Alert class="border-foreground bg-transparent backdrop-blur-sm">
+      <AlertTitle
+        ><a href="https://shadcn.rlabs.art/generate" class="font-black underline"
+          >Try the new Shadcn UI theme generator</a
+        ></AlertTitle
+      >
+      <AlertDescription>
+        It uses the same algorithm to create aesthesic color themes for your next Shadcn UI project. <a
+          href="https://shadcn.rlabs.art/generate"
+          class=" underline">Try now!</a
+        >
+      </AlertDescription>
+    </Alert>
+  </div>
   <section
-    class="border-border sticky -top-[6rem] z-10 w-full border-b shadow-xs backdrop-blur-3xl md:-top-[7rem]"
+    class="border-border sticky -top-[3rem] z-10 w-full border-b shadow-xs backdrop-blur-3xl"
     style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '80')}; transition-property: all; transition-duration: 350ms;`}
   >
     <h1
-      class="px-5 pt-[4rem] text-center font-black drop-shadow-md sm:text-lg md:pt-[5rem] md:text-xl lg:text-xl 2xl:text-2xl"
+      class="px-5 pt-[1rem] text-center font-black drop-shadow-md sm:text-lg md:pt-[1rem] md:text-xl lg:text-xl 2xl:text-2xl"
     >
       Welcome to VSCode Themes Community
     </h1>

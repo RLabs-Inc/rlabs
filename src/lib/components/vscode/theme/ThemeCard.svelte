@@ -29,10 +29,28 @@
   let isEditLoading = $state(false);
 
   async function shareTheme() {
-    isSharing = true;
-    setTimeout(() => {
+    try {
+      isSharing = true;
+      const searchParams = new URLSearchParams(window.location.search);
+      searchParams.set('theme', theme.id.toString());
+      const shareUrl = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
+      const shareData = {
+        title: `${theme.name} - VSCode Theme`,
+        text: `Check out this awesome VSCode theme: ${theme.name}`,
+        url: shareUrl
+      };
+
+      if (navigator.share && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        // You might want to show a toast notification here that the URL was copied
+      }
+    } catch (error) {
+      console.error('Error sharing theme:', error);
+    } finally {
       isSharing = false;
-    }, 3000);
+    }
   }
 
   async function editTheme() {
@@ -100,6 +118,7 @@
         ac1={theme.uiColors.AC1}
       />
       <ShareButton
+        {theme}
         count={theme.shares || 0}
         {shareTheme}
         {isSharing}

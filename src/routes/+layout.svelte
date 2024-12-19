@@ -14,6 +14,8 @@
   import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
   import { dev } from '$app/environment';
 
+  import { Toaster } from '$lib/components/ui/sonner';
+
   injectAnalytics({ mode: dev ? 'development' : 'production' });
   injectSpeedInsights();
 
@@ -26,6 +28,7 @@
   publishableKey={PUBLIC_CLERK_PUBLISHABLE_KEY}
 >
   <div class="grid h-screen grid-rows-[auto_1fr_auto]">
+    <Toaster />
     <ModeWatcher />
     {@render children()}
     <Footer />
