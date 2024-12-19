@@ -17,7 +17,7 @@
 
   onMount(async () => {
     if (browser) {
-      monacoEditor = await getMonacoEditor();
+      monacoEditor = getMonacoEditor();
       await monacoEditor.initMonaco(theme, snippet, lang, fontSize, fontWeight, editorContainer);
     }
   });
