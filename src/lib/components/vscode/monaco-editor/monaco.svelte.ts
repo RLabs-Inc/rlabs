@@ -55,7 +55,9 @@ export function getMonacoEditor() {
     editorContainer: HTMLDivElement
   ) => {
     if (!browser) return;
-    monaco = (await import('./monaco-worker')).default;
+    // Import only the essential parts we need
+    const monacoCore = await import('monaco-editor-core/esm/vs/editor/editor.api');
+    monaco = monacoCore;
     registerLanguages();
     highlighter = await createHighlighterCore({
       themes: [JSON.parse(theme)],
