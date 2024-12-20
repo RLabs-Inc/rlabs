@@ -6,9 +6,6 @@ import { getPublicThemes, getThemeById, updateThemeDownloads } from '$lib/server
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
 import logoURL from '../../../vsix-template/images/RLabs-Lamp.png';
 
-const logoData = read(logoURL);
-const logo = await logoData.arrayBuffer();
-
 const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
   query: '?raw',
   import: 'default',
@@ -39,6 +36,8 @@ export const actions: Actions = {
     if (!theme) {
       return { success: false, error: 'Theme not found' };
     }
+    const logoData = read(logoURL);
+    const logo = await logoData.arrayBuffer();
 
     const zipObj: Record<string, Uint8Array> = {};
 
