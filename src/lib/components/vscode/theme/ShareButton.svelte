@@ -66,7 +66,7 @@
   <!-- <Popover> -->
   <!-- <PopoverTrigger> -->
   <button
-    data-umami-event="Share Button"
+    data-umami-event={`Share Button ${theme.name}`}
     onclick={handleShare}
     class="cursor-pointer"
     disabled={isSharing}

@@ -71,7 +71,7 @@
               value={fontState().weight}
               onValueChange={(value) => {
                 fontState().setWeight(value);
-                monacoEditor.changeFont(fontState().size, value);
+                monacoEditor?.changeFont(fontState().size, value);
               }}
               type="single"
             >
@@ -93,7 +93,7 @@
               value={fontState().size}
               oninput={(e) => {
                 fontState().setSize(Number((e.target as HTMLInputElement).value));
-                monacoEditor.changeFont(
+                monacoEditor?.changeFont(
                   Number((e.target as HTMLInputElement).value),
                   fontState().weight
                 );

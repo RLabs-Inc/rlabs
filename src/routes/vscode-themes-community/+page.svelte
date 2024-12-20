@@ -67,14 +67,17 @@
   <div class="px-4 pt-16 pb-2">
     <Alert class="border-foreground bg-transparent backdrop-blur-sm">
       <AlertTitle
-        ><a href="https://shadcn.rlabs.art/generate" class="font-black underline"
-          >Try the new Shadcn UI theme generator</a
+        ><a
+          data-umami-event="shadcn"
+          href="https://shadcn.rlabs.art/generate"
+          class="font-black underline">Try the new Shadcn UI theme generator</a
         ></AlertTitle
       >
       <AlertDescription>
         It uses the same algorithm to create aesthesic color themes for your next Shadcn UI project. <a
           href="https://shadcn.rlabs.art/generate"
-          class=" underline">Try now!</a
+          class=" underline"
+          data-umami-event="shadcn">Try now!</a
         >
       </AlertDescription>
     </Alert>

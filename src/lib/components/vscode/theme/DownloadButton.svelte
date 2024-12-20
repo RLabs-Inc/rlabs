@@ -21,7 +21,7 @@
 <div class="download-btn flex items-center gap-1 transition-colors" style={styleVars}>
   <input type="hidden" name="themeId" value={themeId} />
   <button
-    data-umami-event="Download Button"
+    data-umami-event={`Download Button ${themeId}`}
     class="cursor-pointer"
     disabled={isDownloading}
     formaction="?/downloadTheme"
