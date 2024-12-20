@@ -1,13 +1,10 @@
 import { read } from '$app/server';
-import type { Config } from '@sveltejs/adapter-vercel';
+// import type { Config } from '@sveltejs/adapter-vercel';
 import type { Actions, PageServerLoad } from './$types';
 import { zipSync } from 'fflate';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
 import { getThemeById, getUserThemes, updateThemeDownloads } from '$lib/server/vscode/themes';
 import logoURL from '../../../../vsix-template/images/RLabs-Lamp.png';
-
-const logoData = read(logoURL);
-const logo = await logoData.arrayBuffer();
 
 const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
   query: '?raw',
@@ -15,9 +12,9 @@ const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
   eager: true
 });
 
-export const config: Config = {
-  runtime: 'nodejs20.x'
-};
+// export const config: Config = {
+//   runtime: 'nodejs20.x'
+// };
 
 export const load: PageServerLoad = async ({ locals }) => {
   const { userId } = locals.auth;
@@ -41,6 +38,8 @@ export const actions: Actions = {
     if (!theme) {
       return { success: false, error: 'Theme not found' };
     }
+    const logoData = read(logoURL);
+    const logo = await logoData.arrayBuffer();
 
     const zipObj: Record<string, Uint8Array> = {};
 

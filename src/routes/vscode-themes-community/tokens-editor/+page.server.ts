@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import type { Config } from '@sveltejs/adapter-vercel';
+// import type { Config } from '@sveltejs/adapter-vercel';
 import { parseLocalTheme } from '$lib/utils/vscode/theme-parser';
 import { getPublicThemes } from '$lib/server/vscode/themes';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
@@ -25,6 +25,6 @@ export const load: PageServerLoad = async () => {
   };
 };
 
-export const config: Config = {
-  runtime: 'nodejs20.x'
-};
+// export const config: Config = {
+//   runtime: 'nodejs20.x'
+// };
