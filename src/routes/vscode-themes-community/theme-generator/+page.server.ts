@@ -8,11 +8,12 @@ const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
   import: 'default',
   eager: true
 });
+
 const logo = import.meta.glob('/vsix-template/images/RLabs-Lamp.png', {
-  query: '?raw',
+  query: '?inline',
   import: 'default',
   eager: true
-});
+}) as Record<string, string>;
 
 export const load: PageServerLoad = async ({ locals, url }) => {
   const { userId } = locals.auth;
@@ -37,8 +38,6 @@ export const actions: Actions = {
       return { success: false, error: 'No color sets provided' };
     }
 
-    const logoData = (await logo.fileData) as ArrayBuffer;
-
     const zipObj: Record<string, Uint8Array> = {};
 
     for (const [filePath, fileData] of Object.entries(vsixTemplateFiles)) {
@@ -53,7 +52,8 @@ export const actions: Actions = {
         readme = readme.replace(/\${themeName}/g, 'Generated Theme');
         zipObj['extension/README.md'] = Buffer.from(readme);
       } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
-        zipObj['extension/images/RLabs-Lamp.png'] = Buffer.from(logoData);
+        const base64Data = Object.values(logo)[0].split(',')[1];
+        zipObj['extension/images/RLabs-Lamp.png'] = Buffer.from(base64Data, 'base64');
       } else if (filePath === '/vsix-template/LICENSE') {
         let license = fileData as string;
         license = license.replace(/\${year}/g, new Date().getFullYear().toString());
