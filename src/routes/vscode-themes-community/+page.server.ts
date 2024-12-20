@@ -1,12 +1,14 @@
-import { read } from '$app/server';
-// import type { Config } from '@sveltejs/adapter-vercel';
 import type { Actions, PageServerLoad } from './$types';
 import { zipSync } from 'fflate';
 import { getPublicThemes, getThemeById, updateThemeDownloads } from '$lib/server/vscode/themes';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
-import logoURL from '../../../vsix-template/images/RLabs-Lamp.png';
 
 const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
+  query: '?raw',
+  import: 'default',
+  eager: true
+});
+const logo = import.meta.glob('/vsix-template/images/RLabs-Lamp.png', {
   query: '?raw',
   import: 'default',
   eager: true
@@ -21,9 +23,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   return { themes };
 };
-// export const config: Config = {
-//   runtime: 'nodejs20.x'
-// };
 
 export const actions: Actions = {
   downloadTheme: async ({ request }) => {
@@ -36,8 +35,7 @@ export const actions: Actions = {
     if (!theme) {
       return { success: false, error: 'Theme not found' };
     }
-    const logoData = read(logoURL);
-    const logo = await logoData.arrayBuffer();
+    const logoData = (await logo.fileData) as ArrayBuffer;
 
     const zipObj: Record<string, Uint8Array> = {};
 
@@ -56,7 +54,7 @@ export const actions: Actions = {
         readme = readme.replace(/\${themeName}/g, theme.name);
         zipObj['extension/README.md'] = Buffer.from(readme);
       } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
-        zipObj['extension/images/RLabs-Lamp.png'] = Buffer.from(logo);
+        zipObj['extension/images/RLabs-Lamp.png'] = Buffer.from(logoData);
       } else if (filePath === '/vsix-template/LICENSE') {
         let license = fileData as string;
         license = license.replace(/\${year}/g, new Date().getFullYear().toString());
