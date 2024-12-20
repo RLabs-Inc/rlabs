@@ -1,5 +1,5 @@
 import { read } from '$app/server';
-import type { Config } from '@sveltejs/adapter-vercel';
+// import type { Config } from '@sveltejs/adapter-vercel';
 import type { Actions, PageServerLoad } from './$types';
 import { zipSync } from 'fflate';
 import { getPublicThemes, getThemeById, updateThemeDownloads } from '$lib/server/vscode/themes';
@@ -24,9 +24,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 
   return { themes };
 };
-export const config: Config = {
-  runtime: 'nodejs20.x'
-};
+// export const config: Config = {
+//   runtime: 'nodejs20.x'
+// };
 
 export const actions: Actions = {
   downloadTheme: async ({ request }) => {
