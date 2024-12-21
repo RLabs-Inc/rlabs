@@ -1,7 +1,7 @@
 import { wcagLuminance } from 'culori';
 
-import type { TokenColors, VSCodeTheme } from '$lib/types/theme';
-import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/color';
+import type { TokenColors, VSCodeTheme } from '$lib/types/vscode/theme';
+import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/vscode/color';
 import { getAllTokenColors } from './export-theme';
 import { getSemanticTokenColors } from './export-theme/semantic';
 

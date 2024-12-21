@@ -19,8 +19,8 @@
   import ColorPicker from '$lib/components/vscode/generator/ColorPicker.svelte';
   import LoadSaveTheme from './LoadSaveTheme.svelte';
 
-  import { ColorSchemes } from '$lib/types/color';
-  import type { Theme } from '$lib/types/theme';
+  import { ColorSchemes } from '$lib/types/vscode/color';
+  import type { Theme } from '$lib/types/vscode/theme';
   import Export from './Export.svelte';
   import { SliderPicker } from '$lib/components/ui/slider-picker';
   import { Input } from '$lib/components/ui/input';

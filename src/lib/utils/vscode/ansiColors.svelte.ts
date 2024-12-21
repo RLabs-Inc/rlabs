@@ -3,8 +3,8 @@ import { ensureReadability, randomizeColor } from './colorUtils.svelte';
 import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
 import { getControls } from '$lib/state/vscode/controls.svelte';
 
-import { type AnsiColors } from '$lib/types/color';
-import type { AnsiColorsGenerationOptions } from '$lib/types/theme';
+import { type AnsiColors } from '$lib/types/vscode/color';
+import type { AnsiColorsGenerationOptions } from '$lib/types/vscode/theme';
 
 export function generateAnsiColors(options: AnsiColorsGenerationOptions): {
   generatedAnsiColors: AnsiColors;

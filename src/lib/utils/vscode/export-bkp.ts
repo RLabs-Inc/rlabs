@@ -1,7 +1,7 @@
 import Color from 'color';
 
-import type { VSCodeTheme } from '$lib/types/theme';
-import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/color';
+import type { VSCodeTheme } from '$lib/types/vscode/theme';
+import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/vscode/color';
 
 export function generateSemanticThemeJSON(
   name: string = 'Generated Color Theme',

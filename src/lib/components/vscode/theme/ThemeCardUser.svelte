@@ -8,7 +8,7 @@
   import ShareButton from '$lib/components/vscode/theme/ShareButton.svelte';
   import EditButton from '$lib/components/vscode/theme/EditButton.svelte';
 
-  import type { Theme } from '$lib/types/theme';
+  import type { Theme } from '$lib/types/vscode/theme';
   import clsx from 'clsx';
 
   const { theme }: { theme: Theme } = $props();

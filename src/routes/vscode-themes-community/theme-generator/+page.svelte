@@ -9,7 +9,7 @@
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import { getSelectedColor } from '$lib/state/vscode/editor.svelte';
-  import type { Theme } from '$lib/types/theme';
+  import type { Theme } from '$lib/types/vscode/theme';
 
   import ColorPicker from '$lib/components/vscode/generator/ColorPicker.svelte';
 

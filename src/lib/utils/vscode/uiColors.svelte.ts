@@ -4,8 +4,8 @@ import { ensureReadability, randomizeColor } from '$lib/utils/vscode/colorUtils.
 import { getControls } from '$lib/state/vscode/controls.svelte';
 import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';
 
-import { type UIColors } from '$lib/types/color';
-import type { UIColorsGenerationOptions } from '$lib/types/theme';
+import { type UIColors } from '$lib/types/vscode/color';
+import type { UIColorsGenerationOptions } from '$lib/types/vscode/theme';
 
 export function generateUIColors(options: UIColorsGenerationOptions): {
   generatedUIColors: UIColors;
@@ -18,7 +18,10 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
   const syntaxLockedColors = options.syntaxLockedColors || {};
 
   // Generate scheme hues considering both UI and syntax locked colors
-  if ((lockedColors && Object.keys(lockedColors).length > 0) || Object.keys(syntaxLockedColors).length > 0) {
+  if (
+    (lockedColors && Object.keys(lockedColors).length > 0) ||
+    Object.keys(syntaxLockedColors).length > 0
+  ) {
     schemeHuesState().generateWithLocks(lockedColors, syntaxLockedColors);
   } else {
     schemeHuesState().generate();
@@ -34,46 +37,22 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
   const colors: UIColors = {
     BG1:
       lockedColors?.BG1 ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [0, 35] : [93, 100],
-        [0, 2]
-      ),
+      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 35] : [93, 100], [0, 2]),
     BG2:
       lockedColors?.BG2 ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [0, 25] : [85, 100],
-        [0, 3]
-      ),
+      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 25] : [85, 100], [0, 3]),
     BG3:
       lockedColors?.BG3 ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [0, 30] : [90, 100],
-        [0, 3]
-      ),
+      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 30] : [90, 100], [0, 3]),
     FG1:
       lockedColors?.FG1 ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [97, 100] : [0, 20],
-        [0, 10]
-      ),
+      randomizeColor([getRandomHue()], controlsState().isDark ? [97, 100] : [0, 20], [0, 10]),
     FG2:
       lockedColors?.FG2 ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [95, 100] : [0, 30],
-        [0, 15]
-      ),
+      randomizeColor([getRandomHue()], controlsState().isDark ? [95, 100] : [0, 30], [0, 15]),
     FG3:
       lockedColors?.FG3 ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [0, 35] : [85, 100],
-        [0, 20]
-      ),
+      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 35] : [85, 100], [0, 20]),
     AC1:
       lockedColors?.AC1 ||
       randomizeColor(
@@ -83,18 +62,10 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
       ),
     AC2:
       lockedColors?.AC2 ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [0, 100] : [0, 100],
-        [0, 40]
-      ),
+      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 100] : [0, 100], [0, 40]),
     BORDER:
       lockedColors?.BORDER ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [0, 40] : [90, 100],
-        [0, 10]
-      ),
+      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 40] : [90, 100], [0, 10]),
     INFO:
       lockedColors?.INFO ||
       randomizeColor([233, 270], controlsState().isDark ? [20, 100] : [0, 100], [10, 40]),
@@ -109,25 +80,15 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
       randomizeColor([120, 170], controlsState().isDark ? [20, 100] : [0, 100], [10, 40]),
     lineHighlight:
       lockedColors?.lineHighlight ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [5, 40] : [65, 100],
-        [0, 25]
-      ) + '70',
+      randomizeColor([getRandomHue()], controlsState().isDark ? [5, 40] : [65, 100], [0, 25]) +
+        '70',
     selection:
       lockedColors?.selection ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [5, 40] : [65, 100],
-        [0, 25]
-      ) + '70',
+      randomizeColor([getRandomHue()], controlsState().isDark ? [5, 40] : [65, 100], [0, 25]) +
+        '70',
     findMatch:
       lockedColors?.findMatch ||
-      randomizeColor(
-        [getRandomHue()],
-        controlsState().isDark ? [5, 40] : [65, 100],
-        [0, 25]
-      ) + '70'
+      randomizeColor([getRandomHue()], controlsState().isDark ? [5, 40] : [65, 100], [0, 25]) + '70'
   };
 
   // Ensure readability for specific colors

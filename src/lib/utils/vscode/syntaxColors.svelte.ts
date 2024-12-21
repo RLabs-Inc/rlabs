@@ -8,8 +8,8 @@ import { getControls } from '$lib/state/vscode/controls.svelte';
 import { getSchemeHues } from '$lib/state/vscode/scheme-colors.svelte';
 import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
 
-import type { SyntaxColors } from '$lib/types/color';
-import type { SyntaxColorsGenerationOptions } from '$lib/types/theme';
+import type { SyntaxColors } from '$lib/types/vscode/color';
+import type { SyntaxColorsGenerationOptions } from '$lib/types/vscode/theme';
 import { toOKLCH } from '$lib/components/vscode/color-picker/color-utils.svelte';
 
 export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {

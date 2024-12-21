@@ -1,4 +1,4 @@
-import type { SemanticTokenColor, TokenColors } from '$lib/types/theme';
+import type { SemanticTokenColor, TokenColors } from '$lib/types/vscode/theme';
 
 export function getGenericSemanticTokens({
   colors,

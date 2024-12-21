@@ -5,7 +5,7 @@
   import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
   import { getAnsiColors } from '$lib/state/vscode/ansi-colors.svelte';
 
-  import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/color';
+  import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/vscode/color';
   import { Button } from '$lib/components/ui/button';
 
   const selectedColorState = getSelectedColor();

@@ -12,7 +12,7 @@
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import { getControls } from '$lib/state/vscode/controls.svelte';
 
-  import type { Theme } from '$lib/types/theme';
+  import type { Theme } from '$lib/types/vscode/theme';
   const { userId, themes }: { userId: string | null; themes: Theme[] } = $props();
   const selectedThemeState = getSelectedTheme();
   const controlsState = getControls();

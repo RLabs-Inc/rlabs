@@ -1,4 +1,4 @@
-import type { TokenColors, TokenColor } from '$lib/types/theme';
+import type { TokenColors, TokenColor } from '$lib/types/vscode/theme';
 
 export function getVariableSyntaxTokens({ syntaxColors }: TokenColors): TokenColor[] {
   return [

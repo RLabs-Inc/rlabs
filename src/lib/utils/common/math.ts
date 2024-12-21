@@ -1,4 +1,4 @@
-import type { ColorSchemes } from '$lib/types/color';
+import type { ColorSchemes } from '$lib/types/vscode/color';
 
 export const randomInteger = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;

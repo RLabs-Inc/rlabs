@@ -2,8 +2,8 @@ import { generateUIColors } from '$lib/utils/vscode/uiColors.svelte';
 import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
 
-import { type UIColors } from '$lib/types/color';
-import type { UIColorsGenerationOptions } from '$lib/types/theme';
+import { type UIColors } from '$lib/types/vscode/color';
+import type { UIColorsGenerationOptions } from '$lib/types/vscode/theme';
 import { initialUIColors } from '$lib/constants/colors';
 
 let uiColors = $state<UIColors>(initialUIColors);

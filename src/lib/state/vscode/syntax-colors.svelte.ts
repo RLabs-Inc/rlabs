@@ -1,8 +1,8 @@
 import { generateSyntaxColors } from '$lib/utils/vscode/syntaxColors.svelte';
 import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
-import { type SyntaxColors } from '$lib/types/color';
-import type { SyntaxColorsGenerationOptions } from '$lib/types/theme';
+import { type SyntaxColors } from '$lib/types/vscode/color';
+import type { SyntaxColorsGenerationOptions } from '$lib/types/vscode/theme';
 import { initialSyntaxColors } from '$lib/constants/colors';
 
 let syntaxColors = $state<SyntaxColors>(initialSyntaxColors);

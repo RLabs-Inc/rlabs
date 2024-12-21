@@ -1,5 +1,5 @@
 import { saveNewTheme, updateTheme } from '$lib/server/vscode/themes';
-import type { Theme } from '$lib/types/theme.js';
+import type { Theme } from '$lib/types/vscode/theme.js';
 
 export async function POST({ request }) {
   const theme: Theme = await request.json();

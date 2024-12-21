@@ -1,5 +1,5 @@
 import { wcagLuminance } from 'culori';
-import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/color';
+import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/vscode/color';
 import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
 import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
 import { getAnsiColors } from '$lib/state/vscode/ansi-colors.svelte';

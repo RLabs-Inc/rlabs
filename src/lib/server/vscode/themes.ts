@@ -2,7 +2,7 @@
 import { eq, desc, and } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { newThemes } from '$lib/server/db/schema';
-import type { Theme } from '$lib/types/theme';
+import type { Theme } from '$lib/types/vscode/theme';
 import { parseThemeFromDB } from '$lib/utils/vscode/theme';
 
 export async function getPublicThemes(): Promise<Theme[]> {

@@ -1,8 +1,8 @@
 import { generateAnsiColors } from '$lib/utils/vscode/ansiColors.svelte';
 import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
-import { type AnsiColors } from '$lib/types/color';
-import type { AnsiColorsGenerationOptions } from '$lib/types/theme';
+import { type AnsiColors } from '$lib/types/vscode/color';
+import type { AnsiColorsGenerationOptions } from '$lib/types/vscode/theme';
 import { initialAnsiColors } from '$lib/constants/colors';
 
 let ansiColors = $state<AnsiColors>(initialAnsiColors);

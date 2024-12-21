@@ -1,6 +1,6 @@
 import { toOKLCH } from '$lib/components/vscode/color-picker/color-utils.svelte';
 import { generateSchemeHues } from './index.svelte';
-import type { ColorSchemes } from '$lib/types/color';
+import type { ColorSchemes } from '$lib/types/vscode/color';
 
 interface SchemeHueOptions {
   baseHue: number;

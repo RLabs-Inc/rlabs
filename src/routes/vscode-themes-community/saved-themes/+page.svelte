@@ -6,7 +6,7 @@
   import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import { getIsEditing } from '$lib/state/vscode/editor.svelte';
   import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
-  import type { Theme } from '$lib/types/theme';
+  import type { Theme } from '$lib/types/vscode/theme';
 
   const { data }: { data: { themes: Theme[] } } = $props();
   const selectedTheme = getSelectedTheme();

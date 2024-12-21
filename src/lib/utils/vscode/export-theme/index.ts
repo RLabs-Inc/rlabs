@@ -1,4 +1,4 @@
-import type { TokenColor, TokenColors } from '$lib/types/theme';
+import type { TokenColor, TokenColors } from '$lib/types/vscode/theme';
 // Base
 import { getGeneralTokenColors } from './base/general';
 import { getMarkupTokenColors } from './base/markup';

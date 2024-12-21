@@ -4,7 +4,7 @@
   import ThemeCard from '$lib/components/vscode/theme/ThemeCard.svelte';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import { getIsEditing, getSelectedFile } from '$lib/state/vscode/editor.svelte';
-  import type { Theme } from '$lib/types/theme';
+  import type { Theme } from '$lib/types/vscode/theme';
   import { randomInteger } from '$lib/utils/common/math';
   import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
 
