@@ -35,34 +35,6 @@ export class ThemeState {
     white: '#eee8d5'
   });
 
-  yaml: string = $derived(`
-    name: '${this.themeInfo.name}'
-    accent: '${this.uiColors.accent}'
-    cursor: '${this.uiColors.cursor}'
-    background: '${this.uiColors.background}'
-    foreground: '${this.uiColors.foreground}'
-    details: '${this.themeInfo.details}'
-    terminal_colors:
-      normal:
-        black: '${this.normalColors.black}'
-        red: '${this.normalColors.red}'
-        green: '${this.normalColors.green}'
-        yellow: '${this.normalColors.yellow}'
-        blue: '${this.normalColors.blue}'
-        magenta: '${this.normalColors.magenta}'
-        cyan: '${this.normalColors.cyan}'
-        white: '${this.normalColors.white}'
-      bright:
-        black: '${this.brightColors.black}'
-        red: '${this.brightColors.red}'
-        green: '${this.brightColors.green}'
-        yellow: '${this.brightColors.yellow}'
-        blue: '${this.brightColors.blue}'
-        magenta: '${this.brightColors.magenta}'
-        cyan: '${this.brightColors.cyan}'
-        white: '${this.brightColors.white}'
-    `);
-
   constructor() {}
   generate(
     isDark: boolean,
@@ -94,5 +66,20 @@ export class ThemeState {
     for (const [key, value] of Object.entries(this.normalColors)) {
       warpMock.style.setProperty(`--normal-${key}`, value);
     }
+  }
+  download() {
+    const theme = {
+      ...this.themeInfo,
+      ...this.uiColors,
+      terminal_colors: {
+        bright: {
+          ...this.brightColors
+        },
+        normal: {
+          ...this.normalColors
+        }
+      }
+    };
+    return theme;
   }
 }

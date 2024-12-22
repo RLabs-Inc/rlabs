@@ -40,9 +40,9 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
   //     schemeHues.generate();
   //   }
 
-  const getRandomHue = () => {
-    return schemeHues[randomInteger(0, schemeHues.length - 1) % schemeHues.length];
-  };
+  // const getRandomHue = () => {
+  //   return schemeHues[randomInteger(0, schemeHues.length - 1) % schemeHues.length];
+  // };
 
   const getUniqueRandomHue = () => {
     // If all hues have been used, reset the set
@@ -74,18 +74,27 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
     white: [getUniqueRandomHue()]
   };
 
+  const uiColorHues = {
+    background: [getUniqueRandomHue()],
+    foreground: [getUniqueRandomHue()],
+    accent: [schemeHues[0]]
+  };
+
   const uiColors: UiColors = {
     background:
       lockedColors?.background ||
-      randomizeColor([getRandomHue()], isDark ? [0, 35] : [85, 100], [0, 40]),
-    foreground: lockedColors?.foreground || randomizeColor([getRandomHue()], [0, 100], [0, 40]),
-    accent: lockedColors?.accent || randomizeColor([schemeHues[0]], [0, 100], [0, 40]),
-    cursor: lockedColors?.cursor || randomizeColor([schemeHues[0]], [0, 100], [0, 40])
+      randomizeColor(uiColorHues.background, isDark ? [0, 35] : [85, 100], [0, 40]),
+    foreground:
+      lockedColors?.foreground || randomizeColor(uiColorHues.foreground, [0, 100], [0, 40]),
+    accent: lockedColors?.accent || randomizeColor(uiColorHues.accent, [0, 100], [0, 40]),
+    cursor: lockedColors?.cursor || randomizeColor(uiColorHues.accent, [0, 100], [0, 40])
   };
 
-  uiColors.cursor = ensureReadability(uiColors.cursor, uiColors.background, 5.5);
-  uiColors.foreground = ensureReadability(uiColors.foreground, uiColors.background, 6.5);
   uiColors.accent = ensureReadability(uiColors.accent, uiColors.background, 4.5);
+  uiColors.cursor = ensureReadability(uiColors.cursor, uiColors.background, 5.5);
+
+  uiColors.foreground = ensureReadability(uiColors.foreground, uiColors.background, 7.5);
+  uiColors.foreground = ensureReadability(uiColors.foreground, uiColors.accent, 2.5);
 
   const normalLightness = [0, 80];
   const normalChroma = [0, 40];

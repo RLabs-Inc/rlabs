@@ -27,7 +27,7 @@
       <Button href="https://shadcn.rlabs.art/generate" variant="link"
         >Shadcn UI Theme Generator</Button
       >
-      <Button href="/warp" variant="link">Warp Terminal Theme Generator</Button>
+      <!-- <Button href="/warp" variant="link">Warp Terminal Theme Generator</Button> -->
       <Button
         class={$page.url.pathname === '/about' ? 'underline' : ''}
         href="/about"
@@ -67,7 +67,7 @@
           <Button href="https://shadcn.rlabs.art/generate" variant="link"
             >Shadcn UI Theme Generator</Button
           >
-          <Button href="/warp" variant="link">Warp Terminal Theme Generator</Button>
+          <!-- <Button href="/warp" variant="link">Warp Terminal Theme Generator</Button> -->
           <Button
             class={$page.url.pathname === '/about' ? 'underline' : ''}
             href="/about"

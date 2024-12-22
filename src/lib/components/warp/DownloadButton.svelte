@@ -6,8 +6,9 @@
   const themeState = new ThemeState();
 
   const handleDownload = () => {
+    console.log(themeState.download());
     const link = document.createElement('a');
-    link.href = `data:text/yaml;charset=utf-8,${encodeURIComponent(themeState.yaml)}`;
+    link.href = `data:text/yaml;charset=utf-8,${encodeURIComponent(JSON.stringify(themeState.download()))}`;
     link.download = 'sacred-geometry.yml';
     link.click();
   };
