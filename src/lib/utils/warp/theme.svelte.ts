@@ -1,6 +1,5 @@
 import { randomInteger } from '$lib/utils/common/math';
 import { ensureReadability } from '$lib/utils/warp/colorUtils.svelte';
-import { getControlsState } from '$lib/state/warp/controls.svelte';
 
 import type {
   CssVariables,
@@ -26,9 +25,7 @@ export const randomizeColor = (
 };
 
 export function generateTheme(options: ThemeGenerationOptions): CssVariables {
-  const controlsState = getControlsState();
-  const isDark = controlsState().isDark;
-  const { baseHue, scheme } = options;
+  const { isDark, baseHue, scheme } = options;
 
   const schemeHues = generateSchemeHues(baseHue, scheme);
 
@@ -156,10 +153,8 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
 
   const cssVariables: CssVariables = {
     uiColors,
-    terminal_colors: {
-      bright: bright,
-      normal: normal
-    }
+    brightColors: bright,
+    normalColors: normal
   };
 
   return cssVariables;

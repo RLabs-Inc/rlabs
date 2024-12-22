@@ -1,29 +1,30 @@
 <script lang="ts">
-  import { getThemeState } from '$lib/state/warp/colors.svelte';
+  import { ThemeState } from '$lib/state/warp/theme.svelte';
 
-  const themeState = getThemeState();
+  const themeState = new ThemeState();
+  const { uiColors, brightColors, normalColors } = themeState;
 
   const cssVariables = $derived(
-    `--background: ${themeState().uiColors.background};
-    --foreground: ${themeState().uiColors.foreground};
-    --accent: ${themeState().uiColors.accent};
-    --cursor: ${themeState().uiColors.cursor};
-    --bright-black: ${themeState().brightColors.black};
-    --bright-red: ${themeState().brightColors.red};
-    --bright-green: ${themeState().brightColors.green};
-    --bright-yellow: ${themeState().brightColors.yellow};
-    --bright-blue: ${themeState().brightColors.blue};
-    --bright-magenta: ${themeState().brightColors.magenta};
-    --bright-cyan: ${themeState().brightColors.cyan};
-    --bright-white: ${themeState().brightColors.white};
-    --normal-black: ${themeState().normalColors.black};
-    --normal-red: ${themeState().normalColors.red};
-    --normal-green: ${themeState().normalColors.green};
-    --normal-yellow: ${themeState().normalColors.yellow};
-    --normal-blue: ${themeState().normalColors.blue};
-    --normal-magenta: ${themeState().normalColors.magenta};
-    --normal-cyan: ${themeState().normalColors.cyan};
-    --normal-white: ${themeState().normalColors.white};`
+    `--background: ${uiColors.background};
+    --foreground: ${uiColors.foreground};
+    --accent: ${uiColors.accent};
+    --cursor: ${uiColors.cursor};
+    --bright-black: ${brightColors.black};
+    --bright-red: ${brightColors.red};
+    --bright-green: ${brightColors.green};
+    --bright-yellow: ${brightColors.yellow};
+    --bright-blue: ${brightColors.blue};
+    --bright-magenta: ${brightColors.magenta};
+    --bright-cyan: ${brightColors.cyan};
+    --bright-white: ${brightColors.white};
+    --normal-black: ${normalColors.black};
+    --normal-red: ${normalColors.red};
+    --normal-green: ${normalColors.green};
+    --normal-yellow: ${normalColors.yellow};
+    --normal-blue: ${normalColors.blue};
+    --normal-magenta: ${normalColors.magenta};
+    --normal-cyan: ${normalColors.cyan};
+    --normal-white: ${normalColors.white};`
   );
 </script>
 

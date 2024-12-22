@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { getControlsState } from '$lib/state/warp/controls.svelte';
-  import { getThemeState } from '$lib/state/warp/colors.svelte';
+  import { ControlsState } from '$lib/state/warp/control.svelte';
+  import { ThemeState } from '$lib/state/warp/theme.svelte';
   import { SliderPicker } from '$lib/components/ui/slider-picker';
   import { Label } from '$lib/components/ui/label';
   import { Button } from '$lib/components/ui/button';
@@ -15,8 +15,9 @@
   import { Switch } from '../ui/switch';
   import DownloadButton from './DownloadButton.svelte';
 
-  const controlsState = getControlsState();
-  const themeState = getThemeState();
+  const controlsState = new ControlsState();
+  const { controls } = controlsState;
+  const themeState = new ThemeState();
 
   const baseHueGradient = `linear-gradient(
     to right in oklch longer hue,
@@ -28,27 +29,20 @@
   <div class="flex w-full flex-col gap-2">
     <Label>Base hue</Label>
     <SliderPicker
-      value={controlsState().baseHue}
-      onValueChange={controlsState().setBaseHue}
-      onValueCommit={(value) =>
-        themeState().generate(value[0], controlsState().scheme as ColorSchemes)}
+      bind:value={controls.baseHue}
+      onValueCommit={() => controlsState.generate()}
       min={0}
       max={360}
       bgColor={baseHueGradient}
-      controlledValue={true}
       data-umami-event="Base hue slider changed"
     />
   </div>
   <div class="flex w-full flex-wrap items-center justify-center gap-5 lg:flex-nowrap">
     <div class="flex w-full flex-col gap-2">
       <Label>Color Scheme</Label>
-      <Select
-        value={controlsState().scheme}
-        onValueChange={(value) => controlsState().setScheme(value as ColorSchemes)}
-        type="single"
-      >
+      <Select bind:value={controls.scheme} type="single">
         <SelectTrigger class="max-w-lg">
-          {controlsState().scheme || 'Select a scheme'}
+          {controls.scheme || 'Select a scheme'}
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -62,22 +56,11 @@
 
     <div class="flex w-full flex-col gap-2">
       <Label>Dark theme?</Label>
-      <Switch
-        checked={controlsState().isDark}
-        onCheckedChange={(value) => {
-          controlsState().setIsDark(value);
-          themeState().generate(controlsState().baseHue[0], controlsState().scheme as ColorSchemes);
-        }}
-      />
+      <Switch bind:checked={controls.isDark} onCheckedChange={() => controlsState.generate()} />
     </div>
     <div class="flex w-full flex-nowrap items-center gap-2">
-      <Button
-        class="w-full"
-        onclick={() =>
-          themeState().generate(controlsState().baseHue[0], controlsState().scheme as ColorSchemes)}
-        >Generate</Button
-      >
-      <Button class="w-full" onclick={() => controlsState().randomize()}>Randomize</Button>
+      <Button class="w-full" onclick={() => controlsState.generate()}>Generate</Button>
+      <Button class="w-full" onclick={() => controlsState.randomize()}>Randomize</Button>
       <div class="border-foreground rounded-md border">
         <DownloadButton />
       </div>

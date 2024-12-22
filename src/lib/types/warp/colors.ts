@@ -42,10 +42,12 @@ export type Colors = {
 
 export type CssVariables = {
   uiColors: UiColors;
-  terminal_colors: TerminalColors;
+  brightColors: Colors;
+  normalColors: Colors;
 };
 
 export type ThemeGenerationOptions = {
+  isDark: boolean;
   baseHue: number;
   scheme: ColorSchemes;
   lockedColors?: Record<string, string>;
@@ -55,4 +57,15 @@ export type Oklch = {
   l: number;
   c: number;
   h: number;
+};
+
+export type ControlsStateType = {
+  isDark: boolean;
+  baseHue: number[];
+  scheme: ColorSchemes;
+  lockedColors: Record<string, string>;
+};
+
+export type LockedColors = {
+  [key: string]: string;
 };
