@@ -119,7 +119,7 @@ export function ensureReadability(
     color = tempColor;
     iterations++;
   }
-  return formatHex8(color!);
+  return formatHex(color!);
 }
 
 export function adjustHue(hue: number): number {

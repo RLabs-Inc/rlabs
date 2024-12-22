@@ -45,31 +45,31 @@ let normalColors = $state<Colors>({
 });
 
 const ymlString = $derived(`
-name: ${themeInfo.name}
-accent: ${uiColors.accent}
-cursor: ${uiColors.cursor}
-background: ${uiColors.background}
-foreground: ${uiColors.foreground}
-details: ${themeInfo.details}
+name: '${themeInfo.name}'
+accent: '${uiColors.accent}'
+cursor: '${uiColors.cursor}'
+background: '${uiColors.background}'
+foreground: '${uiColors.foreground}'
+details: '${themeInfo.details}'
 terminal_colors: 
     bright:
-        black: ${brightColors.black}
-        blue: ${brightColors.blue}
-        cyan: ${brightColors.cyan}
-        green: ${brightColors.green}
-        magenta: ${brightColors.magenta}
-        red: ${brightColors.red}
-        white: ${brightColors.white}
-        yellow: ${brightColors.yellow}
+        black: '${brightColors.black}'
+        blue: '${brightColors.blue}'
+        cyan: '${brightColors.cyan}'
+        green: '${brightColors.green}'
+        magenta: '${brightColors.magenta}'
+        red: '${brightColors.red}'
+        white: '${brightColors.white}'
+        yellow: '${brightColors.yellow}'
     normal:
-        black: ${normalColors.black}
-        blue: ${normalColors.blue}
-        cyan: ${normalColors.cyan}
-        green: ${normalColors.green}
-        magenta: ${normalColors.magenta}
-        red: ${normalColors.red}
-        white: ${normalColors.white}
-        yellow: ${normalColors.yellow}
+        black: '${normalColors.black}'
+        blue: '${normalColors.blue}'
+        cyan: '${normalColors.cyan}'
+        green: '${normalColors.green}'
+        magenta: '${normalColors.magenta}'
+        red: '${normalColors.red}'
+        white: '${normalColors.white}'
+        yellow: '${normalColors.yellow}'
 `);
 
 const terminalColors = $derived<TerminalColors>({
