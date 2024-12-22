@@ -9,7 +9,7 @@ import type {
   Colors
 } from '$lib/types/warp/colors';
 import { generateSchemeHues } from '../common/color-schemes/patterns';
-import { clampChroma, formatHex, formatHex8, random } from 'culori';
+import { clampChroma, formatHex, random } from 'culori';
 import { toOKLCH } from '$lib/components/vscode/color-picker/color-utils.svelte';
 
 export const randomizeColor = (
@@ -95,7 +95,7 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
   // const brightLightness = Math.min(90, normalLightness + 30); // (normalLightness + 30;
 
   function brightenColor(color: string): string {
-    return formatHex8(
+    return formatHex(
       clampChroma(
         {
           mode: 'oklch',
