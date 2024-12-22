@@ -1,14 +1,13 @@
 <script lang="ts">
   import { Button } from '$lib/components/ui/button';
   import { Download } from 'lucide-svelte';
-  import { ThemeState } from '$lib/state/warp/theme.svelte';
+  import { getThemeState } from '$lib/state/warp/colors.svelte';
 
-  const themeState = new ThemeState();
+  const themeState = getThemeState();
 
   const handleDownload = () => {
-    console.log(themeState.download());
     const link = document.createElement('a');
-    link.href = `data:text/yaml;charset=utf-8,${encodeURIComponent(JSON.stringify(themeState.download()))}`;
+    link.href = `data:text/yaml;charset=utf-8,${encodeURIComponent(themeState().ymlString)}`;
     link.download = 'sacred-geometry.yml';
     link.click();
   };

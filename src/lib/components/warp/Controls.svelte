@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { ControlsState } from '$lib/state/warp/control.svelte';
-  import { ThemeState } from '$lib/state/warp/theme.svelte';
+  import { getControlsState } from '$lib/state/warp/controls.svelte';
   import { SliderPicker } from '$lib/components/ui/slider-picker';
   import { Label } from '$lib/components/ui/label';
   import { Button } from '$lib/components/ui/button';
@@ -15,9 +14,7 @@
   import { Switch } from '../ui/switch';
   import DownloadButton from './DownloadButton.svelte';
 
-  const controlsState = new ControlsState();
-  const { controls } = controlsState;
-  const themeState = new ThemeState();
+  const controlsState = getControlsState();
 
   const baseHueGradient = `linear-gradient(
     to right in oklch longer hue,
@@ -29,8 +26,8 @@
   <div class="flex w-full flex-col gap-2">
     <Label>Base hue</Label>
     <SliderPicker
-      bind:value={controls.baseHue}
-      onValueCommit={() => controlsState.generate()}
+      value={controlsState().baseHue}
+      onValueCommit={() => controlsState().generate()}
       min={0}
       max={360}
       bgColor={baseHueGradient}
@@ -40,9 +37,16 @@
   <div class="flex w-full flex-wrap items-center justify-center gap-5 lg:flex-nowrap">
     <div class="flex w-full flex-col gap-2">
       <Label>Color Scheme</Label>
-      <Select bind:value={controls.scheme} type="single">
+      <Select
+        value={controlsState().scheme}
+        onValueChange={(value) => {
+          controlsState().setScheme(value as ColorSchemes);
+          controlsState().generate();
+        }}
+        type="single"
+      >
         <SelectTrigger class="max-w-lg">
-          {controls.scheme || 'Select a scheme'}
+          {controlsState().scheme || 'Select a scheme'}
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -56,11 +60,17 @@
 
     <div class="flex w-full flex-col gap-2">
       <Label>Dark theme?</Label>
-      <Switch bind:checked={controls.isDark} onCheckedChange={() => controlsState.generate()} />
+      <Switch
+        checked={controlsState().isDark}
+        onCheckedChange={(checked) => {
+          controlsState().setIsDark(checked);
+          controlsState().generate();
+        }}
+      />
     </div>
     <div class="flex w-full flex-nowrap items-center gap-2">
-      <Button class="w-full" onclick={() => controlsState.generate()}>Generate</Button>
-      <Button class="w-full" onclick={() => controlsState.randomize()}>Randomize</Button>
+      <Button class="w-full" onclick={() => controlsState().generate()}>Generate</Button>
+      <Button class="w-full" onclick={() => controlsState().randomize()}>Randomize</Button>
       <div class="border-foreground rounded-md border">
         <DownloadButton />
       </div>
