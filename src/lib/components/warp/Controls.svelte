@@ -31,7 +31,7 @@
       min={0}
       max={360}
       bgColor={baseHueGradient}
-      data-umami-event="Base hue slider changed"
+      data-umami-event="Warp Base hue slider changed"
     />
   </div>
   <div class="flex w-full flex-wrap items-center justify-center gap-5 lg:flex-nowrap">
@@ -51,7 +51,10 @@
         <SelectContent>
           <SelectGroup>
             {#each Object.values(ColorSchemes) as scheme}
-              <SelectItem value={scheme as string}>{scheme}</SelectItem>
+              <SelectItem
+                data-umami-event={`Warp Color scheme changed ${scheme}`}
+                value={scheme as string}>{scheme}</SelectItem
+              >
             {/each}
           </SelectGroup>
         </SelectContent>
@@ -66,11 +69,20 @@
           controlsState().setIsDark(checked);
           controlsState().generate();
         }}
+        data-umami-event="Warp Dark theme toggle"
       />
     </div>
     <div class="flex w-full flex-nowrap items-center gap-2">
-      <Button class="w-full" onclick={() => controlsState().generate()}>Generate</Button>
-      <Button class="w-full" onclick={() => controlsState().randomize()}>Randomize</Button>
+      <Button
+        class="w-full"
+        onclick={() => controlsState().generate()}
+        data-umami-event="Warp Generate button clicked">Generate</Button
+      >
+      <Button
+        class="w-full"
+        onclick={() => controlsState().randomize()}
+        data-umami-event="Warp Randomize button clicked">Randomize</Button
+      >
       <div class="border-foreground rounded-md border">
         <DownloadButton />
       </div>

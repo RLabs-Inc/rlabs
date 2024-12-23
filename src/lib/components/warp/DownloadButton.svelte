@@ -13,7 +13,7 @@
   };
 </script>
 
-<Button variant="ghost" size="icon" onclick={handleDownload}>
+<Button data-umami-event="Download Theme" variant="ghost" size="icon" onclick={handleDownload}>
   <Download class="h-6 w-6" />
   <span class="sr-only">Download</span>
 </Button>
