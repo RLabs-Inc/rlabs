@@ -119,7 +119,16 @@
 <section class="flex flex-col gap-2">
   {#if user}
     {#if themes.length > 0}
-      <Label class="text-sm font-black drop-shadow-xs">Load / Save theme</Label>
+      <div class="flex items-center justify-between">
+        <Label class="text-sm font-black drop-shadow-xs">Load / Save theme</Label>
+
+        <Button
+          disabled={selectedThemeState().theme?.id === 0}
+          variant="outline"
+          onclick={() => selectedThemeState().newTheme()}
+          data-umami-event="New theme">New theme</Button
+        >
+      </div>
       <Select
         value={selectThemeValue}
         onValueChange={handleThemeSelect}
@@ -162,6 +171,7 @@
     {#if nameError}
       <p class="text-destructive text-xs">{nameError}</p>
     {/if}
+
     <div class="flex items-center gap-2">
       <Checkbox
         disabled={isPending}

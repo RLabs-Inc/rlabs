@@ -185,6 +185,29 @@ export function getSelectedTheme() {
     });
   }
 
+  function newTheme() {
+    controlsState().setThemeName('');
+    controlsState().setThemeIsPublic(false);
+    set({
+      id: 0,
+      userId: '',
+      userName: '',
+      isDark: controlsState().isDark,
+      scheme: ColorSchemes[controlsState().scheme as keyof typeof ColorSchemes],
+      baseHue: controlsState().baseHue[0],
+      name: controlsState().themeName,
+      isPublic: controlsState().themeIsPublic,
+      schemeHues: schemeHuesState().schemeHues,
+      uiColors: uiColorsState().uiColors,
+      syntaxColors: syntaxColorsState().syntaxColors,
+      ansiColors: ansiColorsState().ansiColors,
+      shares: 0,
+      downloads: 0,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+  }
+
   return () => ({
     get theme() {
       return theme;
@@ -194,6 +217,7 @@ export function getSelectedTheme() {
     reset,
     update,
     generate,
-    randomize
+    randomize,
+    newTheme
   });
 }

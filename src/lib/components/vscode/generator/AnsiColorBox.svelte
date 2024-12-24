@@ -13,11 +13,11 @@
 </script>
 
 <div
-  class="rounded-md px-2 py-1 shadow-md"
-  style={`background-color: ${bg}; transition-property: all; transition-duration: 100ms;`}
+  class="rounded-md border-l-25 py-1 shadow-md"
+  style={`background-color: ${bg}; transition-property: all; transition-duration: 100ms; border-color: ${color};`}
 >
   <div
-    class="flex w-full cursor-pointer items-center justify-between border-l px-2 py-1 text-xs capitalize"
+    class="flex w-full cursor-pointer items-center justify-between px-2 py-1 text-xs capitalize"
     style={`color: ${color}; border-color: ${color}; transition-property: all; transition-duration: 100ms;`}
     onclick={() => {
       selectedColorState().setSelectedColor({ name, color, type: 'ansi' });
