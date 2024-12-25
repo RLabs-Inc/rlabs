@@ -59,6 +59,7 @@
     "culori": "^4.0.1",
     "drizzle-orm": "^0.36.1",
     "fflate": "^0.8.2",
+    "litlyx-js": "^1.0.3",
     "mode-watcher": "^0.5.0",
     "svelte-clerk": "^0.3.8",
     "zod": "^3.23.8"

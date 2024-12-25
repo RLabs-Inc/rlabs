@@ -24,6 +24,7 @@
   import Export from './Export.svelte';
   import { SliderPicker } from '$lib/components/ui/slider-picker';
   import { Input } from '$lib/components/ui/input';
+  import { Lit } from 'litlyx-js';
 
   const { userId, themes }: { userId: string | null; themes: Theme[] } = $props();
   const controls = getControls();
@@ -47,8 +48,10 @@
   function handleKeyDown(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === 'r') {
       controls().randomize();
+      Lit.event('Randomize Theme Key');
     } else if (event.ctrlKey && event.key === 'g') {
       controls().generate();
+      Lit.event('Generate Theme Key');
     }
   }
 </script>

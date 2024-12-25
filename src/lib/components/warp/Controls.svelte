@@ -13,6 +13,7 @@
   } from '$lib/components/ui/select';
   import { Switch } from '../ui/switch';
   import DownloadButton from './DownloadButton.svelte';
+  import { Lit } from 'litlyx-js';
 
   const controlsState = getControlsState();
 
@@ -27,7 +28,10 @@
     <Label>Base hue</Label>
     <SliderPicker
       value={controlsState().baseHue}
-      onValueCommit={() => controlsState().generate()}
+      onValueCommit={() => {
+        controlsState().generate();
+        Lit.event('Warp Base hue slider changed');
+      }}
       min={0}
       max={360}
       bgColor={baseHueGradient}
@@ -42,6 +46,7 @@
         onValueChange={(value) => {
           controlsState().setScheme(value as ColorSchemes);
           controlsState().generate();
+          Lit.event(`Warp Color scheme changed ${value}`);
         }}
         type="single"
       >
@@ -68,6 +73,7 @@
         onCheckedChange={(checked) => {
           controlsState().setIsDark(checked);
           controlsState().generate();
+          Lit.event('Warp Dark theme toggle');
         }}
         data-umami-event="Warp Dark theme toggle"
       />
@@ -75,12 +81,18 @@
     <div class="flex w-full flex-nowrap items-center gap-2">
       <Button
         class="w-full"
-        onclick={() => controlsState().generate()}
+        onclick={() => {
+          controlsState().generate();
+          Lit.event('Warp Generate button clicked');
+        }}
         data-umami-event="Warp Generate button clicked">Generate</Button
       >
       <Button
         class="w-full"
-        onclick={() => controlsState().randomize()}
+        onclick={() => {
+          controlsState().randomize();
+          Lit.event('Warp Randomize button clicked');
+        }}
         data-umami-event="Warp Randomize button clicked">Randomize</Button
       >
       <div class="border-foreground rounded-md border">

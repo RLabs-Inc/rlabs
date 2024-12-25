@@ -2,6 +2,7 @@
   import { Button } from '$lib/components/ui/button';
   import { Download } from 'lucide-svelte';
   import { getThemeState } from '$lib/state/warp/colors.svelte';
+  import { Lit } from 'litlyx-js';
 
   const themeState = getThemeState();
 
@@ -10,6 +11,7 @@
     link.href = `data:text/yaml;charset=utf-8,${encodeURIComponent(themeState().ymlString)}`;
     link.download = 'sacred-geometry.yml';
     link.click();
+    Lit.event('Download Theme');
   };
 </script>
 

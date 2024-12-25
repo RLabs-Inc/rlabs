@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Download, LoaderPinwheel } from 'lucide-svelte';
-
+  import { Lit } from 'litlyx-js';
   type Props = {
     // downloadTheme: () => Promise<void>;
     themeId: number;
@@ -25,6 +25,7 @@
     class="cursor-pointer"
     disabled={isDownloading}
     formaction="?/downloadTheme"
+    onclick={() => Lit.event('Download Theme' + themeId)}
   >
     {#if isDownloading}
       <LoaderPinwheel class="h-4 w-4 animate-spin" />

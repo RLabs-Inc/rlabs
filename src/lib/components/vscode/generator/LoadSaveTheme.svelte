@@ -11,6 +11,7 @@
 
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import { getControls } from '$lib/state/vscode/controls.svelte';
+  import { Lit } from 'litlyx-js';
 
   import type { Theme } from '$lib/types/vscode/theme';
   const { userId, themes }: { userId: string | null; themes: Theme[] } = $props();
@@ -95,7 +96,7 @@
       isPending = false;
       return;
     }
-
+    Lit.event('Saved Theme');
     const response: Response = await fetch('/api/vscode/save-theme', {
       method: 'POST',
       body: JSON.stringify(selectedThemeState().theme)
@@ -127,7 +128,7 @@
           variant="outline"
           onclick={() => selectedThemeState().newTheme()}
           data-umami-event="New theme">New theme</Button
-        >
+        >\
       </div>
       <Select
         value={selectThemeValue}

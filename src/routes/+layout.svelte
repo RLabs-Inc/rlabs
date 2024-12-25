@@ -13,11 +13,13 @@
   import { injectAnalytics } from '@vercel/analytics/sveltekit';
   import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
   import { dev } from '$app/environment';
+  import { Lit } from 'litlyx-js';
 
   import { Toaster } from '$lib/components/ui/sonner';
 
   injectAnalytics({ mode: dev ? 'development' : 'production' });
   injectSpeedInsights();
+  Lit.init('676b7ce407b3365ec84f351f');
 
   let { children }: { children: Snippet } = $props();
 </script>
