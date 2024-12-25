@@ -75,6 +75,7 @@
               onValueChange={(value) => {
                 fontState().setWeight(value);
                 monacoEditor?.changeFont(fontState().size, value);
+                Lit.event('Font weight ' + value);
               }}
               type="single"
             >
@@ -100,6 +101,7 @@
                   Number((e.target as HTMLInputElement).value),
                   fontState().weight
                 );
+                Lit.event('Font size ' + Number((e.target as HTMLInputElement).value));
               }}
               data-umami-event="Font size"
             />
@@ -113,7 +115,10 @@
         <Switch
           checked={controls().isDark}
           data-umami-event="Dark theme?"
-          onCheckedChange={controls().setIsDark}
+          onCheckedChange={(checked) => {
+            controls().setIsDark(checked);
+            Lit.event('Dark theme ' + checked);
+          }}
         />
       </div>
       <span class="text-foreground text-center text-xs"
@@ -135,7 +140,10 @@
                 class="w-full text-sm"
                 size="sm"
                 data-umami-event="Randomize Button Clicked"
-                onclick={controls().randomize}
+                onclick={() => {
+                  controls().randomize();
+                  Lit.event('Randomize Button Clicked');
+                }}
                 >Randomize
               </Button>
 
@@ -162,6 +170,7 @@
                 checked={controls().fewerRandomColors}
                 onCheckedChange={(checked) => {
                   controls().setFewerRandomColors(checked as boolean);
+                  Lit.event('Use fewer color variation Randomize');
                 }}
                 data-umami-event="Use fewer color variation Randomize"
               />
@@ -182,7 +191,14 @@
             >
           </p>
           <div class="flex flex-col gap-3 pt-2 pb-1">
-            <Select value={controls().scheme} onValueChange={controls().setScheme} type="single">
+            <Select
+              value={controls().scheme}
+              onValueChange={(value) => {
+                controls().setScheme(value);
+                Lit.event(`VSCode Color scheme changed ${value}`);
+              }}
+              type="single"
+            >
               <SelectTrigger>
                 {controls().scheme || 'Select a scheme'}
               </SelectTrigger>
@@ -200,7 +216,10 @@
                 <SliderPicker
                   value={controls().baseHue}
                   onValueChange={controls().setBaseHue}
-                  onValueCommit={(value) => controls().generate()}
+                  onValueCommit={(value) => {
+                    controls().generate();
+                    Lit.event('Base hue slider changed');
+                  }}
                   min={0}
                   max={360}
                   bgColor={baseHueGradient}
@@ -215,7 +234,10 @@
                   class="w-full text-sm text-wrap"
                   size="sm"
                   data-umami-event="Generate Button"
-                  onclick={controls().generate}
+                  onclick={() => {
+                    controls().generate();
+                    Lit.event('Generate Button clicked');
+                  }}
                 >
                   Re-generate colors
                 </Button>
@@ -241,6 +263,7 @@
                   checked={controls().fewerGeneratedColors}
                   onCheckedChange={(checked) => {
                     controls().setFewerGeneratedColors(checked as boolean);
+                    Lit.event('Use fewer color variation Generate');
                   }}
                   data-umami-event="Use fewer color variation Generate"
                 />

@@ -7,6 +7,7 @@
   import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
   import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
   import { getAnsiColors } from '$lib/state/vscode/ansi-colors.svelte';
+  import { Lit } from 'litlyx-js';
 
   const controlsState = getControls();
   const uiColorsState = getUiColors();
@@ -55,6 +56,7 @@
     data-umami-event="Export Button"
     type="submit"
     formaction="?/downloadTheme"
+    onclick={() => Lit.event('Export Button clicked')}
   >
     {#if isDownloading}
       <LoaderPinwheel class="h-4 w-4 animate-spin" />
