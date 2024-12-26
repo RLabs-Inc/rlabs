@@ -5,123 +5,80 @@ export const exampleFiles = [
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg',
     language: 'typescript',
     displayName: 'Typescript',
-    snippet: `// Advanced TypeScript API Client with Authentication and Rate Limiting
-import type { RequestConfig, ResponseType, ApiResponse } from './types';
-import { RateLimiter } from './utils/rate-limiter';
-import { AuthManager } from './services/auth';
+    snippet: `import { wcagLuminance } from 'culori';
 
-interface RetryConfig {
-  maxRetries: number;
-  backoffFactor: number;
-  statusCodesToRetry: number[];
-}
+import type { TokenColors, VSCodeTheme } from '$lib/types/vscode/theme';
+import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/vscode/color';
+import { getAllTokenColors } from './export-theme';
+import { getSemanticTokenColors } from './export-theme/semantic';
 
-@injectable()
-export class EnhancedApiClient implements IApiClient {
-  private static instance: EnhancedApiClient;
-  readonly #rateLimiter: RateLimiter;
-  readonly #authManager: AuthManager;
+export function generateSemanticThemeJSON(
+  name: string = 'Generated Color Theme',
+  colors: UIColors,
+  syntaxColors: SyntaxColors,
+  ansiColors: AnsiColors
+): { themeJSON: string; themeObject: VSCodeTheme } {
+  const tokenColors: TokenColors = { colors, syntaxColors, ansiColors };
 
-  constructor(
-    @inject('CONFIG') protected config: ApiConfig,
-    @inject('LOGGER') private logger: Logger
-  ) {
-    this.#rateLimiter = new RateLimiter(config.rateLimit);
-    this.#authManager = new AuthManager(config.auth);
-  }
-
-  public static getInstance(config?: Partial<ApiConfig>): EnhancedApiClient {
-    if (!EnhancedApiClient.instance) {
-      EnhancedApiClient.instance = new EnhancedApiClient(config);
+  const getAC1Foreground = () => {
+    if (wcagLuminance(colors.BG1) < 0.5) {
+      return wcagLuminance(colors.AC1) < 0.5 ? colors.FG1 : colors.FG3;
+    } else {
+      return wcagLuminance(colors.AC1) < 0.5 ? colors.FG3 : colors.FG1;
     }
-    return EnhancedApiClient.instance;
-  }
-
-  @memoize()
-  @logMethod()
-  public async request<T extends ResponseType>(
-    endpoint: string,
-    options: RequestConfig = {},
-    retryConfig?: Partial<RetryConfig>
-  ): Promise<ApiResponse<T>> {
-    try {
-      await this.#rateLimiter.acquireToken();
-      const authHeaders = await this.#authManager.getAuthHeaders();
-      
-      const response = await this.executeRequest<T>(endpoint, {
-        ...options,
-        headers: { ...options.headers, ...authHeaders }
-      });
-
-      if (!response.ok && this.shouldRetry(response.status, retryConfig)) {
-        return this.handleRetry<T>(endpoint, options, retryConfig);
-      }
-
-      return this.processResponse<T>(response);
-    } catch (error) {
-      this.logger.error(\`API Request failed: \${error.message}\`, {
-        endpoint,
-        options: this.sanitizeOptions(options)
-      });
-      throw new ApiError(\`Request failed: \${error.message}\`, error.code);
+  };
+  const getColorWithOpacity = (color: string, opacity: string) => {
+    if (color.length > 7) {
+      return color.slice(0, -2) + opacity;
+    } else {
+      return color + opacity;
     }
+  };
+
+  const theme = {
+    name: name,
+    type:
+      wcagLuminance(colors.BG1) < 0.5
+        ? ('dark' as 'dark' | 'light')
+        : ('light' as 'dark' | 'light'),
+    semanticClass: 'theme.rlabs',
+    semanticHighlighting: true,
+    colors: {
+      // # Integrated Terminal Colors
+      'terminal.background': colors.BG1,
+      'terminal.foreground': colors.FG1,
+      'terminal.border': colors.BORDER,
+      'terminal.ansiBrightBlack': ansiColors.BrightBlack,
+      'terminal.ansiBrightRed': ansiColors.BrightRed,
+      'terminal.ansiBrightGreen': ansiColors.BrightGreen,
+      'terminal.ansiBrightYellow': ansiColors.BrightYellow,
+      'terminal.ansiBrightBlue': ansiColors.BrightBlue,
+      'terminal.ansiBrightMagenta': ansiColors.BrightMagenta,
+      'terminal.ansiBrightCyan': ansiColors.BrightCyan,
+      'terminal.ansiBrightWhite': ansiColors.BrightWhite,
+      'terminal.ansiBlack': ansiColors.Black,
+      'terminal.ansiRed': ansiColors.Red,
+      'terminal.ansiGreen': ansiColors.Green,
+      'terminal.ansiYellow': ansiColors.Yellow,
+      'terminal.ansiBlue': ansiColors.Blue,
+      'terminal.ansiMagenta': ansiColors.Magenta,
+      'terminal.ansiCyan': ansiColors.Cyan,
+      'terminal.ansiWhite': ansiColors.White,
+      'terminal.selectionBackground': colors.selection,
+      // "terminal.selectionForeground": colors.FG1,
+      'terminal.inactiveSelectionBackground': colors.selection,
+      // # Base Colors
+      focusBorder: colors.BORDER, // Overall border color for focused elements. This color is only used if not overridden by a component
+      foreground: colors.FG1, // Overall foreground color. This color is only used if not overridden by a component
+      disabledForeground: syntaxColors.comment, // Overall foreground for disabled elements. This color is only used if not overridden by a component.
+  },
+    tokenColors: getSemanticTokenColors(tokenColors, getAC1Foreground, getAC2Foreground, getINFOForeground, getWARNINGForeground, getERRORForeground),
+    semanticTokenColors: getSemanticTokenColors(tokenColors, getAC1Foreground, getAC2Foreground, getINFOForeground, getWARNINGForeground, getERRORForeground),
   }
 
-  private async executeRequest<T>(endpoint: string, config: RequestConfig): Promise<Response> {
-    const baseUrl = this.config.environment === 'production' 
-      ? 'https://api.production.com/v2'
-      : 'https://api.staging.com/v2';
-
-    return fetch(\`\${baseUrl}\${endpoint}\`, {
-      ...config,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Client-Version': '2.0.0',
-        ...config.headers
-      }
-    });
-  }
-
-  private shouldRetry(
-    statusCode: number, 
-    config?: Partial<RetryConfig>
-  ): boolean {
-    const defaultRetryConfig: RetryConfig = {
-      maxRetries: 3,
-      backoffFactor: 1.5,
-      statusCodesToRetry: [408, 429, 500, 502, 503, 504]
-    };
-
-    const retryConfig = { ...defaultRetryConfig, ...config };
-    return retryConfig.statusCodesToRetry.includes(statusCode);
-  }
-
-  private sanitizeOptions(options: RequestConfig): Partial<RequestConfig> {
-    const { headers, ...rest } = options;
-    return {
-      ...rest,
-      headers: headers ? {
-        ...headers,
-        Authorization: headers.Authorization ? '[REDACTED]' : undefined
-      } : undefined
-    };
-  }
+  const themeJSON = JSON.stringify(theme, null, 2);
+  return { themeJSON, themeObject: theme };
 }
-
-// Usage example
-const apiClient = EnhancedApiClient.getInstance({
-  environment: 'production',
-  rateLimit: { requestsPerMinute: 100 },
-  auth: {
-    clientId: process.env.API_CLIENT_ID,
-    clientSecret: process.env.API_CLIENT_SECRET
-  }
-});
-
-const userData = await apiClient.request<UserResponse>('/users/profile', {
-  method: 'GET',
-  cache: 'no-cache'
-});
 
 // Next.js API route example
 import { type NextApiRequest, type NextApiResponse } from 'next';
@@ -215,139 +172,10 @@ export default async function handler(
 
   } catch (error) {
     console.error('[API] Profile update error:', error);
-
-
-/**
- * @fileoverview E-commerce API service with caching, rate limiting, and error handling
- * @author John Doe <john@example.com>
- * @see {@link https://api-docs.example.com|API Documentation}
- */
-
-import type { Product, CartItem, OrderDetails, PaymentIntent } from './types';
-import { Redis } from 'ioredis';
-import { RateLimiter } from './utils/rate-limiter';
-import { validatePaymentIntent } from './utils/validation';
-import { CACHE_TTL, MAX_RETRIES } from './constants';
-
-interface CheckoutOptions {
-  readonly cartId: string;
-  readonly customerId?: string;
-  paymentMethod: 'card' | 'paypal' | 'crypto';
-  metadata?: Record<string, unknown>;
-}
-
-type CacheKey = \`cart:\${string}\` | \`order:\${string}\`;
-
-@injectable()
-export class ECommerceService implements IECommerceProvider {
-  readonly #redis: Redis;
-  readonly #rateLimiter: RateLimiter;
-  static #instance: ECommerceService;
-
-  constructor(
-    @inject('DATABASE') private db: Database,
-    @inject('LOGGER') private logger: Logger,
-    @inject('STRIPE') private stripe: StripeClient
-  ) {
-    this.#redis = new Redis(process.env.REDIS_URL);
-    this.#rateLimiter = new RateLimiter({ maxRequests: 100 });
-  }
-
-  public static getInstance(): ECommerceService {
-    if (!ECommerceService.#instance) {
-      ECommerceService.#instance = new ECommerceService();
-    }
-    return ECommerceService.#instance;
-  }
-
-  @memoize()
-  @logMethod()
-  public async checkout(
-    options: CheckoutOptions
-  ): Promise<Result<OrderDetails, CheckoutError>> {
-    try {
-      await this.#rateLimiter.acquireToken();
-      
-      const cartItems = await this.getCartItems(options.cartId);
-      if (!cartItems?.length) {
-        throw new CheckoutError('Cart is empty', 'EMPTY_CART');
-      }
-
-      const total = cartItems.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
-
-      const paymentIntent = await this.createPaymentIntent({
-        amount: total,
-        currency: 'usd',
-        paymentMethod: options.paymentMethod,
-        metadata: {
-          cartId: options.cartId,
-          ...options.metadata
-        }
-      });
-
-      if (paymentIntent instanceof Error) {
-        console.error(\`Payment failed: \${paymentIntent.message}\`);
-        throw new CheckoutError(
-          'Payment processing failed',
-          'PAYMENT_FAILED'
-        );
-      }
-
-      const order = await this.db.transaction(async (trx) => {
-        const [orderId] = await trx('orders').insert({
-          customer_id: options.customerId,
-          payment_intent_id: paymentIntent.id,
-          total_amount: total,
-          status: 'pending'
-        });
-
-        await trx('order_items').insert(
-          cartItems.map((item) => ({
-            order_id: orderId,
-            product_id: item.productId,
-            quantity: item.quantity,
-            price: item.price
-          }))
-        );
-
-        return orderId;
-      });
-
-      await Promise.all([
-        this.#redis.del(\`cart:\${options.cartId}\`),
-        this.#redis.set(
-          \`order:\${order}\`,
-          JSON.stringify({ status: 'pending' }),
-          'EX',
-          CACHE_TTL
-        )
-      ]);
-
-      return Ok({
-        orderId: order,
-        paymentIntentId: paymentIntent.id,
-        total,
-        status: 'pending'
-      });
-
-    } catch (error) {
-      this.logger.error('[Checkout] Failed:', {
-        error: error.message,
-        cartId: options.cartId
-      });
-
-      if (error instanceof CheckoutError) {
-        return Err(error);
-      }
-
-      return Err(new CheckoutError(
-        'Checkout process failed',
-        'INTERNAL_ERROR'
-      ));
-    }
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      code: 'INTERNAL_SERVER_ERROR' 
+    });
   }
 }
     `
