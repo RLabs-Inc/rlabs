@@ -26,6 +26,7 @@ export function getControlsState() {
 
   function generate() {
     const themeState = getThemeState();
+    themeState().setSelectedColor(null);
     themeState().generate(isDark, baseHue[0], scheme as ColorSchemes);
   }
 
@@ -33,6 +34,7 @@ export function getControlsState() {
     setBaseHue([randomInteger(0, 360)]);
     setScheme(randomEnum(Object(ColorSchemes)) as ColorSchemes);
     const themeState = getThemeState();
+    themeState().setSelectedColor(null);
     themeState().generate(isDark, baseHue[0], scheme as ColorSchemes);
   }
 

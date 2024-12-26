@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import { converter, type Oklch, formatCss, formatHex } from 'culori';
   import clsx from 'clsx';
@@ -61,6 +61,9 @@
     pickerState().setPickerAlpha([toOKLCH(themeState().selectedColor!.color)!.alpha! * 100 || 100]);
     updateMaps(); // Initial map update
   });
+  //   onDestroy(() => {
+  //     themeState().setSelectedColor(null);
+  //   });
 </script>
 
 <div class="grid grid-cols-1 place-items-center items-center gap-4 lg:grid-cols-2">
