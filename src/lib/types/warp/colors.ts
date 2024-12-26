@@ -69,3 +69,9 @@ export type ControlsStateType = {
 export type LockedColors = {
   [key: string]: string;
 };
+
+export type SelectedColor = {
+  type: 'ui' | 'normal' | 'bright';
+  name: string;
+  color: string;
+};

@@ -1,37 +1,7 @@
 <script lang="ts">
-  import { getThemeState } from '$lib/state/warp/colors.svelte';
-
-  const themeState = getThemeState();
-
-  const cssVariables = $derived(
-    `--background: ${themeState().uiColors.background};
-    --foreground: ${themeState().uiColors.foreground};
-    --accent: ${themeState().uiColors.accent};
-    --cursor: ${themeState().uiColors.cursor};
-    --bright-black: ${themeState().brightColors.black};
-    --bright-red: ${themeState().brightColors.red};
-    --bright-green: ${themeState().brightColors.green};
-    --bright-yellow: ${themeState().brightColors.yellow};
-    --bright-blue: ${themeState().brightColors.blue};
-    --bright-magenta: ${themeState().brightColors.magenta};
-    --bright-cyan: ${themeState().brightColors.cyan};
-    --bright-white: ${themeState().brightColors.white};
-    --normal-black: ${themeState().normalColors.black};
-    --normal-red: ${themeState().normalColors.red};
-    --normal-green: ${themeState().normalColors.green};
-    --normal-yellow: ${themeState().normalColors.yellow};
-    --normal-blue: ${themeState().normalColors.blue};
-    --normal-magenta: ${themeState().normalColors.magenta};
-    --normal-cyan: ${themeState().normalColors.cyan};
-    --normal-white: ${themeState().normalColors.white};`
-  );
 </script>
 
-<section
-  id="warp-mock"
-  style={cssVariables}
-  class="flex w-full flex-col items-center justify-center"
->
+<section id="warp-mock" class="flex w-full flex-col items-center justify-center md:min-w-[620px]">
   <div
     class="h-fit w-full max-w-[350px] rounded-md leading-5 drop-shadow-lg select-none md:max-w-2xl"
     style="background-color: var(--background); color: var(--foreground);"

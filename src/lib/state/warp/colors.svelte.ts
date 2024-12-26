@@ -5,7 +5,8 @@ import type {
   UiColors,
   Colors,
   CssVariables,
-  ThemeGenerationOptions
+  ThemeGenerationOptions,
+  SelectedColor
 } from '$lib/types/warp/colors';
 import { generateTheme } from '$lib/utils/warp/theme.svelte';
 import type { ColorSchemes } from '$lib/types/sacred-geometry-schemes';
@@ -85,6 +86,8 @@ const theme = $derived<WarpTheme>({
 
 let lockedColors = $state<Record<string, string>>({});
 
+let selectedColor = $state<SelectedColor | null>(null);
+
 export function getThemeState() {
   function setThemeInfo(value: ThemeInfo) {
     themeInfo = value;
@@ -97,18 +100,21 @@ export function getThemeState() {
   }
   function setUiColor(key: keyof UiColors, value: string) {
     uiColors[key] = value;
+    updateCssVariables({ uiColors, brightColors, normalColors });
   }
   function setBrightColors(value: Colors) {
     brightColors = value;
   }
   function setBrightColor(key: keyof Colors, value: string) {
     brightColors[key] = value;
+    updateCssVariables({ uiColors, brightColors, normalColors });
   }
   function setNormalColors(value: Colors) {
     normalColors = value;
   }
   function setNormalColor(key: keyof Colors, value: string) {
     normalColors[key] = value;
+    updateCssVariables({ uiColors, brightColors, normalColors });
   }
 
   function setLockedColors(value: Record<string, string>) {
@@ -120,6 +126,9 @@ export function getThemeState() {
     } else {
       lockedColors[key] = color;
     }
+  }
+  function setSelectedColor(value: SelectedColor | null) {
+    selectedColor = value;
   }
 
   function generate(isDark: boolean, baseHue: number, scheme: ColorSchemes) {
@@ -159,6 +168,7 @@ export function getThemeState() {
     terminalColors,
     lockedColors,
     ymlString,
+    selectedColor,
     generate,
     setThemeInfo,
     setUiColors,
@@ -169,6 +179,7 @@ export function getThemeState() {
     setNormalColor,
     setLockedColors,
     toggleLockedColor,
-    setThemeDetails
+    setThemeDetails,
+    setSelectedColor
   });
 }
