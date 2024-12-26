@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
+  import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { converter, type Oklch, formatCss, formatHex } from 'culori';
+  import { type Oklch, formatCss, formatHex } from 'culori';
   import clsx from 'clsx';
 
   import { getThemeState } from '$lib/state/warp/colors.svelte';
@@ -22,8 +22,11 @@
   const themeState = getThemeState();
   const pickerState = getPickerState();
 
-  const { onChange } = $props<{
+  const { onChange, color, type, name } = $props<{
     onChange?: (color: SelectedColor) => void;
+    color: string;
+    type: string;
+    name: string;
   }>();
 
   // let showMaps = $state(false);
@@ -55,15 +58,13 @@
   const bgThumb = $derived(getBGThumb(pickerColor));
 
   onMount(() => {
-    pickerState().setPickerLightness([toOKLCH(themeState().selectedColor!.color)!.l * 100]);
-    pickerState().setPickerChroma([toOKLCH(themeState().selectedColor!.color)!.c]);
-    pickerState().setPickerHue([toOKLCH(themeState().selectedColor!.color)!.h || 0]);
-    pickerState().setPickerAlpha([toOKLCH(themeState().selectedColor!.color)!.alpha! * 100 || 100]);
+    const oklchColor: Oklch = toOKLCH(color)!;
+    pickerState().setPickerLightness([oklchColor.l * 100]);
+    pickerState().setPickerChroma([oklchColor.c]);
+    pickerState().setPickerHue([oklchColor.h || 0]);
+    pickerState().setPickerAlpha([oklchColor.alpha ? oklchColor.alpha * 100 : 100]);
     updateMaps(); // Initial map update
   });
-  //   onDestroy(() => {
-  //     themeState().setSelectedColor(null);
-  //   });
 </script>
 
 <div class="grid grid-cols-1 place-items-center items-center gap-4 lg:grid-cols-2">

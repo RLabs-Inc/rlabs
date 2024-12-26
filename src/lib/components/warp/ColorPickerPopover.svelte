@@ -6,7 +6,9 @@
 
   const themeState = getThemeState();
 
-  const selectedColor = $derived(themeState().selectedColor);
+  //   const selectedColor = $derived(themeState().selectedColor);
+
+  const { color, name, type } = $props<{ color: string; name: string; type: string }>();
 
   function handleColorChange(newColor: SelectedColor) {
     themeState().setSelectedColor(newColor);
@@ -31,9 +33,9 @@
   class="border-border-st bg-background-st dark:border-primary-foreground-st dark:bg-background-st/40 rounded-md border shadow-xs"
 >
   <div class="flex w-full flex-col items-center justify-center gap-2 p-2 text-xs">
-    <span class="text-sm font-black capitalize drop-shadow-xs">{selectedColor?.name}</span>
-    {#key selectedColor?.name}
-      <LCHColorPicker onChange={handleColorChange} />
+    <span class="text-sm font-black capitalize drop-shadow-xs">{name}</span>
+    {#key name}
+      <LCHColorPicker onChange={handleColorChange} {color} {name} {type} />
     {/key}
   </div>
 </section>
