@@ -33,7 +33,7 @@
   class="border-border-st bg-background-st dark:border-primary-foreground-st dark:bg-background-st/40 rounded-md border shadow-xs"
 >
   <div class="flex w-full flex-col items-center justify-center gap-2 p-2 text-xs">
-    <span class="text-sm font-black capitalize drop-shadow-xs">{name}</span>
+    <span class="text-sm font-black capitalize drop-shadow-xs"></span>
     {#key name}
       <LCHColorPicker onChange={handleColorChange} {color} {name} {type} />
     {/key}
