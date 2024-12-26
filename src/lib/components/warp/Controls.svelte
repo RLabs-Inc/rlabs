@@ -28,6 +28,7 @@
     <Label>Base hue</Label>
     <SliderPicker
       value={controlsState().baseHue}
+      onValueChange={controlsState().setBaseHue}
       onValueCommit={() => {
         controlsState().generate();
         Lit.event('Warp Base hue slider changed');
