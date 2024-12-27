@@ -170,11 +170,11 @@
                 checked={controls().fewerRandomColors}
                 onCheckedChange={(checked) => {
                   controls().setFewerRandomColors(checked as boolean);
-                  Lit.event('Use fewer color variation Randomize');
+                  Lit.event('Less color variation Randomize');
                 }}
-                data-umami-event="Use fewer color variation Randomize"
+                data-umami-event="Less color variation Randomize"
               />
-              <Label class="text-xs">Use fewer color variation?</Label>
+              <Label class="text-xs">Less color variation?</Label>
             </div>
           </div>
         </div>
@@ -263,11 +263,11 @@
                   checked={controls().fewerGeneratedColors}
                   onCheckedChange={(checked) => {
                     controls().setFewerGeneratedColors(checked as boolean);
-                    Lit.event('Use fewer color variation Generate');
+                    Lit.event('Less color variation Generate');
                   }}
-                  data-umami-event="Use fewer color variation Generate"
+                  data-umami-event="Less color variation Generate"
                 />
-                <Label class="text-xs">Use fewer color variation?</Label>
+                <Label class="text-xs">Less color variation?</Label>
               </div>
             </div>
           </div>

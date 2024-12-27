@@ -27,8 +27,9 @@ export function getSyntaxColors() {
     }
   }
 
-  function generate() {
+  function generate(fewerColors: boolean) {
     const options: SyntaxColorsGenerationOptions = {
+      few: fewerColors,
       lockedColors: lockedSyntaxColors
     };
     const { generatedSyntaxColors } = generateSyntaxColors(options);

@@ -94,6 +94,7 @@ export type UIColorsGenerationOptions = {
 };
 
 export type SyntaxColorsGenerationOptions = {
+  few?: boolean;
   lockedColors: Partial<SyntaxColors>;
 };
 

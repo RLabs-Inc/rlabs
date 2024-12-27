@@ -133,7 +133,7 @@ export function getSelectedTheme() {
     selectedColorState().setSelectedColor(null);
     schemeHuesState().generate();
     uiColorsState().generate(fewerColors);
-    syntaxColorsState().generate();
+    syntaxColorsState().generate(fewerColors);
     ansiColorsState().generate();
     set({
       ...theme,
@@ -163,7 +163,7 @@ export function getSelectedTheme() {
     controlsState().setThemeIsPublic(false);
     schemeHuesState().generate();
     uiColorsState().generate(fewerColors);
-    syntaxColorsState().generate();
+    syntaxColorsState().generate(fewerColors);
     ansiColorsState().generate();
     set({
       id: 0,

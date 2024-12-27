@@ -18,7 +18,7 @@ export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
   const controlsState = getControls();
   const uiColorsState = getUiColors();
   const schemeHuesState = getSchemeHues();
-  const { lockedColors } = options;
+  const { lockedColors, few } = options;
 
   const getRandomHue = () => {
     return schemeHuesState().schemeHues[
@@ -91,9 +91,11 @@ export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
     controlImport: lockedColors?.controlImport || randomizeColor([controlHue], [0, 100], [0, 100]),
     support: lockedColors?.support || randomizeColor([supportHue], [0, 100], [0, 100]),
     supportFunction:
-      lockedColors?.supportFunction || randomizeColor([supportFunctionHue], [0, 100], [0, 100]),
+      lockedColors?.supportFunction ||
+      randomizeColor([few ? supportHue : supportFunctionHue], [0, 100], [0, 100]),
     supportMethod:
-      lockedColors?.supportMethod || randomizeColor([supportFunctionHue], [0, 100], [0, 100]),
+      lockedColors?.supportMethod ||
+      randomizeColor([few ? supportHue : supportFunctionHue], [0, 100], [0, 100]),
     supportVariable:
       lockedColors?.supportVariable || randomizeColor([supportHue], [0, 100], [0, 100]),
     supportProperty:
@@ -101,27 +103,41 @@ export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
 
     function: lockedColors?.function || randomizeColor([functionHue], [0, 100], [0, 100]),
     functionCall: lockedColors?.functionCall || randomizeColor([functionHue], [0, 100], [0, 100]),
-    method: lockedColors?.method || randomizeColor([methodHue], [0, 100], [0, 100]),
-    methodCall: lockedColors?.methodCall || randomizeColor([methodHue], [0, 100], [0, 100]),
-    selector: lockedColors?.selector || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
+    method:
+      lockedColors?.method || randomizeColor([few ? functionHue : methodHue], [0, 100], [0, 100]),
+    methodCall:
+      lockedColors?.methodCall ||
+      randomizeColor([few ? functionHue : methodHue], [0, 100], [0, 100]),
+    selector:
+      lockedColors?.selector ||
+      randomizeColor([few ? functionHue : getRandomHue()], [0, 100], [0, 100]),
 
-    parameter: lockedColors?.parameter || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
+    parameter:
+      lockedColors?.parameter ||
+      randomizeColor([few ? variableHue : getRandomHue()], [0, 100], [0, 100]),
     variable: lockedColors?.variable || randomizeColor([variableHue], [0, 100], [0, 100]),
     variableReadonly:
       lockedColors?.variableReadonly || randomizeColor([variableHue], [0, 100], [0, 100]),
     variableDeclaration:
       lockedColors?.variableDeclaration || randomizeColor([variableHue], [0, 100], [0, 100]),
     variableProperty:
-      lockedColors?.variableProperty || randomizeColor([variableHue], [0, 100], [0, 100]),
-    property: lockedColors?.property || randomizeColor([propertyHue], [0, 100], [0, 100]),
+      lockedColors?.variableProperty ||
+      randomizeColor([few ? variableHue : propertyHue], [0, 100], [0, 100]),
+    property:
+      lockedColors?.property ||
+      randomizeColor([few ? variableHue : propertyHue], [0, 100], [0, 100]),
     propertyDeclaration:
-      lockedColors?.propertyDeclaration || randomizeColor([propertyHue], [0, 100], [0, 100]),
-    class: lockedColors?.class || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
+      lockedColors?.propertyDeclaration ||
+      randomizeColor([few ? variableHue : propertyHue], [0, 100], [0, 100]),
+    class:
+      lockedColors?.class || randomizeColor([few ? typeHue : getRandomHue()], [0, 100], [0, 100]),
     type: lockedColors?.type || randomizeColor([typeHue], [0, 100], [0, 100]),
     typeParameter: lockedColors?.typeParameter || randomizeColor([typeHue], [0, 100], [0, 100]),
 
     tag: lockedColors?.tag || randomizeColor([tagHue], [0, 100], [0, 100]),
-    attribute: lockedColors?.attribute || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
+    attribute:
+      lockedColors?.attribute ||
+      randomizeColor([few ? variableHue : getRandomHue()], [0, 100], [0, 100]),
     constant: lockedColors?.constant || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
     unit: lockedColors?.unit || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
     datetime: lockedColors?.datetime || randomizeColor([getRandomHue()], [0, 100], [0, 100]),

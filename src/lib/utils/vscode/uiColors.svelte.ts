@@ -1,4 +1,4 @@
-import { oklch } from 'culori';
+// import { oklch } from 'culori';
 import { randomInteger } from '$lib/utils/common/math';
 import { ensureReadability, randomizeColor } from '$lib/utils/vscode/colorUtils.svelte';
 import { getControls } from '$lib/state/vscode/controls.svelte';
@@ -34,25 +34,54 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
     ];
   };
 
+  const hues = {
+    bg: [getRandomHue()],
+    fg: [getRandomHue()]
+  };
+
   const colors: UIColors = {
     BG1:
       lockedColors?.BG1 ||
-      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 35] : [93, 100], [0, 2]),
+      randomizeColor(
+        [few ? hues.bg[0] : getRandomHue()],
+        controlsState().isDark ? [0, 35] : [93, 100],
+        [0, 2]
+      ),
     BG2:
       lockedColors?.BG2 ||
-      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 25] : [85, 100], [0, 3]),
+      randomizeColor(
+        [few ? hues.bg[0] : getRandomHue()],
+        controlsState().isDark ? [0, 25] : [88, 100],
+        [0, 5]
+      ),
     BG3:
       lockedColors?.BG3 ||
-      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 30] : [90, 100], [0, 3]),
+      randomizeColor(
+        [few ? hues.bg[0] : getRandomHue()],
+        controlsState().isDark ? [0, 30] : [90, 100],
+        [0, 3]
+      ),
     FG1:
       lockedColors?.FG1 ||
-      randomizeColor([getRandomHue()], controlsState().isDark ? [97, 100] : [0, 20], [0, 10]),
+      randomizeColor(
+        [few ? hues.fg[0] : getRandomHue()],
+        controlsState().isDark ? [97, 100] : [0, 15],
+        [0, 10]
+      ),
     FG2:
       lockedColors?.FG2 ||
-      randomizeColor([getRandomHue()], controlsState().isDark ? [95, 100] : [0, 30], [0, 15]),
+      randomizeColor(
+        [few ? hues.fg[0] : getRandomHue()],
+        controlsState().isDark ? [95, 100] : [0, 30],
+        [0, 15]
+      ),
     FG3:
       lockedColors?.FG3 ||
-      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 35] : [85, 100], [0, 20]),
+      randomizeColor(
+        [few ? hues.fg[0] : getRandomHue()],
+        controlsState().isDark ? [0, 25] : [88, 100],
+        [0, 15]
+      ),
     AC1:
       lockedColors?.AC1 ||
       randomizeColor(
@@ -112,14 +141,14 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
     }
   });
 
-  if (!few) {
-    const ac1Hue = oklch(colors.AC1)?.h;
-    const ac2Hue = oklch(colors.AC2)?.h;
-    if (ac1Hue && ac2Hue) {
-      schemeHuesState().generateAdditionalHues(ac1Hue, controlsState().scheme);
-      schemeHuesState().generateAdditionalHues(ac2Hue, controlsState().scheme);
-    }
-  }
+  // if (!few) {
+  //   const ac1Hue = oklch(colors.AC1)?.h;
+  //   const ac2Hue = oklch(colors.AC2)?.h;
+  //   if (ac1Hue && ac2Hue) {
+  //     schemeHuesState().generateAdditionalHues(ac1Hue, controlsState().scheme);
+  //     schemeHuesState().generateAdditionalHues(ac2Hue, controlsState().scheme);
+  //   }
+  // }
 
   return { generatedUIColors: colors };
 }
