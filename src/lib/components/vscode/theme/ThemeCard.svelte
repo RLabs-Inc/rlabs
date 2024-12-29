@@ -5,7 +5,7 @@
   import DownloadButton from '$lib/components/vscode/theme/DownloadButton.svelte';
   import ShareButton from '$lib/components/vscode/theme/ShareButton.svelte';
   import EditButtonPublic from './EditButtonPublic.svelte';
-  import type { Theme } from '$lib/types/theme';
+  import type { Theme } from '$lib/types/vscode/theme';
   import clsx from 'clsx';
   import { getIsEditing } from '$lib/state/vscode/editor.svelte';
 
