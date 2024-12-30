@@ -1,16 +1,16 @@
 " General syntax highlighting (matching VSCode's general token colors)
 
 " Basic syntax groups
-execute 'highlight Normal guifg=' . g:colors.FG1 . ' guibg=' . g:theme_get_background()
-execute 'highlight NonText guifg=' . g:syntaxColors.comment . ' gui=NONE'
-execute 'highlight Special guifg=' . g:syntaxColors.other
-execute 'highlight SpecialKey guifg=' . g:syntaxColors.other
-execute 'highlight Conceal guifg=' . g:syntaxColors.other
+execute 'highlight Normal guifg=' . g:colors.fg1 . ' guibg=' . g:colors.bg1
+execute 'highlight NonText guifg=' . g:syntax_colors.comment . ' gui=NONE'
+execute 'highlight Special guifg=' . g:syntax_colors.other
+execute 'highlight SpecialKey guifg=' . g:syntax_colors.other
+execute 'highlight Conceal guifg=' . g:syntax_colors.other
 execute 'highlight Underlined gui=underline'
-execute 'highlight Ignore guifg=' . g:syntaxColors.comment
-execute 'highlight Error guifg=' . g:colors.ERROR . ' guibg=NONE'
-execute 'highlight Todo guifg=' . g:colors.WARNING . ' guibg=NONE'
-execute 'highlight MatchParen guifg=' . g:colors.FG1 . ' guibg=' . g:colors.selection
+execute 'highlight Ignore guifg=' . g:syntax_colors.comment
+execute 'highlight Error guifg=' . g:colors.error . ' guibg=NONE'
+execute 'highlight Todo guifg=' . g:colors.warning . ' guibg=NONE'
+execute 'highlight MatchParen guifg=' . g:GetSelectionForeground() . ' guibg=' . g:colors.selection
 
 " Text formatting
 execute 'highlight Bold gui=bold'
@@ -18,96 +18,96 @@ execute 'highlight Italic gui=italic'
 execute 'highlight Underlined gui=underline'
 
 " Search and selection
-execute 'highlight Search guibg=' . g:colors.findMatch . ' guifg=' . g:colors.FG1
-execute 'highlight IncSearch guibg=' . g:colors.findMatch . ' guifg=' . g:colors.FG1
-execute 'highlight CurSearch guibg=' . g:colors.findMatch . ' guifg=' . g:colors.FG1
-execute 'highlight Visual guibg=' . g:colors.selection
-execute 'highlight VisualNOS guibg=' . g:colors.selection
+execute 'highlight Search guibg=' . g:colors.find_match . ' guifg=' . g:GetFindMatchForeground()
+execute 'highlight IncSearch guibg=' . g:colors.find_match . ' guifg=' . g:GetFindMatchForeground()
+execute 'highlight CurSearch guibg=' . g:colors.find_match . ' guifg=' . g:GetFindMatchForeground()
+execute 'highlight Visual guibg=' . g:colors.selection . ' guifg=' . g:GetSelectionForeground()
+execute 'highlight VisualNOS guibg=' . g:colors.selection . ' guifg=' . g:GetSelectionForeground()
 
 " Cursor and current line
-execute 'highlight Cursor guifg=bg guibg=' . g:colors.AC1
-execute 'highlight CursorIM guifg=bg guibg=' . g:colors.AC1
-execute 'highlight CursorLine guibg=' . g:colors.lineHighlight . ' gui=NONE'
-execute 'highlight CursorColumn guibg=' . g:colors.lineHighlight . ' gui=NONE'
-execute 'highlight ColorColumn guibg=' . g:colors.lineHighlight . ' gui=NONE'
+execute 'highlight Cursor guifg=bg guibg=' . g:colors.ac1 . ' guifg=' . g:GetAC1Foreground()
+execute 'highlight CursorIM guifg=bg guibg=' . g:colors.ac1 . ' guifg=' . g:GetAC1Foreground()
+execute 'highlight CursorLine guibg=' . g:colors.line_highlight . ' guifg=' . g:GetLineHighlightForeground() . ' gui=NONE'
+execute 'highlight CursorColumn guibg=' . g:colors.line_highlight . ' guifg=' . g:GetLineHighlightForeground() . ' gui=NONE'
+execute 'highlight ColorColumn guibg=' . g:colors.line_highlight . ' guifg=' . g:GetLineHighlightForeground() . ' gui=NONE'
 
 " Line numbers and signs column
-execute 'highlight LineNr guifg=' . g:syntaxColors.comment . ' guibg=' . g:theme_get_line_number_bg()
-execute 'highlight CursorLineNr guifg=' . g:colors.AC1 . ' guibg=' . g:theme_get_line_number_bg()
-execute 'highlight SignColumn guibg=' . g:theme_get_background()
-execute 'highlight FoldColumn guifg=' . g:syntaxColors.comment . ' guibg=' . g:theme_get_background()
+execute 'highlight LineNr guifg=' . g:syntax_colors.comment . ' guibg=' . g:colors.bg1
+execute 'highlight CursorLineNr guifg=' . g:colors.ac1 . ' guibg=' . g:colors.bg1
+execute 'highlight SignColumn guibg=' . g:colors.bg1
+execute 'highlight FoldColumn guifg=' . g:syntax_colors.comment . ' guibg=' . g:colors.bg1
 
 " Folding
-execute 'highlight Folded guifg=' . g:syntaxColors.comment . ' guibg=' . g:colors.BG2
-execute 'highlight FoldColumn guifg=' . g:syntaxColors.comment . ' guibg=' . g:theme_get_background()
+execute 'highlight Folded guifg=' . g:syntax_colors.comment . ' guibg=' . g:colors.bg3
+execute 'highlight FoldColumn guifg=' . g:syntax_colors.comment . ' guibg=' . g:colors.bg1
 
 " Popup menu
-execute 'highlight Pmenu guifg=' . g:colors.FG1 . ' guibg=' . g:colors.BG2
-execute 'highlight PmenuSel guifg=' . g:theme_getAC2Foreground() . ' guibg=' . g:colors.AC2
-execute 'highlight PmenuSbar guibg=' . g:colors.BG3
-execute 'highlight PmenuThumb guibg=' . g:colors.FG2
+execute 'highlight Pmenu guifg=' . g:colors.fg1 . ' guibg=' . g:colors.bg2
+execute 'highlight PmenuSel guifg=' . g:GetAC2Foreground() . ' guibg=' . g:colors.ac2
+execute 'highlight PmenuSbar guibg=' . g:colors.bg3
+execute 'highlight PmenuThumb guibg=' . g:colors.fg2
 
 " Spelling
-execute 'highlight SpellBad gui=undercurl guisp=' . g:colors.ERROR
-execute 'highlight SpellCap gui=undercurl guisp=' . g:colors.WARNING
-execute 'highlight SpellLocal gui=undercurl guisp=' . g:colors.INFO
-execute 'highlight SpellRare gui=undercurl guisp=' . g:colors.AC1
+execute 'highlight SpellBad gui=undercurl guisp=' . g:colors.error
+execute 'highlight SpellCap gui=undercurl guisp=' . g:colors.warning
+execute 'highlight SpellLocal gui=undercurl guisp=' . g:colors.info
+execute 'highlight SpellRare gui=undercurl guisp=' . g:colors.ac1
 
 " Diffs
-execute 'highlight DiffAdd guifg=' . g:colors.SUCCESS . ' guibg=' . g:theme_get_background()
-execute 'highlight DiffChange guifg=' . g:colors.WARNING . ' guibg=' . g:theme_get_background()
-execute 'highlight DiffDelete guifg=' . g:colors.ERROR . ' guibg=' . g:theme_get_background()
-execute 'highlight DiffText guifg=' . g:colors.INFO . ' guibg=' . g:theme_get_background()
+execute 'highlight DiffAdd guifg=' . g:GetSUCCESSForeground() . ' guibg=' . g:colors.success
+execute 'highlight DiffChange guifg=' . g:GetWARNINGForeground() . ' guibg=' . g:colors.warning
+execute 'highlight DiffDelete guifg=' . g:GetERRORForeground() . ' guibg=' . g:colors.error
+execute 'highlight DiffText guifg=' . g:GetINFOForeground() . ' guibg=' . g:colors.info
 
 " Directory
-execute 'highlight Directory guifg=' . g:syntaxColors.class
+execute 'highlight Directory guifg=' . g:syntax_colors.class
 
 " Whitespace
-execute 'highlight WhitespaceEOL guifg=' . g:colors.ERROR . ' guibg=NONE'
-execute 'highlight NonText guifg=' . g:syntaxColors.comment . ' gui=NONE'
-execute 'highlight SpecialKey guifg=' . g:syntaxColors.comment . ' gui=NONE'
+execute 'highlight WhitespaceEOL guifg=' . g:colors.error . ' guibg=NONE'
+execute 'highlight NonText guifg=' . g:syntax_colors.comment . ' gui=NONE'
+execute 'highlight SpecialKey guifg=' . g:syntax_colors.comment . ' gui=NONE'
 
 " Wild menu
-execute 'highlight WildMenu guifg=' . g:theme_getAC2Foreground() . ' guibg=' . g:colors.AC2
+execute 'highlight WildMenu guifg=' . g:colors.bg3 . ' guibg=' . g:colors.fg2
 
 " QuickFix
-execute 'highlight qfLineNr guifg=' . g:syntaxColors.comment
-execute 'highlight qfFileName guifg=' . g:syntaxColors.class
+execute 'highlight qfLineNr guifg=' . g:syntax_colors.comment
+execute 'highlight qfFileName guifg=' . g:colors.ac1
 
 " Treesitter Context
-execute 'highlight TreesitterContext guibg=' . g:colors.BG2
-execute 'highlight TreesitterContextLineNumber guifg=' . g:colors.AC1 . ' guibg=' . g:colors.BG2
+execute 'highlight TreesitterContext guibg=' . g:colors.bg2
+execute 'highlight TreesitterContextLineNumber guifg=' . g:colors.ac1 . ' guibg=' . g:colors.bg3
 
 " LSP References
-execute 'highlight LspReferenceText guibg=' . g:colors.selection
-execute 'highlight LspReferenceRead guibg=' . g:colors.selection
-execute 'highlight LspReferenceWrite guibg=' . g:colors.selection
+execute 'highlight LspReferenceText guibg=' . g:colors.selection . ' guifg=' . g:GetSelectionForeground()
+execute 'highlight LspReferenceRead guibg=' . g:colors.selection . ' guifg=' . g:GetSelectionForeground()
+execute 'highlight LspReferenceWrite guibg=' . g:colors.selection . ' guifg=' . g:GetSelectionForeground()
 
 " LSP Diagnostics
-execute 'highlight DiagnosticError guifg=' . g:colors.ERROR
-execute 'highlight DiagnosticWarn guifg=' . g:colors.WARNING
-execute 'highlight DiagnosticInfo guifg=' . g:colors.INFO
-execute 'highlight DiagnosticHint guifg=' . g:colors.SUCCESS
+execute 'highlight DiagnosticError guifg=' . g:colors.error
+execute 'highlight DiagnosticWarn guifg=' . g:colors.warning
+execute 'highlight DiagnosticInfo guifg=' . g:colors.info
+execute 'highlight DiagnosticHint guifg=' . g:colors.success
 
-execute 'highlight DiagnosticUnderlineError gui=undercurl guisp=' . g:colors.ERROR
-execute 'highlight DiagnosticUnderlineWarn gui=undercurl guisp=' . g:colors.WARNING
-execute 'highlight DiagnosticUnderlineInfo gui=undercurl guisp=' . g:colors.INFO
-execute 'highlight DiagnosticUnderlineHint gui=undercurl guisp=' . g:colors.SUCCESS
+execute 'highlight DiagnosticUnderlineError gui=undercurl guisp=' . g:colors.error
+execute 'highlight DiagnosticUnderlineWarn gui=undercurl guisp=' . g:colors.warning
+execute 'highlight DiagnosticUnderlineInfo gui=undercurl guisp=' . g:colors.info
+execute 'highlight DiagnosticUnderlineHint gui=undercurl guisp=' . g:colors.success
 
 " Neovim Terminal Colors
-let g:terminal_color_0 = g:ansiColors.Black
-let g:terminal_color_1 = g:ansiColors.Red
-let g:terminal_color_2 = g:ansiColors.Green
-let g:terminal_color_3 = g:ansiColors.Yellow
-let g:terminal_color_4 = g:ansiColors.Blue
-let g:terminal_color_5 = g:ansiColors.Magenta
-let g:terminal_color_6 = g:ansiColors.Cyan
-let g:terminal_color_7 = g:ansiColors.White
-let g:terminal_color_8 = g:ansiColors.BrightBlack
-let g:terminal_color_9 = g:ansiColors.BrightRed
-let g:terminal_color_10 = g:ansiColors.BrightGreen
-let g:terminal_color_11 = g:ansiColors.BrightYellow
-let g:terminal_color_12 = g:ansiColors.BrightBlue
-let g:terminal_color_13 = g:ansiColors.BrightMagenta
-let g:terminal_color_14 = g:ansiColors.BrightCyan
-let g:terminal_color_15 = g:ansiColors.BrightWhite
+let g:terminal_color_0 = g:ansi_colors.black
+let g:terminal_color_1 = g:ansi_colors.red
+let g:terminal_color_2 = g:ansi_colors.green
+let g:terminal_color_3 = g:ansi_colors.yellow
+let g:terminal_color_4 = g:ansi_colors.blue
+let g:terminal_color_5 = g:ansi_colors.magenta
+let g:terminal_color_6 = g:ansi_colors.cyan
+let g:terminal_color_7 = g:ansi_colors.white
+let g:terminal_color_8 = g:ansi_colors.bright_black
+let g:terminal_color_9 = g:ansi_colors.bright_red
+let g:terminal_color_10 = g:ansi_colors.bright_green
+let g:terminal_color_11 = g:ansi_colors.bright_yellow
+let g:terminal_color_12 = g:ansi_colors.bright_blue
+let g:terminal_color_13 = g:ansi_colors.bright_magenta
+let g:terminal_color_14 = g:ansi_colors.bright_cyan
+let g:terminal_color_15 = g:ansi_colors.bright_white

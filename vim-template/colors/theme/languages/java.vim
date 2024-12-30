@@ -12,8 +12,8 @@ execute 'highlight javaTypedef guifg=' . g:syntax_colors.type
 " Classes and interfaces
 execute 'highlight javaClassDecl guifg=' . g:syntax_colors.storage
 execute 'highlight javaClassName guifg=' . g:syntax_colors.class
-execute 'highlight javaInterfaceName guifg=' . g:syntax_colors.interface
-execute 'highlight javaInterface guifg=' . g:syntax_colors.interface
+execute 'highlight javaInterfaceName guifg=' . g:syntax_colors.type
+execute 'highlight javaInterface guifg=' . g:syntax_colors.type
 execute 'highlight javaClassExtends guifg=' . g:syntax_colors.keyword
 execute 'highlight javaInterfaceExtends guifg=' . g:syntax_colors.keyword
 execute 'highlight javaImplements guifg=' . g:syntax_colors.keyword
@@ -54,17 +54,17 @@ execute 'highlight javaThrow guifg=' . g:syntax_colors.control
 execute 'highlight javaSynchronized guifg=' . g:syntax_colors.modifier
 
 " Comments and documentation
-execute 'highlight javaComment guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight javaLineComment guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight javaDocComment guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
+execute 'highlight javaComment guifg=' . g:syntax_colors.comment 
+execute 'highlight javaLineComment guifg=' . g:syntax_colors.comment 
+execute 'highlight javaDocComment guifg=' . g:syntax_colors.comment
 execute 'highlight javaTodo guifg=' . g:syntax_colors.comment . ' gui=bold'
 execute 'highlight javaDocTags guifg=' . g:syntax_colors.comment . ' gui=bold'
-execute 'highlight javaDocParam guifg=' . g:syntax_colors.parameter . ' gui=italic'
-execute 'highlight javaDocSeeTag guifg=' . g:syntax_colors.comment . ' gui=italic'
+execute 'highlight javaDocParam guifg=' . g:syntax_colors.parameter
+execute 'highlight javaDocSeeTag guifg=' . g:syntax_colors.comment 
 
 " Literals and values
-execute 'highlight javaString guifg=' . g:syntax_colors.string
-execute 'highlight javaCharacter guifg=' . g:syntax_colors.string
+execute 'highlight javaString guifg=' . g:colors.fg1
+execute 'highlight javaCharacter guifg=' . g:colors.fg2
 execute 'highlight javaNumber guifg=' . g:syntax_colors.constant
 execute 'highlight javaFloat guifg=' . g:syntax_colors.constant
 execute 'highlight javaBoolean guifg=' . g:syntax_colors.constant
@@ -83,16 +83,16 @@ execute 'highlight javaAnnotationMember guifg=' . g:syntax_colors.property
 
 " Operators and delimiters
 execute 'highlight javaOperator guifg=' . g:syntax_colors.operator
-execute 'highlight javaBracket guifg=' . g:syntax_colors.punctuation
-execute 'highlight javaParen guifg=' . g:syntax_colors.punctuation
-execute 'highlight javaBrace guifg=' . g:syntax_colors.punctuation
+execute 'highlight javaBracket guifg=' . g:syntax_colors.punctuation_brace
+execute 'highlight javaParen guifg=' . g:syntax_colors.punctuation_brace
+execute 'highlight javaBrace guifg=' . g:syntax_colors.punctuation_brace
 execute 'highlight javaComma guifg=' . g:syntax_colors.punctuation_comma
 execute 'highlight javaSemiColon guifg=' . g:syntax_colors.punctuation
 execute 'highlight javaDot guifg=' . g:syntax_colors.punctuation
 
 " Special syntax
-execute 'highlight javaSpecialChar guifg=' . g:syntax_colors.string_escape
-execute 'highlight javaFormat guifg=' . g:syntax_colors.string_escape
+execute 'highlight javaSpecialChar guifg=' . g:colors.fg2
+execute 'highlight javaFormat guifg=' . g:colors.fg2
 execute 'highlight javaLambda guifg=' . g:syntax_colors.function
 execute 'highlight javaMethodReference guifg=' . g:syntax_colors.function
 
@@ -113,7 +113,7 @@ execute 'highlight javaExports guifg=' . g:syntax_colors.keyword
 execute 'highlight javaOpens guifg=' . g:syntax_colors.keyword
 execute 'highlight javaProvides guifg=' . g:syntax_colors.keyword
 execute 'highlight javaUses guifg=' . g:syntax_colors.keyword
-execute 'highlight javaTextBlock guifg=' . g:syntax_colors.string
+execute 'highlight javaTextBlock guifg=' . g:colors.fg2
 execute 'highlight javaVarKeyword guifg=' . g:syntax_colors.type
 execute 'highlight javaSealedClass guifg=' . g:syntax_colors.keyword
 execute 'highlight javaPermits guifg=' . g:syntax_colors.keyword

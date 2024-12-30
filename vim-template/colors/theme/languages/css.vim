@@ -13,18 +13,18 @@ execute 'highlight cssAttributeSelector guifg=' . g:syntax_colors.attribute
 
 " Properties
 execute 'highlight cssDefinition guifg=' . g:syntax_colors.property
-execute 'highlight cssAttr guifg=' . g:syntax_colors.value
-execute 'highlight cssAttrRegion guifg=' . g:syntax_colors.value
+execute 'highlight cssAttr guifg=' . g:syntax_colors.attribute
+execute 'highlight cssAttrRegion guifg=' . g:syntax_colors.attribute
 execute 'highlight cssCustomProp guifg=' . g:syntax_colors.property
 execute 'highlight cssVendor guifg=' . g:syntax_colors.support
 execute 'highlight cssImportant guifg=' . g:syntax_colors.keyword . ' gui=bold'
 
 " Values
 execute 'highlight cssColor guifg=' . g:syntax_colors.constant
-execute 'highlight cssUnitDecorators guifg=' . g:syntax_colors.constant
+execute 'highlight cssUnitDecorators guifg=' . g:syntax_colors.unit
 execute 'highlight cssValueNumber guifg=' . g:syntax_colors.constant
 execute 'highlight cssValueLength guifg=' . g:syntax_colors.constant
-execute 'highlight cssValueTime guifg=' . g:syntax_colors.constant
+execute 'highlight cssValueTime guifg=' . g:syntax_colors.datetime
 execute 'highlight cssValueFrequency guifg=' . g:syntax_colors.constant
 execute 'highlight cssValueAngle guifg=' . g:syntax_colors.constant
 execute 'highlight cssFunction guifg=' . g:syntax_colors.function
@@ -61,13 +61,13 @@ execute 'highlight cssTransformAttr guifg=' . g:syntax_colors.constant
 
 " Layout and Box Model
 execute 'highlight cssBoxProp guifg=' . g:syntax_colors.property
-execute 'highlight cssBoxAttr guifg=' . g:syntax_colors.value
+execute 'highlight cssBoxAttr guifg=' . g:syntax_colors.attribute
 execute 'highlight cssFlexibleBoxProp guifg=' . g:syntax_colors.property
-execute 'highlight cssFlexibleBoxAttr guifg=' . g:syntax_colors.value
+execute 'highlight cssFlexibleBoxAttr guifg=' . g:syntax_colors.attribute
 execute 'highlight cssGridProp guifg=' . g:syntax_colors.property
-execute 'highlight cssGridAttr guifg=' . g:syntax_colors.value
+execute 'highlight cssGridAttr guifg=' . g:syntax_colors.attribute
 execute 'highlight cssPositioningProp guifg=' . g:syntax_colors.property
-execute 'highlight cssPositioningAttr guifg=' . g:syntax_colors.value
+execute 'highlight cssPositioningAttr guifg=' . g:syntax_colors.attribute
 
 " Special syntax
 execute 'highlight cssBraces guifg=' . g:syntax_colors.punctuationBrace
@@ -75,8 +75,8 @@ execute 'highlight cssProp guifg=' . g:syntax_colors.property
 execute 'highlight cssComment guifg=' . g:syntax_colors.comment
 execute 'highlight cssError guifg=' . g:syntax_colors.error
 execute 'highlight cssNoise guifg=' . g:syntax_colors.punctuation
-execute 'highlight cssStringQ guifg=' . g:syntax_colors.string
-execute 'highlight cssStringQQ guifg=' . g:syntax_colors.string
+execute 'highlight cssStringQ guifg=' . g:colors.fg2
+execute 'highlight cssStringQQ guifg=' . g:colors.fg2
 execute 'highlight cssDeprecated guifg=' . g:syntax_colors.comment . ' gui=strikethrough'
 
 " SCSS specific

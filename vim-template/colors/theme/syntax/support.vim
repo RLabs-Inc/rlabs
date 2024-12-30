@@ -1,7 +1,7 @@
 " Support syntax highlighting (matching VSCode's support token colors)
 
 " Basic support elements
-execute 'highlight Support guifg=' . g:syntax_colors.support_type
+execute 'highlight Support guifg=' . g:syntax_colors.support
 execute 'highlight SupportFunction guifg=' . g:syntax_colors.support_function
 execute 'highlight SupportMethod guifg=' . g:syntax_colors.support_method
 execute 'highlight SupportClass guifg=' . g:syntax_colors.class
@@ -14,26 +14,26 @@ execute 'highlight SupportProperty guifg=' . g:syntax_colors.support_property
 execute 'highlight cLibrary guifg=' . g:syntax_colors.support_function
 execute 'highlight cLibFunction guifg=' . g:syntax_colors.support_function
 execute 'highlight cLibType guifg=' . g:syntax_colors.type
-execute 'highlight cppSTL guifg=' . g:syntax_colors.support_type
+execute 'highlight cppSTL guifg=' . g:syntax_colors.support
 execute 'highlight cppSTLfunction guifg=' . g:syntax_colors.support_function
 execute 'highlight cppSTLtype guifg=' . g:syntax_colors.type
 execute 'highlight cppSTLexception guifg=' . g:syntax_colors.type
-execute 'highlight cppSTLnamespace guifg=' . g:syntax_colors.namespace
+execute 'highlight cppSTLclass guifg=' . g:syntax_colors.class
 
 " JavaScript/TypeScript
-execute 'highlight jsGlobalObjects guifg=' . g:syntax_colors.support_type
+execute 'highlight jsGlobalObjects guifg=' . g:syntax_colors.support
 execute 'highlight jsBuiltins guifg=' . g:syntax_colors.support_function
-execute 'highlight jsDOMObjects guifg=' . g:syntax_colors.support_type
+execute 'highlight jsDOMObjects guifg=' . g:syntax_colors.support
 execute 'highlight jsDOMMethods guifg=' . g:syntax_colors.support_method
 execute 'highlight jsDOMProperties guifg=' . g:syntax_colors.support_property
-execute 'highlight jsWindowObjects guifg=' . g:syntax_colors.support_type
+execute 'highlight jsWindowObjects guifg=' . g:syntax_colors.support
 execute 'highlight jsWindowMethods guifg=' . g:syntax_colors.support_method
 execute 'highlight jsWindowProperties guifg=' . g:syntax_colors.support_property
-execute 'highlight jsConsole guifg=' . g:syntax_colors.support_type
+execute 'highlight jsConsole guifg=' . g:syntax_colors.support
 execute 'highlight jsConsoleMethods guifg=' . g:syntax_colors.support_method
-execute 'highlight jsPromise guifg=' . g:syntax_colors.support_type
+execute 'highlight jsPromise guifg=' . g:syntax_colors.support
 execute 'highlight jsPromiseMethods guifg=' . g:syntax_colors.support_method
-execute 'highlight typescriptGlobal guifg=' . g:syntax_colors.support_type
+execute 'highlight typescriptGlobal guifg=' . g:syntax_colors.support
 execute 'highlight typescriptBOMWindowProp guifg=' . g:syntax_colors.support_property
 execute 'highlight typescriptDOMStorageProp guifg=' . g:syntax_colors.support_property
 execute 'highlight typescriptFileReaderProp guifg=' . g:syntax_colors.support_property
@@ -41,7 +41,7 @@ execute 'highlight typescriptGlobalMethod guifg=' . g:syntax_colors.support_meth
 
 " Python
 execute 'highlight pythonBuiltin guifg=' . g:syntax_colors.support_function
-execute 'highlight pythonBuiltinObj guifg=' . g:syntax_colors.support_type
+execute 'highlight pythonBuiltinObj guifg=' . g:syntax_colors.support
 execute 'highlight pythonBuiltinFunc guifg=' . g:syntax_colors.support_function
 execute 'highlight pythonBuiltinType guifg=' . g:syntax_colors.type
 execute 'highlight pythonExceptions guifg=' . g:syntax_colors.type
@@ -49,12 +49,12 @@ execute 'highlight pythonException guifg=' . g:syntax_colors.type
 
 " Ruby
 execute 'highlight rubyClass guifg=' . g:syntax_colors.class
-execute 'highlight rubyModule guifg=' . g:syntax_colors.namespace
+execute 'highlight rubyModule guifg=' . g:syntax_colors.class
 execute 'highlight rubyPseudoVariable guifg=' . g:syntax_colors.variable_readonly
 execute 'highlight rubyConstant guifg=' . g:syntax_colors.constant
 
 " Java
-execute 'highlight javaLangObject guifg=' . g:syntax_colors.support_type
+execute 'highlight javaLangObject guifg=' . g:syntax_colors.support
 execute 'highlight javaLangClass guifg=' . g:syntax_colors.class
 execute 'highlight javaLangMethod guifg=' . g:syntax_colors.support_method
 execute 'highlight javaLangThrowable guifg=' . g:syntax_colors.type
@@ -68,11 +68,11 @@ execute 'highlight goDeclaration guifg=' . g:syntax_colors.storage
 execute 'highlight goDeclType guifg=' . g:syntax_colors.type
 
 " Rust
-execute 'highlight rustLibrary guifg=' . g:syntax_colors.support_type
-execute 'highlight rustTrait guifg=' . g:syntax_colors.interface
-execute 'highlight rustEnum guifg=' . g:syntax_colors.enum
-execute 'highlight rustEnumVariant guifg=' . g:syntax_colors.enum_member
-execute 'highlight rustModPath guifg=' . g:syntax_colors.namespace
+execute 'highlight rustLibrary guifg=' . g:syntax_colors.support
+execute 'highlight rustTrait guifg=' . g:syntax_colors.type
+execute 'highlight rustEnum guifg=' . g:syntax_colors.type
+execute 'highlight rustEnumVariant guifg=' . g:syntax_colors.type
+execute 'highlight rustModPath guifg=' . g:syntax_colors.class
 execute 'highlight rustSelf guifg=' . g:syntax_colors.variable_readonly
 
 " PHP

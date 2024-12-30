@@ -8,7 +8,7 @@ execute 'highlight svelteTagName guifg=' . g:syntax_colors.tag
 execute 'highlight svelteTagDelimiter guifg=' . g:syntax_colors.tag_punctuation
 execute 'highlight svelteAttribute guifg=' . g:syntax_colors.attribute
 execute 'highlight svelteAttributeShorthand guifg=' . g:syntax_colors.attribute
-execute 'highlight svelteAttributeValue guifg=' . g:syntax_colors.string
+execute 'highlight svelteAttributeValue guifg=' . g:colors.fg2
 
 " Script and style blocks
 execute 'highlight svelteScriptTag guifg=' . g:syntax_colors.tag
@@ -74,15 +74,15 @@ execute 'highlight svelteExpression guifg=' . g:syntax_colors.variable
 execute 'highlight svelteExpressionDelimiter guifg=' . g:syntax_colors.punctuation
 
 " Comments and documentation
-execute 'highlight svelteComment guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight svelteCommentBlock guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
+execute 'highlight svelteComment guifg=' . g:syntax_colors.comment 
+execute 'highlight svelteCommentBlock guifg=' . g:syntax_colors.comment 
 execute 'highlight svelteCommentTodo guifg=' . g:syntax_colors.comment . ' gui=bold'
 
 " Special syntax
 execute 'highlight svelteProp guifg=' . g:syntax_colors.property
 execute 'highlight svelteStore guifg=' . g:syntax_colors.variable
-execute 'highlight svelteAwait guifg=' . g:syntax_colors.control
-execute 'highlight svelteThen guifg=' . g:syntax_colors.control
-execute 'highlight svelteCatch guifg=' . g:syntax_colors.control
+execute 'highlight svelteAwait guifg=' . g:syntax_colors.control_flow
+execute 'highlight svelteThen guifg=' . g:syntax_colors.control_flow
+execute 'highlight svelteCatch guifg=' . g:syntax_colors.control_flow
 execute 'highlight svelteKey guifg=' . g:syntax_colors.attribute
 execute 'highlight svelteEach guifg=' . g:syntax_colors.control

@@ -64,8 +64,8 @@ execute 'highlight rustNumber guifg=' . g:syntax_colors.constant
 execute 'highlight rustBoolean guifg=' . g:syntax_colors.constant
 execute 'highlight rustFloat guifg=' . g:syntax_colors.constant
 execute 'highlight rustConstant guifg=' . g:syntax_colors.constant
-execute 'highlight rustEnum guifg=' . g:syntax_colors.enum
-execute 'highlight rustEnumVariant guifg=' . g:syntax_colors.enum_member
+execute 'highlight rustEnum guifg=' . g:syntax_colors.type
+execute 'highlight rustEnumVariant guifg=' . g:syntax_colors.type
 
 " PHP
 execute 'highlight phpConstant guifg=' . g:syntax_colors.constant

@@ -117,9 +117,9 @@
         <div class="flex items-center gap-2">
           <span class="text-muted-foreground text-xs">LCH:</span>
           <span class="font-mono">
-            {formatDecimal(pickerColorState().pickerLightness[0])}%,
-            {pickerColorState().pickerChroma[0]},
-            {formatDecimal(pickerColorState().pickerHue[0])}°
+            {formatDecimal(pickerColorState().pickerLightness[0], 2)}%,
+            {formatDecimal(pickerColorState().pickerChroma[0], 3)},
+            {formatDecimal(pickerColorState().pickerHue[0], 2)}°
             {#if pickerColorState().pickerAlpha[0] !== 100}
               - {formatDecimal(pickerColorState().pickerAlpha[0])}%
             {/if}
@@ -134,7 +134,7 @@
           >Alpha: {formatDecimal(pickerColorState().pickerAlpha[0])}%</label
         >
         <Input
-          class="w-20"
+          class="w-23"
           type="number"
           min={0}
           max={100}
@@ -172,14 +172,14 @@
   <div class="order-2 flex w-[280px] flex-col gap-2 md:order-1 lg:order-2">
     <div class="flex items-center justify-between">
       <label for="lightness-slider" class="text-xs"
-        >Lightness: {formatDecimal(pickerColorState().pickerLightness[0])}%</label
+        >Lightness: {formatDecimal(pickerColorState().pickerLightness[0], 2)}%</label
       >
       <Input
-        class="w-20"
+        class="w-23"
         type="number"
         min={0}
         max={100}
-        step={0.1}
+        step={0.01}
         value={pickerColorState().pickerLightness[0]}
         oninput={(e) => {
           pickerColorState().setPickerLightness([Number((e.target as HTMLInputElement).value)]);
@@ -203,7 +203,7 @@
       }}
       min={0}
       max={100}
-      step={0.1}
+      step={0.01}
       bgColor={bgLightness}
       controlledValue={true}
       alpha={false}
@@ -216,14 +216,14 @@
   <div class="order-3 flex w-[280px] flex-col gap-2 md:order-2 lg:order-3">
     <div class="flex items-center justify-between">
       <label for="chroma-slider" class="text-xs"
-        >Chroma: {formatDecimal(pickerColorState().pickerChroma[0])}</label
+        >Chroma: {formatDecimal(pickerColorState().pickerChroma[0], 4)}</label
       >
       <Input
-        class="w-20"
+        class="w-23"
         type="number"
         min={0}
         max={0.4}
-        step={0.01}
+        step={0.0001}
         value={pickerColorState().pickerChroma[0]}
         oninput={(e) => {
           pickerColorState().setPickerChroma([Number((e.target as HTMLInputElement).value)]);
@@ -249,7 +249,7 @@
       }}
       min={0}
       max={0.4}
-      step={0.001}
+      step={0.0001}
       bgColor={bgChroma}
       controlledValue={true}
       alpha={false}
@@ -262,14 +262,14 @@
   <div class="order-4 flex w-[280px] flex-col gap-2">
     <div class="flex items-center justify-between">
       <label for="hue-slider" class="text-xs"
-        >Hue: {formatDecimal(pickerColorState().pickerHue[0])}°</label
+        >Hue: {formatDecimal(pickerColorState().pickerHue[0], 2)}°</label
       >
       <Input
-        class="w-20"
+        class="w-23"
         type="number"
         min={0}
         max={360}
-        step={0.1}
+        step={0.01}
         value={pickerColorState().pickerHue[0]}
         oninput={(e) => {
           pickerColorState().setPickerHue([Number((e.target as HTMLInputElement).value)]);
@@ -293,7 +293,7 @@
       }}
       min={0}
       max={360}
-      step={0.1}
+      step={0.01}
       bgColor={bgHue}
       controlledValue={true}
       alpha={false}

@@ -169,14 +169,14 @@
   <div class="flex w-[280px] flex-col gap-2 lg:order-1">
     <div class="flex items-center justify-between">
       <label for="lightness-slider" class="text-foreground-st text-xs"
-        >Lightness: {formatDecimal(pickerState().lightness[0])}%</label
+        >Lightness: {formatDecimal(pickerState().lightness[0], 3)}%</label
       >
       <Input
         class="text-foreground-st bg-background-st ring-offset-background-st ring-ring-st focus:ring-ring-st border-border-st w-20"
         type="number"
         min={0}
         max={100}
-        step={0.1}
+        step={0.01}
         value={pickerState().lightness[0]}
         oninput={(e) => {
           pickerState().setPickerLightness([Number((e.target as HTMLInputElement).value)]);
@@ -206,7 +206,7 @@
       }}
       min={0}
       max={100}
-      step={0.1}
+      step={0.01}
       bgColor={bgLightness}
       controlledValue={true}
       alpha={false}
@@ -219,14 +219,14 @@
   <div class="flex w-[280px] flex-col gap-2 lg:order-2">
     <div class="flex items-center justify-between">
       <label for="chroma-slider" class="text-foreground-st text-xs"
-        >Chroma: {formatDecimal(pickerState().chroma[0])}</label
+        >Chroma: {formatDecimal(pickerState().chroma[0], 4)}</label
       >
       <Input
         class="text-foreground-st bg-background-st ring-offset-background-st ring-ring-st focus:ring-ring-st border-border-st w-20"
         type="number"
         min={0}
         max={0.4}
-        step={0.01}
+        step={0.001}
         value={pickerState().chroma[0]}
         oninput={(e) => {
           pickerState().setPickerChroma([Number((e.target as HTMLInputElement).value)]);
@@ -265,14 +265,14 @@
   <div class="flex w-[280px] flex-col gap-2 lg:order-4">
     <div class="flex items-center justify-between">
       <label for="hue-slider" class="text-foreground-st text-xs"
-        >Hue: {formatDecimal(pickerState().hue[0])}°</label
+        >Hue: {formatDecimal(pickerState().hue[0], 3)}°</label
       >
       <Input
         class="text-foreground-st bg-background-st ring-offset-background-st ring-ring-st focus:ring-ring-st border-input-st w-20"
         type="number"
         min={0}
         max={360}
-        step={0.1}
+        step={0.01}
         value={pickerState().hue[0]}
         oninput={(e) => {
           pickerState().setPickerHue([Number((e.target as HTMLInputElement).value)]);
@@ -296,7 +296,7 @@
       }}
       min={0}
       max={360}
-      step={0.1}
+      step={0.01}
       bgColor={bgHue}
       controlledValue={true}
       alpha={false}

@@ -11,9 +11,9 @@ execute 'highlight csPreprocessor guifg=' . g:syntax_colors.keyword
 
 " Classes and interfaces
 execute 'highlight csClass guifg=' . g:syntax_colors.class
-execute 'highlight csInterface guifg=' . g:syntax_colors.interface
+execute 'highlight csInterface guifg=' . g:syntax_colors.type
 execute 'highlight csStruct guifg=' . g:syntax_colors.type
-execute 'highlight csEnum guifg=' . g:syntax_colors.enum
+execute 'highlight csEnum guifg=' . g:syntax_colors.type
 execute 'highlight csDelegate guifg=' . g:syntax_colors.type
 execute 'highlight csInheritance guifg=' . g:syntax_colors.keyword
 execute 'highlight csGeneric guifg=' . g:syntax_colors.type
@@ -68,9 +68,9 @@ execute 'highlight csAttributeArg guifg=' . g:syntax_colors.constant
 execute 'highlight csAttributeParens guifg=' . g:syntax_colors.punctuation
 
 " Strings and characters
-execute 'highlight csString guifg=' . g:syntax_colors.string
-execute 'highlight csVerbatimString guifg=' . g:syntax_colors.string
-execute 'highlight csInterpolatedString guifg=' . g:syntax_colors.string
+execute 'highlight csString guifg=' . g:colors.fg1
+execute 'highlight csVerbatimString guifg=' . g:colors.fg2
+execute 'highlight csInterpolatedString guifg=' . g:colors.fg2
 execute 'highlight csInterpolation guifg=' . g:syntax_colors.variable
 execute 'highlight csInterpolationDelimiter guifg=' . g:syntax_colors.punctuation
 execute 'highlight csChar guifg=' . g:syntax_colors.constant
@@ -83,10 +83,10 @@ execute 'highlight csBoolean guifg=' . g:syntax_colors.constant
 execute 'highlight csNull guifg=' . g:syntax_colors.constant
 
 " Comments and documentation
-execute 'highlight csComment guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight csXmlComment guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight csXmlTag guifg=' . g:syntax_colors.keyword . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight csXmlString guifg=' . g:syntax_colors.string . ' gui=' . g:theme_get_style('Comment')
+execute 'highlight csComment guifg=' . g:syntax_colors.comment
+execute 'highlight csXmlComment guifg=' . g:syntax_colors.comment
+execute 'highlight csXmlTag guifg=' . g:syntax_colors.keyword
+execute 'highlight csXmlString guifg=' . g:colors.fg2
 execute 'highlight csTodo guifg=' . g:syntax_colors.comment . ' gui=bold'
 
 " Error handling
@@ -97,8 +97,8 @@ execute 'highlight csFinally guifg=' . g:syntax_colors.control
 execute 'highlight csThrow guifg=' . g:syntax_colors.control
 
 " Special syntax
-execute 'highlight csSpecialChar guifg=' . g:syntax_colors.string_escape
-execute 'highlight csFormat guifg=' . g:syntax_colors.string_escape
+execute 'highlight csSpecialChar guifg=' . g:colors.fg2
+execute 'highlight csFormat guifg=' . g:colors.fg2
 execute 'highlight csGlobalNamespace guifg=' . g:syntax_colors.type
 execute 'highlight csIsType guifg=' . g:syntax_colors.operator
 execute 'highlight csAsType guifg=' . g:syntax_colors.operator

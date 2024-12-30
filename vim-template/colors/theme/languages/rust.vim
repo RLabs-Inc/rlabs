@@ -1,95 +1,95 @@
 " Rust specific highlighting
 
 " Basic syntax
-execute 'highlight rustKeyword guifg=' . g:syntaxColors.keyword
-execute 'highlight rustStorage guifg=' . g:syntaxColors.storage
-execute 'highlight rustOperator guifg=' . g:syntaxColors.operator
-execute 'highlight rustFunction guifg=' . g:syntaxColors.function
-execute 'highlight rustFuncName guifg=' . g:syntaxColors.function
-execute 'highlight rustFuncCall guifg=' . g:syntaxColors.functionCall
-execute 'highlight rustIdentifier guifg=' . g:syntaxColors.variable
+execute 'highlight rustKeyword guifg=' . g:syntax_colors.keyword
+execute 'highlight rustStorage guifg=' . g:syntax_colors.storage
+execute 'highlight rustOperator guifg=' . g:syntax_colors.operator
+execute 'highlight rustFunction guifg=' . g:syntax_colors.function
+execute 'highlight rustFuncName guifg=' . g:syntax_colors.function
+execute 'highlight rustFuncCall guifg=' . g:syntax_colors.function_call
+execute 'highlight rustIdentifier guifg=' . g:syntax_colors.variable
 
 " Types and traits
-execute 'highlight rustType guifg=' . g:syntaxColors.type
-execute 'highlight rustTrait guifg=' . g:syntaxColors.type
-execute 'highlight rustEnum guifg=' . g:syntaxColors.type
-execute 'highlight rustStructure guifg=' . g:syntaxColors.class
-execute 'highlight rustTypedef guifg=' . g:syntaxColors.type
-execute 'highlight rustSelf guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight rustSigil guifg=' . g:syntaxColors.operator
-execute 'highlight rustLifetime guifg=' . g:syntaxColors.storage . ' gui=italic'
+execute 'highlight rustType guifg=' . g:syntax_colors.type
+execute 'highlight rustTrait guifg=' . g:syntax_colors.type
+execute 'highlight rustEnum guifg=' . g:syntax_colors.type
+execute 'highlight rustStructure guifg=' . g:syntax_colors.class
+execute 'highlight rustTypedef guifg=' . g:syntax_colors.type
+execute 'highlight rustSelf guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight rustSigil guifg=' . g:syntax_colors.operator
+execute 'highlight rustLifetime guifg=' . g:syntax_colors.storage
 
 " Modules and paths
-execute 'highlight rustModPath guifg=' . g:syntaxColors.type
-execute 'highlight rustModPathSep guifg=' . g:syntaxColors.punctuation
-execute 'highlight rustModule guifg=' . g:syntaxColors.type
-execute 'highlight rustUse guifg=' . g:syntaxColors.controlImport
-execute 'highlight rustPubScope guifg=' . g:syntaxColors.modifier
-execute 'highlight rustSuper guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight rustCrate guifg=' . g:syntaxColors.variableReadonly
+execute 'highlight rustModPath guifg=' . g:syntax_colors.type
+execute 'highlight rustModPathSep guifg=' . g:syntax_colors.punctuation
+execute 'highlight rustModule guifg=' . g:syntax_colors.type
+execute 'highlight rustUse guifg=' . g:syntax_colors.control_import
+execute 'highlight rustPubScope guifg=' . g:syntax_colors.modifier
+execute 'highlight rustSuper guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight rustCrate guifg=' . g:syntax_colors.variable_readonly
 
 " Attributes and macros
-execute 'highlight rustAttribute guifg=' . g:syntaxColors.attribute
-execute 'highlight rustDerive guifg=' . g:syntaxColors.attribute
-execute 'highlight rustCommentLineDoc guifg=' . g:syntaxColors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight rustMacro guifg=' . g:syntaxColors.function
-execute 'highlight rustAssert guifg=' . g:syntaxColors.function
-execute 'highlight rustPanic guifg=' . g:syntaxColors.function
+execute 'highlight rustAttribute guifg=' . g:syntax_colors.attribute
+execute 'highlight rustDerive guifg=' . g:syntax_colors.attribute
+execute 'highlight rustCommentLineDoc guifg=' . g:syntax_colors.comment
+execute 'highlight rustMacro guifg=' . g:syntax_colors.function
+execute 'highlight rustAssert guifg=' . g:syntax_colors.function
+execute 'highlight rustPanic guifg=' . g:syntax_colors.function
 
 " Control flow
-execute 'highlight rustConditional guifg=' . g:syntaxColors.control
-execute 'highlight rustRepeat guifg=' . g:syntaxColors.control
-execute 'highlight rustReturn guifg=' . g:syntaxColors.controlFlow
-execute 'highlight rustAsync guifg=' . g:syntaxColors.keyword
-execute 'highlight rustAwait guifg=' . g:syntaxColors.keyword
-execute 'highlight rustYield guifg=' . g:syntaxColors.controlFlow
+execute 'highlight rustConditional guifg=' . g:syntax_colors.control
+execute 'highlight rustRepeat guifg=' . g:syntax_colors.control
+execute 'highlight rustReturn guifg=' . g:syntax_colors.control_flow
+execute 'highlight rustAsync guifg=' . g:syntax_colors.keyword
+execute 'highlight rustAwait guifg=' . g:syntax_colors.keyword
+execute 'highlight rustYield guifg=' . g:syntax_colors.control_flow
 
 " Memory management
-execute 'highlight rustOwnership guifg=' . g:syntaxColors.storage
-execute 'highlight rustBorrow guifg=' . g:syntaxColors.storage
-execute 'highlight rustMutable guifg=' . g:syntaxColors.modifier
-execute 'highlight rustMove guifg=' . g:syntaxColors.storage
-execute 'highlight rustBoxNew guifg=' . g:syntaxColors.function
-execute 'highlight rustBoxHeap guifg=' . g:syntaxColors.type
+execute 'highlight rustOwnership guifg=' . g:syntax_colors.storage
+execute 'highlight rustBorrow guifg=' . g:syntax_colors.storage
+execute 'highlight rustMutable guifg=' . g:syntax_colors.modifier
+execute 'highlight rustMove guifg=' . g:syntax_colors.storage
+execute 'highlight rustBoxNew guifg=' . g:syntax_colors.function
+execute 'highlight rustBoxHeap guifg=' . g:syntax_colors.type
 
 " Constants and literals
-execute 'highlight rustBoolean guifg=' . g:syntaxColors.constant
-execute 'highlight rustNumber guifg=' . g:syntaxColors.constant
-execute 'highlight rustFloat guifg=' . g:syntaxColors.constant
-execute 'highlight rustString guifg=' . g:colors.FG1
-execute 'highlight rustStringDelimiter guifg=' . g:syntaxColors.punctuationQuote
-execute 'highlight rustCharacter guifg=' . g:syntaxColors.constant
-execute 'highlight rustConstant guifg=' . g:syntaxColors.constant
+execute 'highlight rustBoolean guifg=' . g:syntax_colors.constant
+execute 'highlight rustNumber guifg=' . g:syntax_colors.constant
+execute 'highlight rustFloat guifg=' . g:syntax_colors.constant
+execute 'highlight rustString guifg=' . g:colors.fg1
+execute 'highlight rustStringDelimiter guifg=' . g:syntax_colors.punctuation_quote
+execute 'highlight rustCharacter guifg=' . g:syntax_colors.constant
+execute 'highlight rustConstant guifg=' . g:syntax_colors.constant
 
 " Error handling
-execute 'highlight rustResult guifg=' . g:syntaxColors.type
-execute 'highlight rustOption guifg=' . g:syntaxColors.type
-execute 'highlight rustTry guifg=' . g:syntaxColors.controlFlow
-execute 'highlight rustMatch guifg=' . g:syntaxColors.control
-execute 'highlight rustMatchArm guifg=' . g:syntaxColors.control
+execute 'highlight rustResult guifg=' . g:syntax_colors.type
+execute 'highlight rustOption guifg=' . g:syntax_colors.type
+execute 'highlight rustTry guifg=' . g:syntax_colors.control_flow
+execute 'highlight rustMatch guifg=' . g:syntax_colors.control
+execute 'highlight rustMatchArm guifg=' . g:syntax_colors.control
 
 " Unsafe code
-execute 'highlight rustUnsafe guifg=' . g:syntaxColors.keyword . ' gui=bold'
-execute 'highlight rustUnion guifg=' . g:syntaxColors.type
+execute 'highlight rustUnsafe guifg=' . g:syntax_colors.keyword . ' gui=bold'
+execute 'highlight rustUnion guifg=' . g:syntax_colors.type
 
 " FFI
-execute 'highlight rustExtern guifg=' . g:syntaxColors.keyword
-execute 'highlight rustExternCrate guifg=' . g:syntaxColors.keyword
-execute 'highlight rustForeignName guifg=' . g:syntaxColors.function
+execute 'highlight rustExtern guifg=' . g:syntax_colors.keyword
+execute 'highlight rustExternCrate guifg=' . g:syntax_colors.keyword
+execute 'highlight rustForeignName guifg=' . g:syntax_colors.function
 
 " Testing
-execute 'highlight rustTest guifg=' . g:syntaxColors.attribute
-execute 'highlight rustBench guifg=' . g:syntaxColors.attribute
-execute 'highlight rustTestFn guifg=' . g:syntaxColors.function
+execute 'highlight rustTest guifg=' . g:syntax_colors.attribute
+execute 'highlight rustBench guifg=' . g:syntax_colors.attribute
+execute 'highlight rustTestFn guifg=' . g:syntax_colors.function
 
 " Punctuation
-execute 'highlight rustComma guifg=' . g:syntaxColors.punctuationComma
-execute 'highlight rustSemiColon guifg=' . g:syntaxColors.punctuation
-execute 'highlight rustBracket guifg=' . g:syntaxColors.punctuationBrace
-execute 'highlight rustBrace guifg=' . g:syntaxColors.punctuationBrace
-execute 'highlight rustParen guifg=' . g:syntaxColors.punctuationBrace
-execute 'highlight rustArrow guifg=' . g:syntaxColors.punctuation
-execute 'highlight rustQuestionMark guifg=' . g:syntaxColors.punctuation
+execute 'highlight rustComma guifg=' . g:syntax_colors.punctuation_comma
+execute 'highlight rustSemiColon guifg=' . g:syntax_colors.punctuation
+execute 'highlight rustBracket guifg=' . g:syntax_colors.punctuation_brace
+execute 'highlight rustBrace guifg=' . g:syntax_colors.punctuation_brace
+execute 'highlight rustParen guifg=' . g:syntax_colors.punctuation_brace
+execute 'highlight rustArrow guifg=' . g:syntax_colors.punctuation
+execute 'highlight rustQuestionMark guifg=' . g:syntax_colors.punctuation
 
 " Special syntax
 execute 'highlight rustLabel guifg=' . g:syntax_colors.control

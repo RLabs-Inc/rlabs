@@ -1,122 +1,122 @@
 " PHP specific highlighting
 
 " Basic syntax
-execute 'highlight phpKeyword guifg=' . g:syntaxColors.keyword
-execute 'highlight phpStatement guifg=' . g:syntaxColors.keyword
-execute 'highlight phpType guifg=' . g:syntaxColors.type
-execute 'highlight phpOperator guifg=' . g:syntaxColors.operator
-execute 'highlight phpVarSelector guifg=' . g:syntaxColors.variable
-execute 'highlight phpIdentifier guifg=' . g:syntaxColors.variable
-execute 'highlight phpDefine guifg=' . g:syntaxColors.keyword
+execute 'highlight phpKeyword guifg=' . g:syntax_colors.keyword
+execute 'highlight phpStatement guifg=' . g:syntax_colors.keyword
+execute 'highlight phpType guifg=' . g:syntax_colors.type
+execute 'highlight phpOperator guifg=' . g:syntax_colors.operator
+execute 'highlight phpVarSelector guifg=' . g:syntax_colors.variable
+execute 'highlight phpIdentifier guifg=' . g:syntax_colors.variable
+execute 'highlight phpDefine guifg=' . g:syntax_colors.keyword
 
 " Classes and interfaces
-execute 'highlight phpClass guifg=' . g:syntaxColors.class
-execute 'highlight phpClassName guifg=' . g:syntaxColors.class
-execute 'highlight phpInterface guifg=' . g:syntaxColors.type
-execute 'highlight phpInterfaceName guifg=' . g:syntaxColors.type
-execute 'highlight phpTrait guifg=' . g:syntaxColors.type
-execute 'highlight phpTraitName guifg=' . g:syntaxColors.type
-execute 'highlight phpExtends guifg=' . g:syntaxColors.keyword
-execute 'highlight phpImplements guifg=' . g:syntaxColors.keyword
-execute 'highlight phpUse guifg=' . g:syntaxColors.controlImport
-execute 'highlight phpNamespace guifg=' . g:syntaxColors.controlImport
+execute 'highlight phpClass guifg=' . g:syntax_colors.class
+execute 'highlight phpClassName guifg=' . g:syntax_colors.class
+execute 'highlight phpInterface guifg=' . g:syntax_colors.type
+execute 'highlight phpInterfaceName guifg=' . g:syntax_colors.type
+execute 'highlight phpTrait guifg=' . g:syntax_colors.type
+execute 'highlight phpTraitName guifg=' . g:syntax_colors.type
+execute 'highlight phpExtends guifg=' . g:syntax_colors.keyword
+execute 'highlight phpImplements guifg=' . g:syntax_colors.keyword
+execute 'highlight phpUse guifg=' . g:syntax_colors.control_import
+execute 'highlight phpNamespace guifg=' . g:syntax_colors.control_import
 
 " Methods and functions
-execute 'highlight phpFunction guifg=' . g:syntaxColors.function
-execute 'highlight phpFunctionCall guifg=' . g:syntaxColors.functionCall
-execute 'highlight phpMethod guifg=' . g:syntaxColors.method
-execute 'highlight phpMethodCall guifg=' . g:syntaxColors.methodCall
-execute 'highlight phpStaticCall guifg=' . g:syntaxColors.functionCall
-execute 'highlight phpMagicMethods guifg=' . g:syntaxColors.method
-execute 'highlight phpConstructor guifg=' . g:syntaxColors.function
+execute 'highlight phpFunction guifg=' . g:syntax_colors.function
+execute 'highlight phpFunction_call guifg=' . g:syntax_colors.function_call
+execute 'highlight phpMethod guifg=' . g:syntax_colors.method
+execute 'highlight phpMethodCall guifg=' . g:syntax_colors.method_call
+execute 'highlight phpStaticCall guifg=' . g:syntax_colors.function_call
+execute 'highlight phpMagicMethods guifg=' . g:syntax_colors.method
+execute 'highlight phpConstructor guifg=' . g:syntax_colors.function
 
 " Variables and properties
-execute 'highlight phpVariable guifg=' . g:syntaxColors.variable
-execute 'highlight phpVarSelector guifg=' . g:syntaxColors.variable
-execute 'highlight phpMemberSelector guifg=' . g:syntaxColors.punctuation
-execute 'highlight phpProperty guifg=' . g:syntaxColors.property
-execute 'highlight phpStaticVariable guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight phpGlobal guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight phpSuperglobal guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight phpThis guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight phpMagicConstants guifg=' . g:syntaxColors.constant
+execute 'highlight phpVariable guifg=' . g:syntax_colors.variable
+execute 'highlight phpVarSelector guifg=' . g:syntax_colors.variable
+execute 'highlight phpMemberSelector guifg=' . g:syntax_colors.punctuation
+execute 'highlight phpProperty guifg=' . g:syntax_colors.property
+execute 'highlight phpStaticVariable guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight phpGlobal guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight phpSuperglobal guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight phpThis guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight phpMagicConstants guifg=' . g:syntax_colors.constant
 
 " Control flow
-execute 'highlight phpConditional guifg=' . g:syntaxColors.control
-execute 'highlight phpRepeat guifg=' . g:syntaxColors.control
-execute 'highlight phpLabel guifg=' . g:syntaxColors.control
-execute 'highlight phpReturn guifg=' . g:syntaxColors.controlFlow
-execute 'highlight phpYield guifg=' . g:syntaxColors.controlFlow
-execute 'highlight phpBreak guifg=' . g:syntaxColors.controlFlow
-execute 'highlight phpContinue guifg=' . g:syntaxColors.controlFlow
-execute 'highlight phpGoto guifg=' . g:syntaxColors.controlFlow
+execute 'highlight phpConditional guifg=' . g:syntax_colors.control
+execute 'highlight phpRepeat guifg=' . g:syntax_colors.control
+execute 'highlight phpLabel guifg=' . g:syntax_colors.control
+execute 'highlight phpReturn guifg=' . g:syntax_colors.control_flow
+execute 'highlight phpYield guifg=' . g:syntax_colors.control_flow
+execute 'highlight phpBreak guifg=' . g:syntax_colors.control_flow
+execute 'highlight phpContinue guifg=' . g:syntax_colors.control_flow
+execute 'highlight phpGoto guifg=' . g:syntax_colors.control_flow
 
 " Strings and heredoc
-execute 'highlight phpString guifg=' . g:colors.FG1
-execute 'highlight phpStringDouble guifg=' . g:colors.FG1
-execute 'highlight phpStringSingle guifg=' . g:colors.FG1
-execute 'highlight phpStringDelimiter guifg=' . g:syntaxColors.punctuationQuote
-execute 'highlight phpHereDoc guifg=' . g:colors.FG1
-execute 'highlight phpHereDocDelimiter guifg=' . g:syntaxColors.punctuation
-execute 'highlight phpNowDoc guifg=' . g:colors.FG1
-execute 'highlight phpNowDocDelimiter guifg=' . g:syntaxColors.punctuation
+execute 'highlight phpString guifg=' . g:colors.fg1
+execute 'highlight phpStringDouble guifg=' . g:colors.fg1
+execute 'highlight phpStringSingle guifg=' . g:colors.fg1
+execute 'highlight phpStringDelimiter guifg=' . g:syntax_colors.punctuation_quote
+execute 'highlight phpHereDoc guifg=' . g:colors.fg1
+execute 'highlight phpHereDocDelimiter guifg=' . g:syntax_colors.punctuation
+execute 'highlight phpNowDoc guifg=' . g:colors.fg1
+execute 'highlight phpNowDocDelimiter guifg=' . g:syntax_colors.punctuation
 
 " Numbers and constants
-execute 'highlight phpNumber guifg=' . g:syntaxColors.constant
-execute 'highlight phpFloat guifg=' . g:syntaxColors.constant
-execute 'highlight phpBoolean guifg=' . g:syntaxColors.constant
-execute 'highlight phpNull guifg=' . g:syntaxColors.constant
-execute 'highlight phpConstant guifg=' . g:syntaxColors.constant
+execute 'highlight phpNumber guifg=' . g:syntax_colors.constant
+execute 'highlight phpFloat guifg=' . g:syntax_colors.constant
+execute 'highlight phpBoolean guifg=' . g:syntax_colors.constant
+execute 'highlight phpNull guifg=' . g:syntax_colors.constant
+execute 'highlight phpConstant guifg=' . g:syntax_colors.constant
 
 " Comments and documentation
-execute 'highlight phpComment guifg=' . g:syntaxColors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight phpDocComment guifg=' . g:syntaxColors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight phpDocTags guifg=' . g:syntaxColors.keyword . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight phpDocParam guifg=' . g:syntaxColors.parameter . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight phpDocIdentifier guifg=' . g:syntaxColors.variable . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight phpTodo guifg=' . g:syntaxColors.comment . ' gui=bold'
+execute 'highlight phpComment guifg=' . g:syntax_colors.comment 
+execute 'highlight phpDocComment guifg=' . g:syntax_colors.comment
+execute 'highlight phpDocTags guifg=' . g:syntax_colors.keyword
+execute 'highlight phpDocParam guifg=' . g:syntax_colors.parameter 
+execute 'highlight phpDocIdentifier guifg=' . g:syntax_colors.variable
+execute 'highlight phpTodo guifg=' . g:syntax_colors.comment . ' gui=bold'
 
 " Special syntax
-execute 'highlight phpSpecialChar guifg=' . g:syntaxColors.constant
-execute 'highlight phpBacktick guifg=' . g:syntaxColors.punctuationQuote
-execute 'highlight phpBackslashSequences guifg=' . g:syntaxColors.constant
-execute 'highlight phpBackslashDoubleQuote guifg=' . g:syntaxColors.constant
-execute 'highlight phpBackslashSingleQuote guifg=' . g:syntaxColors.constant
-execute 'highlight phpVarSelectorDeref guifg=' . g:syntaxColors.variable
+execute 'highlight phpSpecialChar guifg=' . g:syntax_colors.constant
+execute 'highlight phpBacktick guifg=' . g:syntax_colors.punctuation_quote
+execute 'highlight phpBackslashSequences guifg=' . g:syntax_colors.constant
+execute 'highlight phpBackslashDoubleQuote guifg=' . g:syntax_colors.constant
+execute 'highlight phpBackslashSingleQuote guifg=' . g:syntax_colors.constant
+execute 'highlight phpVarSelectorDeref guifg=' . g:syntax_colors.variable
 
 " Error handling
-execute 'highlight phpException guifg=' . g:syntaxColors.keyword
-execute 'highlight phpTry guifg=' . g:syntaxColors.keyword
-execute 'highlight phpCatch guifg=' . g:syntaxColors.keyword
-execute 'highlight phpFinally guifg=' . g:syntaxColors.keyword
-execute 'highlight phpError guifg=' . g:colors.ERROR
+execute 'highlight phpException guifg=' . g:syntax_colors.keyword
+execute 'highlight phpTry guifg=' . g:syntax_colors.keyword
+execute 'highlight phpCatch guifg=' . g:syntax_colors.keyword
+execute 'highlight phpFinally guifg=' . g:syntax_colors.keyword
+execute 'highlight phpError guifg=' . g:colors.error
 
 " HTML integration
-execute 'highlight phpRegion guifg=' . g:colors.FG1
-execute 'highlight phpOpenTag guifg=' . g:syntaxColors.tagPunctuation
-execute 'highlight phpCloseTag guifg=' . g:syntaxColors.tagPunctuation
-execute 'highlight phpEchoTag guifg=' . g:syntaxColors.tagPunctuation
-execute 'highlight phpEcho guifg=' . g:syntaxColors.keyword
-execute 'highlight phpPrint guifg=' . g:syntaxColors.keyword
+execute 'highlight phpRegion guifg=' . g:colors.fg1
+execute 'highlight phpOpenTag guifg=' . g:syntax_colors.tag_punctuation
+execute 'highlight phpCloseTag guifg=' . g:syntax_colors.tag_punctuation
+execute 'highlight phpEchoTag guifg=' . g:syntax_colors.tag_punctuation
+execute 'highlight phpEcho guifg=' . g:syntax_colors.keyword
+execute 'highlight phpPrint guifg=' . g:syntax_colors.keyword
 
 " Attributes and modifiers
-execute 'highlight phpAttributes guifg=' . g:syntaxColors.attribute
-execute 'highlight phpAttributeCasts guifg=' . g:syntaxColors.type
-execute 'highlight phpModifier guifg=' . g:syntaxColors.modifier
-execute 'highlight phpVisibility guifg=' . g:syntaxColors.modifier
-execute 'highlight phpFinal guifg=' . g:syntaxColors.modifier
-execute 'highlight phpAbstract guifg=' . g:syntaxColors.modifier
-execute 'highlight phpStatic guifg=' . g:syntaxColors.modifier
+execute 'highlight phpAttributes guifg=' . g:syntax_colors.attribute
+execute 'highlight phpAttributeCasts guifg=' . g:syntax_colors.type
+execute 'highlight phpModifier guifg=' . g:syntax_colors.modifier
+execute 'highlight phpVisibility guifg=' . g:syntax_colors.modifier
+execute 'highlight phpFinal guifg=' . g:syntax_colors.modifier
+execute 'highlight phpAbstract guifg=' . g:syntax_colors.modifier
+execute 'highlight phpStatic guifg=' . g:syntax_colors.modifier
 
 " Modern PHP features
-execute 'highlight phpEnumDeclaration guifg=' . g:syntaxColors.type
-execute 'highlight phpEnumCase guifg=' . g:syntaxColors.constant
-execute 'highlight phpMatchExpression guifg=' . g:syntaxColors.control
-execute 'highlight phpNullsafeOperator guifg=' . g:syntaxColors.operator
-execute 'highlight phpNamedArgument guifg=' . g:syntaxColors.parameter
-execute 'highlight phpTypedProperty guifg=' . g:syntaxColors.property
-execute 'highlight phpPromotedProperty guifg=' . g:syntaxColors.property
-execute 'highlight phpUnionType guifg=' . g:syntaxColors.type
-execute 'highlight phpIntersectionType guifg=' . g:syntaxColors.type
-execute 'highlight phpMixed guifg=' . g:syntaxColors.type
-execute 'highlight phpNever guifg=' . g:syntaxColors.type
+execute 'highlight phpEnumDeclaration guifg=' . g:syntax_colors.type
+execute 'highlight phpEnumCase guifg=' . g:syntax_colors.constant
+execute 'highlight phpMatchExpression guifg=' . g:syntax_colors.control
+execute 'highlight phpNullsafeOperator guifg=' . g:syntax_colors.operator
+execute 'highlight phpNamedArgument guifg=' . g:syntax_colors.parameter
+execute 'highlight phpTypedProperty guifg=' . g:syntax_colors.property
+execute 'highlight phpPromotedProperty guifg=' . g:syntax_colors.property
+execute 'highlight phpUnionType guifg=' . g:syntax_colors.type
+execute 'highlight phpIntersectionType guifg=' . g:syntax_colors.type
+execute 'highlight phpMixed guifg=' . g:syntax_colors.type
+execute 'highlight phpNever guifg=' . g:syntax_colors.type

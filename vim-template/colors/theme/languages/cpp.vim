@@ -39,7 +39,7 @@ execute 'highlight cppVariable guifg=' . g:syntax_colors.variable
 execute 'highlight cppMember guifg=' . g:syntax_colors.property
 execute 'highlight cppField guifg=' . g:syntax_colors.property
 execute 'highlight cppThis guifg=' . g:syntax_colors.variable_readonly
-execute 'highlight cppNamespace guifg=' . g:syntax_colors.namespace
+execute 'highlight cppNamespace guifg=' . g:syntax_colors.class
 
 " Control flow
 execute 'highlight cConditional guifg=' . g:syntax_colors.control
@@ -61,8 +61,8 @@ execute 'highlight cSemicolon guifg=' . g:syntax_colors.punctuation
 execute 'highlight cppSemicolon guifg=' . g:syntax_colors.punctuation
 
 " Literals and values
-execute 'highlight cString guifg=' . g:colors.FG1
-execute 'highlight cppString guifg=' . g:colors.FG1
+execute 'highlight cString guifg=' . g:colors.fg1
+execute 'highlight cppString guifg=' . g:colors.fg1
 execute 'highlight cCharacter guifg=' . g:syntax_colors.constant
 execute 'highlight cppCharacter guifg=' . g:syntax_colors.constant
 execute 'highlight cNumber guifg=' . g:syntax_colors.constant
@@ -75,24 +75,24 @@ execute 'highlight cHexNumber guifg=' . g:syntax_colors.constant
 execute 'highlight cppHexNumber guifg=' . g:syntax_colors.constant
 
 " Preprocessor directives
-execute 'highlight cPreProc guifg=' . g:syntax_colors.preprocessor
-execute 'highlight cppPreProc guifg=' . g:syntax_colors.preprocessor
+execute 'highlight cPreProc guifg=' . g:syntax_colors.control
+execute 'highlight cppPreProc guifg=' . g:syntax_colors.control
 execute 'highlight cInclude guifg=' . g:syntax_colors.control_import
 execute 'highlight cppInclude guifg=' . g:syntax_colors.control_import
-execute 'highlight cDefine guifg=' . g:syntax_colors.preprocessor
-execute 'highlight cppDefine guifg=' . g:syntax_colors.preprocessor
-execute 'highlight cPreCondit guifg=' . g:syntax_colors.preprocessor
-execute 'highlight cppPreCondit guifg=' . g:syntax_colors.preprocessor
+execute 'highlight cDefine guifg=' . g:syntax_colors.control
+execute 'highlight cppDefine guifg=' . g:syntax_colors.control
+execute 'highlight cPreCondit guifg=' . g:syntax_colors.control
+execute 'highlight cppPreCondit guifg=' . g:syntax_colors.control
 execute 'highlight cMacro guifg=' . g:syntax_colors.function
 execute 'highlight cppMacro guifg=' . g:syntax_colors.function
 
 " Comments and documentation
-execute 'highlight cComment guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight cppComment guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight cCommentL guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight cppCommentL guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight cCommentStart guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight cppCommentStart guifg=' . g:syntax_colors.comment . ' gui=' . g:theme_get_style('Comment')
+execute 'highlight cComment guifg=' . g:syntax_colors.comment
+execute 'highlight cppComment guifg=' . g:syntax_colors.comment
+execute 'highlight cCommentL guifg=' . g:syntax_colors.comment
+execute 'highlight cppCommentL guifg=' . g:syntax_colors.comment
+execute 'highlight cCommentStart guifg=' . g:syntax_colors.comment
+execute 'highlight cppCommentStart guifg=' . g:syntax_colors.comment
 execute 'highlight cTodo guifg=' . g:syntax_colors.comment . ' gui=bold'
 execute 'highlight cppTodo guifg=' . g:syntax_colors.comment . ' gui=bold'
 
@@ -103,24 +103,24 @@ execute 'highlight cFormat guifg=' . g:syntax_colors.constant
 execute 'highlight cppFormat guifg=' . g:syntax_colors.constant
 execute 'highlight cSpecialCharacter guifg=' . g:syntax_colors.constant
 execute 'highlight cppSpecialCharacter guifg=' . g:syntax_colors.constant
-execute 'highlight cSpecialError guifg=' . g:colors.ERROR
-execute 'highlight cppSpecialError guifg=' . g:colors.ERROR
+execute 'highlight cSpecialError guifg=' . g:colors.error
+execute 'highlight cppSpecialError guifg=' . g:colors.error
 
 " Error handling
-execute 'highlight cError guifg=' . g:colors.ERROR
-execute 'highlight cppError guifg=' . g:colors.ERROR
-execute 'highlight cBadContinuation guifg=' . g:colors.ERROR
-execute 'highlight cppBadContinuation guifg=' . g:colors.ERROR
-execute 'highlight cParenError guifg=' . g:colors.ERROR
-execute 'highlight cppParenError guifg=' . g:colors.ERROR
-execute 'highlight cErrInParen guifg=' . g:colors.ERROR
-execute 'highlight cppErrInParen guifg=' . g:colors.ERROR
-execute 'highlight cErrInBracket guifg=' . g:colors.ERROR
-execute 'highlight cppErrInBracket guifg=' . g:colors.ERROR
+execute 'highlight cError guifg=' . g:colors.error
+execute 'highlight cppError guifg=' . g:colors.error
+execute 'highlight cBadContinuation guifg=' . g:colors.error
+execute 'highlight cppBadContinuation guifg=' . g:colors.error
+execute 'highlight cParenError guifg=' . g:colors.error
+execute 'highlight cppParenError guifg=' . g:colors.error
+execute 'highlight cErrInParen guifg=' . g:colors.error
+execute 'highlight cppErrInParen guifg=' . g:colors.error
+execute 'highlight cErrInBracket guifg=' . g:colors.error
+execute 'highlight cppErrInBracket guifg=' . g:colors.error
 
 " Modern C++ features
 execute 'highlight cppAutoType guifg=' . g:syntax_colors.type
-execute 'highlight cppRawString guifg=' . g:colors.FG1
+execute 'highlight cppRawString guifg=' . g:colors.fg1
 execute 'highlight cppRawStringDelimiter guifg=' . g:syntax_colors.punctuation_quote
 execute 'highlight cppNullptr guifg=' . g:syntax_colors.constant
 execute 'highlight cppLambda guifg=' . g:syntax_colors.function

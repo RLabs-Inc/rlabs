@@ -1,16 +1,16 @@
 " Theme customization options
 
 " Default values for theme options
-let g:rlabs_transparent_background = get(g:, 'rlabs_transparent_background', 0)
-let g:rlabs_italic_comments = get(g:, 'rlabs_italic_comments', 0)
-let g:rlabs_italic_keywords = get(g:, 'rlabs_italic_keywords', 0)
-let g:rlabs_italic_functions = get(g:, 'rlabs_italic_functions', 0)
-let g:rlabs_italic_variables = get(g:, 'rlabs_italic_variables', 0)
-let g:rlabs_bold_functions = get(g:, 'rlabs_bold_functions', 0)
-let g:rlabs_borders = get(g:, 'rlabs_borders', 1)
-let g:rlabs_contrast = get(g:, 'rlabs_contrast', 'medium')  " low, medium, high
-let g:rlabs_uniform_status_lines = get(g:, 'rlabs_uniform_status_lines', 0)
-let g:rlabs_cursor_line_number_background = get(g:, 'rlabs_cursor_line_number_background', 0)
+let g:${themeNameUnderline}_transparent_background = get(g:, 'theme_transparent_background', 0)
+let g:${themeNameUnderline}_italic_comments = get(g:, 'theme_italic_comments', 0)
+let g:${themeNameUnderline}_italic_keywords = get(g:, 'theme_italic_keywords', 0)
+let g:${themeNameUnderline}_italic_functions = get(g:, 'theme_italic_functions', 0)
+let g:${themeNameUnderline}_italic_variables = get(g:, 'theme_italic_variables', 0)
+let g:${themeNameUnderline}_bold_functions = get(g:, 'theme_bold_functions', 0)
+let g:${themeNameUnderline}_borders = get(g:, 'theme_borders', 1)
+let g:${themeNameUnderline}_contrast = get(g:, 'theme_contrast', 'medium')  " low, medium, high
+let g:${themeNameUnderline}_uniform_status_lines = get(g:, 'theme_uniform_status_lines', 0)
+let g:${themeNameUnderline}_cursor_line_number_background = get(g:, 'theme_cursor_line_number_background', 0)
 
 " Initialize styles dictionary
 let g:styles = {}
@@ -198,27 +198,32 @@ function! g:theme_get_syntax_color(name, fallback)
     return has_key(g:syntax_colors, a:name) ? g:syntax_colors[a:name] : a:fallback
 endfunction
 
+" Function to get syntax color with fallback
+function! g:theme_get_ansi_color(name, fallback)
+  return has_key(g:ansi_colors, a:name) ? g:ansi_colors[a:name] : a:fallback
+endfunction
+
 " Function to get style string based on options
 function! g:theme_get_style(group)
   let l:style = ''
   
-  if a:group == 'Comment' && g:rlabs_italic_comments
+  if a:group == 'Comment' && g:theme_italic_comments
     let l:style .= 'italic'
   endif
   
-  if a:group =~ 'Function' && g:rlabs_italic_functions
+  if a:group =~ 'Function' && g:theme_italic_functions
     let l:style .= len(l:style) ? ',italic' : 'italic'
   endif
   
-  if a:group =~ 'Function' && g:rlabs_bold_functions
+  if a:group =~ 'Function' && g:theme_bold_functions
     let l:style .= len(l:style) ? ',bold' : 'bold'
   endif
   
-  if a:group =~ 'Keyword' && g:rlabs_italic_keywords
+  if a:group =~ 'Keyword' && g:theme_italic_keywords
     let l:style .= len(l:style) ? ',italic' : 'italic'
   endif
   
-  if a:group =~ 'Variable' && g:rlabs_italic_variables
+  if a:group =~ 'Variable' && g:theme_italic_variables
     let l:style .= len(l:style) ? ',italic' : 'italic'
   endif
   
@@ -227,46 +232,46 @@ endfunction
 
 " Function to get background color based on contrast setting
 function! g:theme_get_background()
-  if g:rlabs_transparent_background
+  if g:theme_transparent_background
     return 'NONE'
   endif
   
-  if g:rlabs_contrast == 'low'
-    return g:colors.BG2
-  elseif g:rlabs_contrast == 'high'
-    return g:colors.BG1
+  if g:theme_contrast == 'low'
+    return g:colors.bg2
+  elseif g:theme_contrast == 'high'
+    return g:colors.bg1
   endif
   
-  return g:colors.BG1  " medium contrast (default)
+  return g:colors.bg1  " medium contrast (default)
 endfunction
 
 " Function to get border color based on border setting
 function! g:theme_get_border()
-  return g:rlabs_borders ? g:colors.BORDER : g:colors.BG1
+  return g:theme_borders ? g:colors.border : g:colors.bg1
 endfunction
 
 " Function to get status line colors based on uniform setting
 function! g:theme_get_status_line_bg(mode)
-  if g:rlabs_uniform_status_lines
-    return g:colors.BG2
+  if g:theme_uniform_status_lines
+    return g:colors.bg2
   endif
   
   if a:mode == 'normal'
-    return g:colors.AC2
+    return g:colors.ac2
   elseif a:mode == 'insert'
-    return g:colors.AC1
+    return g:colors.ac1
   elseif a:mode == 'visual'
-    return g:colors.WARNING
+    return g:colors.warning
   elseif a:mode == 'replace'
-    return g:colors.ERROR
+    return g:colors.error
   else
-    return g:colors.BG2
+    return g:colors.bg2
   endif
 endfunction
 
 " Function to get line number background
 function! g:theme_get_line_number_bg()
-  return g:rlabs_cursor_line_number_background ? g:colors.BG2 : 'NONE'
+  return g:theme_cursor_line_number_background ? g:colors.bg2 : 'NONE'
 endfunction
 
 " Export functions to global namespace

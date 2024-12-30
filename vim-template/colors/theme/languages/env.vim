@@ -1,101 +1,101 @@
 " Environment Variables specific highlighting
 
 " Basic syntax
-execute 'highlight envVariable guifg=' . g:syntaxColors.variable
-execute 'highlight envVariableName guifg=' . g:syntaxColors.variable
-execute 'highlight envVariableValue guifg=' . g:colors.FG1
-execute 'highlight envOperator guifg=' . g:syntaxColors.operator
-execute 'highlight envAssignment guifg=' . g:syntaxColors.operator
-execute 'highlight envDelimiter guifg=' . g:syntaxColors.punctuation
-execute 'highlight envQuote guifg=' . g:syntaxColors.punctuationQuote
+execute 'highlight envVariable guifg=' . g:syntax_colors.variable
+execute 'highlight envVariableName guifg=' . g:syntax_colors.variable
+execute 'highlight envVariableValue guifg=' . g:colors.fg1
+execute 'highlight envOperator guifg=' . g:syntax_colors.operator
+execute 'highlight envAssignment guifg=' . g:syntax_colors.operator
+execute 'highlight envDelimiter guifg=' . g:syntax_colors.punctuation
+execute 'highlight envQuote guifg=' . g:syntax_colors.punctuation_quote
 
 " Export statements
-execute 'highlight envExport guifg=' . g:syntaxColors.keyword
-execute 'highlight envExportKeyword guifg=' . g:syntaxColors.keyword
-execute 'highlight envExportVariable guifg=' . g:syntaxColors.variable
-execute 'highlight envExportValue guifg=' . g:colors.FG1
+execute 'highlight envExport guifg=' . g:syntax_colors.keyword
+execute 'highlight envExportKeyword guifg=' . g:syntax_colors.keyword
+execute 'highlight envExportVariable guifg=' . g:syntax_colors.variable
+execute 'highlight envExportValue guifg=' . g:colors.fg1
 
 " Values and types
-execute 'highlight envString guifg=' . g:colors.FG1
-execute 'highlight envStringDelimiter guifg=' . g:syntaxColors.punctuationQuote
-execute 'highlight envNumber guifg=' . g:syntaxColors.constant
-execute 'highlight envInteger guifg=' . g:syntaxColors.constant
-execute 'highlight envFloat guifg=' . g:syntaxColors.constant
-execute 'highlight envBoolean guifg=' . g:syntaxColors.constant
-execute 'highlight envNull guifg=' . g:syntaxColors.constant
-execute 'highlight envPath guifg=' . g:colors.INFO
-execute 'highlight envURL guifg=' . g:colors.INFO
+execute 'highlight envString guifg=' . g:colors.fg1
+execute 'highlight envStringDelimiter guifg=' . g:syntax_colors.punctuation_quote
+execute 'highlight envNumber guifg=' . g:syntax_colors.constant
+execute 'highlight envInteger guifg=' . g:syntax_colors.constant
+execute 'highlight envFloat guifg=' . g:syntax_colors.constant
+execute 'highlight envBoolean guifg=' . g:syntax_colors.constant
+execute 'highlight envNull guifg=' . g:syntax_colors.constant
+execute 'highlight envPath guifg=' . g:colors.info
+execute 'highlight envURL guifg=' . g:colors.info
 
 " Variable interpolation
-execute 'highlight envInterpolation guifg=' . g:syntaxColors.variable
-execute 'highlight envInterpolationDelimiter guifg=' . g:syntaxColors.punctuation
-execute 'highlight envInterpolatedVariable guifg=' . g:syntaxColors.variable
-execute 'highlight envNestedVariable guifg=' . g:syntaxColors.variable
-execute 'highlight envDefaultValue guifg=' . g:syntaxColors.constant
+execute 'highlight envInterpolation guifg=' . g:syntax_colors.variable
+execute 'highlight envInterpolationDelimiter guifg=' . g:syntax_colors.punctuation
+execute 'highlight envInterpolatedVariable guifg=' . g:syntax_colors.variable
+execute 'highlight envNestedVariable guifg=' . g:syntax_colors.variable
+execute 'highlight envDefaultValue guifg=' . g:syntax_colors.constant
 
 " Comments
-execute 'highlight envComment guifg=' . g:syntaxColors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight envInlineComment guifg=' . g:syntaxColors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight envTodo guifg=' . g:syntaxColors.comment . ' gui=bold'
-execute 'highlight envNote guifg=' . g:syntaxColors.comment . ' gui=italic'
+execute 'highlight envComment guifg=' . g:syntax_colors.comment
+execute 'highlight envInlineComment guifg=' . g:syntax_colors.comment 
+execute 'highlight envTodo guifg=' . g:syntax_colors.comment . ' gui=bold'
+execute 'highlight envNote guifg=' . g:syntax_colors.comment . ' gui=italic'
 
 " Special characters
-execute 'highlight envEscape guifg=' . g:syntaxColors.constant
-execute 'highlight envSpecialChar guifg=' . g:syntaxColors.constant
-execute 'highlight envBackslash guifg=' . g:syntaxColors.constant
-execute 'highlight envWhitespace guifg=' . g:syntaxColors.punctuation
+execute 'highlight envEscape guifg=' . g:syntax_colors.constant
+execute 'highlight envSpecialChar guifg=' . g:syntax_colors.constant
+execute 'highlight envBackslash guifg=' . g:syntax_colors.constant
+execute 'highlight envWhitespace guifg=' . g:syntax_colors.punctuation
 
 " Common environment variables
-execute 'highlight envPathVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envHomeVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envUserVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envShellVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envLangVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envTermVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envDisplayVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envTempVar guifg=' . g:syntaxColors.variableReadonly
+execute 'highlight envPathVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envHomeVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envUserVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envShellVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envLangVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envTermVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envDisplayVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envTempVar guifg=' . g:syntax_colors.variable_readonly
 
 " Development variables
-execute 'highlight envNodeVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envPythonVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envRubyVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envJavaVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envGoVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envRustVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envPhpVar guifg=' . g:syntaxColors.variableReadonly
-execute 'highlight envDebugVar guifg=' . g:syntaxColors.variableReadonly
+execute 'highlight envNodeVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envPythonVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envRubyVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envJavaVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envGoVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envRustVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envPhpVar guifg=' . g:syntax_colors.variable_readonly
+execute 'highlight envDebugVar guifg=' . g:syntax_colors.variable_readonly
 
 " Configuration variables
-execute 'highlight envConfigVar guifg=' . g:syntaxColors.variable
-execute 'highlight envSecretVar guifg=' . g:syntaxColors.variable
-execute 'highlight envApiVar guifg=' . g:syntaxColors.variable
-execute 'highlight envDbVar guifg=' . g:syntaxColors.variable
-execute 'highlight envAuthVar guifg=' . g:syntaxColors.variable
-execute 'highlight envCacheVar guifg=' . g:syntaxColors.variable
-execute 'highlight envLogVar guifg=' . g:syntaxColors.variable
-execute 'highlight envPortVar guifg=' . g:syntaxColors.variable
+execute 'highlight envConfigVar guifg=' . g:syntax_colors.variable
+execute 'highlight envSecretVar guifg=' . g:syntax_colors.variable
+execute 'highlight envApiVar guifg=' . g:syntax_colors.variable
+execute 'highlight envDbVar guifg=' . g:syntax_colors.variable
+execute 'highlight envAuthVar guifg=' . g:syntax_colors.variable
+execute 'highlight envCacheVar guifg=' . g:syntax_colors.variable
+execute 'highlight envLogVar guifg=' . g:syntax_colors.variable
+execute 'highlight envPortVar guifg=' . g:syntax_colors.variable
 
 " Error handling
-execute 'highlight envError guifg=' . g:colors.ERROR
-execute 'highlight envInvalidVariable guifg=' . g:colors.ERROR
-execute 'highlight envInvalidValue guifg=' . g:colors.ERROR
-execute 'highlight envInvalidEscape guifg=' . g:colors.ERROR
-execute 'highlight envInvalidInterpolation guifg=' . g:colors.ERROR
-execute 'highlight envMissingValue guifg=' . g:colors.WARNING
-execute 'highlight envDuplicateVariable guifg=' . g:colors.WARNING
+execute 'highlight envError guifg=' . g:colors.error
+execute 'highlight envInvalidVariable guifg=' . g:colors.error
+execute 'highlight envInvalidValue guifg=' . g:colors.error
+execute 'highlight envInvalidEscape guifg=' . g:colors.error
+execute 'highlight envInvalidInterpolation guifg=' . g:colors.error
+execute 'highlight envMissingValue guifg=' . g:colors.warning
+execute 'highlight envDuplicateVariable guifg=' . g:colors.warning
 
 " Special syntax
-execute 'highlight envShebang guifg=' . g:syntaxColors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight envDirective guifg=' . g:syntaxColors.keyword
-execute 'highlight envConditional guifg=' . g:syntaxColors.control
-execute 'highlight envSubstitution guifg=' . g:syntaxColors.operator
-execute 'highlight envConcatenation guifg=' . g:syntaxColors.operator
+execute 'highlight envShebang guifg=' . g:syntax_colors.comment
+execute 'highlight envDirective guifg=' . g:syntax_colors.keyword
+execute 'highlight envConditional guifg=' . g:syntax_colors.control
+execute 'highlight envSubstitution guifg=' . g:syntax_colors.operator
+execute 'highlight envConcatenation guifg=' . g:syntax_colors.operator
 
 " Documentation
-execute 'highlight envDocComment guifg=' . g:syntaxColors.comment . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight envDocTag guifg=' . g:syntaxColors.keyword . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight envDocType guifg=' . g:syntaxColors.type . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight envDocParam guifg=' . g:syntaxColors.parameter . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight envDocExample guifg=' . g:syntaxColors.comment . ' gui=italic'
-execute 'highlight envDocWarning guifg=' . g:colors.WARNING . ' gui=' . g:theme_get_style('Comment')
-execute 'highlight envDocError guifg=' . g:colors.ERROR . ' gui=' . g:theme_get_style('Comment')
+execute 'highlight envDocComment guifg=' . g:syntax_colors.comment 
+execute 'highlight envDocTag guifg=' . g:syntax_colors.keyword
+execute 'highlight envDocType guifg=' . g:syntax_colors.type
+execute 'highlight envDocParam guifg=' . g:syntax_colors.parameter
+execute 'highlight envDocExample guifg=' . g:syntax_colors.comment . ' gui=italic'
+execute 'highlight envDocWarning guifg=' . g:colors.warning
+execute 'highlight envDocError guifg=' . g:colors.error
