@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance, applyAction } from '$app/forms';
-  import { goto, invalidateAll } from '$app/navigation';
+  import { invalidateAll } from '$app/navigation';
 
   import type { Theme } from '$lib/types/vim/theme';
 

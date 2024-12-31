@@ -1,7 +1,7 @@
 import type { PageServerLoad, Actions } from './$types';
 import { zipSync } from 'fflate';
 
-import { replaceColorPlaceholders } from '$lib/utils/vim/export';
+import { replaceColorPlaceholders } from '$lib/utils/vim/export-vim';
 import { getPublicThemes, getThemeById } from '$lib/server/vscode/themes';
 
 // Import all template files

@@ -1,4 +1,4 @@
-import type { Theme } from '$lib/types/vscode/theme';
+import type { Theme } from '$lib/types/vim/theme';
 
 export function replaceColorPlaceholders(template: string, theme: Theme): string {
   let result = template;
