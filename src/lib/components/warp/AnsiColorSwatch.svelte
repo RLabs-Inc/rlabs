@@ -35,6 +35,6 @@
     </Button>
   </PopoverTrigger>
   <PopoverContent class="w-auto">
-    <ColorPickerPopover />
+    <ColorPickerPopover {color} {name} {type} />
   </PopoverContent>
 </Popover>

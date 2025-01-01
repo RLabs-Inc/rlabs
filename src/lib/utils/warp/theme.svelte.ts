@@ -83,20 +83,21 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
   const uiColors: UiColors = {
     background:
       lockedColors?.background ||
-      randomizeColor(uiColorHues.background, isDark ? [0, 35] : [85, 100], [0, 40]),
+      randomizeColor(uiColorHues.background, isDark ? [0, 35] : [89, 100], [0, 40]),
     foreground:
       lockedColors?.foreground || randomizeColor(uiColorHues.foreground, [0, 100], [0, 40]),
     accent: lockedColors?.accent || randomizeColor(uiColorHues.accent, [0, 100], [0, 40]),
     cursor: lockedColors?.cursor || randomizeColor(uiColorHues.accent, [0, 100], [0, 40])
   };
 
-  uiColors.accent = ensureReadability(uiColors.accent, uiColors.background, 4.5);
+  uiColors.accent = ensureReadability(uiColors.accent, uiColors.background, 2.5);
   uiColors.cursor = ensureReadability(uiColors.cursor, uiColors.background, 5.5);
 
   uiColors.foreground = ensureReadability(uiColors.foreground, uiColors.background, 7.5);
   uiColors.foreground = ensureReadability(uiColors.foreground, uiColors.accent, 2.5);
 
-  const normalLightness = [0, 80];
+  // const normalLightness = [randomInteger(0, 90)];
+  const normalLightness = [0, 90];
   const normalChroma = [0, 40];
   // const brightLightness = Math.min(90, normalLightness + 30); // (normalLightness + 30;
 
@@ -105,7 +106,7 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
       clampChroma(
         {
           mode: 'oklch',
-          l: Math.min(0.9, toOKLCH(color)!.l + 0.15),
+          l: Math.min(1, toOKLCH(color)!.l + 0.1),
           c: toOKLCH(color)!.c,
           h: toOKLCH(color)!.h
         },
@@ -131,7 +132,7 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
       normal[key as keyof Colors] = ensureReadability(
         normal[key as keyof Colors],
         uiColors.background,
-        7.5
+        4.5
       );
     }
   });

@@ -3,6 +3,7 @@
   import { Popover, PopoverContent, PopoverTrigger } from '$lib/components/ui/popover';
   import ColorPickerPopover from './ColorPickerPopover.svelte';
   import { Button } from '../ui/button';
+  import { theme } from 'mode-watcher';
 
   const { color, name, type } = $props();
 
@@ -21,23 +22,11 @@
   });
 </script>
 
-<Popover>
-  <PopoverTrigger class="w-auto">
-    <Button
-      variant="ghost"
-      size="icon"
-      class="border-border h-8 w-12 border transition-all  duration-100 hover:bg-transparent hover:text-inherit focus:bg-transparent"
-      onclick={() => {
-        themeState().setSelectedColor({ type, name, color });
-      }}
-    >
-      <div
-        class="h-8 w-12 rounded-md shadow-md drop-shadow-lg"
-        style="background-color: var({cssVar});"
-      ></div>
-    </Button>
-  </PopoverTrigger>
-  <PopoverContent class="w-auto">
-    <ColorPickerPopover {color} {name} {type} />
-  </PopoverContent>
-</Popover>
+<Button
+  variant="ghost"
+  class="h-8 w-12 rounded-md drop-shadow-md"
+  onclick={() => {
+    themeState().setSelectedColor({ name, color, type });
+  }}
+  style={`background-color: var(${cssVar});`}
+/>

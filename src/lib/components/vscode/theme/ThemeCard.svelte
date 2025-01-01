@@ -8,6 +8,7 @@
   import type { Theme } from '$lib/types/vscode/theme';
   import clsx from 'clsx';
   import { getIsEditing } from '$lib/state/vscode/editor.svelte';
+  import DownloadButtonPublic from './DownloadButtonPublic.svelte';
 
   const { theme, stopRandomizing }: { theme: Theme; stopRandomizing: () => void } = $props();
 
@@ -114,8 +115,8 @@
       <EditButtonPublic
         {editTheme}
         isEditing={isEditLoading}
-        fg1={theme.uiColors.FG1}
         ac1={theme.uiColors.AC1}
+        ac2={theme.uiColors.AC2}
       />
       <!-- <ShareButton
         {theme}
@@ -150,11 +151,11 @@
           };
         }}
       >
-        <DownloadButton
+        <DownloadButtonPublic
           count={theme.downloads || 0}
           themeId={theme.id}
           {isDownloading}
-          fg1={theme.uiColors.FG1}
+          ac2={theme.uiColors.AC2}
           ac1={theme.uiColors.AC1}
         />
       </form>

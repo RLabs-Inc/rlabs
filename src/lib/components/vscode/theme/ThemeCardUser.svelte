@@ -10,6 +10,8 @@
 
   import type { Theme } from '$lib/types/vscode/theme';
   import clsx from 'clsx';
+  import { Download } from 'lucide-svelte';
+  import DownloadVimButton from './DownloadVimButton.svelte';
 
   const { theme }: { theme: Theme } = $props();
 
@@ -27,6 +29,7 @@
     --color-keyword: ${theme.syntaxColors.keyword};
   `);
   let isDownloading = $state(false);
+  let isDownloadingVim = $state(false);
   let isSharing = $state(false);
   let isDeleting = $state(false);
   let isEditLoading = $state(false);
@@ -96,62 +99,106 @@
     <div class="h-2 w-full" style="background-color: var(--color-variable)"></div>
     <div class="h-2 w-full" style="background-color: var(--color-keyword)"></div>
   </div>
+
   <div class="flex w-full flex-wrap items-end justify-between p-4">
-    <div class="flex flex-col">
-      <span class="theme-name font-semibold">{theme.name}</span>
-      <span class="theme-user text-xs">{theme.userName}</span>
-    </div>
-    <div class="flex w-full items-center justify-end gap-5">
-      <div class="flex items-center gap-3">
-        <!-- <ShareButton
-          count={theme.shares ?? 0}
-          {shareTheme}
-          {isSharing}
-          fg1={theme.uiColors.FG1}
-          ac1={theme.uiColors.AC1}
-        /> -->
-        <form
-          method="post"
-          use:enhance={() => {
-            isDownloading = true;
-            return async ({ result }: { result: any }) => {
-              const data = result.data;
-              if (data?.success) {
-                const blob = new Blob([data.vsixBuffer], {
-                  type: 'application/octet-stream'
-                });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${theme.name}.vsix`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                a.remove();
-              }
-              invalidateAll();
-              applyAction(result);
-              isDownloading = false;
-            };
-          }}
-        >
-          <DownloadButton
-            count={theme.downloads || 0}
-            themeId={theme.id}
-            {isDownloading}
-            fg1={theme.uiColors.FG1}
+    <div class="flex w-full items-end justify-between">
+      <div class="flex flex-col">
+        <span class="theme-name font-semibold">{theme.name}</span>
+        <span class="theme-user text-xs">{theme.userName}</span>
+      </div>
+      <div class="flex flex-col gap-3">
+        <div class="flex items-end justify-end gap-3">
+          <EditButton
+            {editTheme}
+            isEditing={isEditLoading}
+            ac2={theme.uiColors.AC2}
             ac1={theme.uiColors.AC1}
           />
-        </form>
-      </div>
-      <div class="flex items-center gap-3">
-        <EditButton
-          {editTheme}
-          isEditing={isEditLoading}
-          fg1={theme.uiColors.FG1}
-          ac1={theme.uiColors.AC1}
-        />
-        <DeleteButton {deleteTheme} {isDeleting} isDark={theme.isDark} />
+          <DeleteButton {deleteTheme} {isDeleting} isDark={theme.isDark} ac1={theme.uiColors.AC2} />
+        </div>
+
+        <div class="flex w-full items-end justify-end gap-3">
+          <span class="text-xs" style={`color: ${theme.uiColors.AC2}`}> Download </span>
+
+          <div class="">
+            <form
+              method="post"
+              use:enhance={() => {
+                isDownloadingVim = true;
+                return async ({ result }: { result: any }) => {
+                  const data = result.data;
+                  console.log(data);
+                  if (data?.success) {
+                    const blob = new Blob([data.zipBuffer], {
+                      type: 'application/octet-stream'
+                    });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = data.fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                  }
+                  invalidateAll();
+                  applyAction(result);
+                  isDownloadingVim = false;
+                };
+              }}
+            >
+              <input type="hidden" name="themeId" value={theme.id} />
+              <DownloadVimButton
+                themeId={theme.id}
+                isDownloading={isDownloadingVim}
+                ac2={theme.uiColors.AC2}
+                ac1={theme.uiColors.AC1}
+              />
+            </form>
+          </div>
+          <div class="flex items-center gap-3">
+            <!-- <ShareButton
+              count={theme.shares ?? 0}
+              {shareTheme}
+              {isSharing}
+              fg1={theme.uiColors.FG1}
+              ac1={theme.uiColors.AC1}
+            /> -->
+            <form
+              method="post"
+              use:enhance={() => {
+                isDownloading = true;
+                return async ({ result }: { result: any }) => {
+                  const data = result.data;
+                  if (data?.success) {
+                    const blob = new Blob([data.vsixBuffer], {
+                      type: 'application/octet-stream'
+                    });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${theme.name}.vsix`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                  }
+                  invalidateAll();
+                  applyAction(result);
+                  isDownloading = false;
+                };
+              }}
+            >
+              <DownloadButton
+                count={theme.downloads || 0}
+                themeId={theme.id}
+                {isDownloading}
+                ac2={theme.uiColors.AC2}
+                ac1={theme.uiColors.AC1}
+              />
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -102,19 +102,19 @@ export function adjustCommentColor(
 export function ensureReadability(
   foreground: string,
   background: string,
-  minContrast = 5.5
+  minContrast: number
 ): string {
   let color = oklch(foreground);
   const bgColor = oklch(background);
   const isDarkTheme = isDark(bgColor!);
   let iterations = 0;
-  const maxIterations = 100;
+  const maxIterations = 1000;
   let tempColor = oklch(foreground);
   while (wcagContrast(color!, bgColor!) < minContrast && iterations < maxIterations) {
     if (isDarkTheme) {
-      tempColor = clampChroma({ ...toOKLCH(color)!, l: toOKLCH(color)!.l + 0.015 }, 'oklch');
+      tempColor = clampChroma({ ...toOKLCH(color)!, l: toOKLCH(color)!.l + 0.001 }, 'oklch');
     } else {
-      tempColor = clampChroma({ ...toOKLCH(color)!, l: toOKLCH(color)!.l - 0.015 }, 'oklch');
+      tempColor = clampChroma({ ...toOKLCH(color)!, l: toOKLCH(color)!.l - 0.001 }, 'oklch');
     }
     color = tempColor;
     iterations++;

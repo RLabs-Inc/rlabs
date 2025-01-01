@@ -5,21 +5,22 @@
     deleteTheme: () => Promise<void>;
     isDeleting: boolean;
     isDark: boolean;
+    ac1: string;
   };
 
-  const { deleteTheme, isDeleting, isDark }: Props = $props();
+  const { deleteTheme, isDeleting, isDark, ac1 }: Props = $props();
 
   let styleVars = $derived.by(() => {
     const foreground = isDark ? '#ffff' : '#000000';
     const foregroundHover = isDark ? '#f87171' : '#b91c1c';
     return `
-    --color-foreground: ${foreground};
+    --color-foreground: ${ac1};
     --color-hover: ${foregroundHover};
     `;
   });
 </script>
 
-<div class="delete-btn flex items-center gap-1 p-1 transition-colors" style={styleVars}>
+<div class="delete-btn flex items-center gap-1 transition-colors" style={styleVars}>
   <button class="cursor-pointer" onclick={deleteTheme} disabled={isDeleting}>
     {#if isDeleting}
       <LoaderPinwheel class="h-4 w-4 animate-spin" />

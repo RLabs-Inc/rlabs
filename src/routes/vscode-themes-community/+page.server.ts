@@ -35,7 +35,6 @@ export const actions: Actions = {
     if (!theme) {
       return { success: false, error: 'Theme not found' };
     }
-    console.log(logo);
     const base64Data = Object.values(logo)[0].split(',')[1];
 
     const zipObj: Record<string, Uint8Array> = {};

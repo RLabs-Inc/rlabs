@@ -35,6 +35,8 @@
       }}
       min={0}
       max={360}
+      step={0.01}
+      type="multiple"
       bgColor={baseHueGradient}
       data-umami-event="Warp Base hue slider changed"
     />

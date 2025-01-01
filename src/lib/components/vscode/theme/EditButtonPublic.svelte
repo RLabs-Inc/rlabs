@@ -4,15 +4,15 @@
   type Props = {
     editTheme: () => Promise<void>;
     isEditing: boolean;
-    fg1: string;
     ac1: string;
+    ac2: string;
   };
 
-  const { editTheme, isEditing, fg1, ac1 }: Props = $props();
+  const { editTheme, isEditing, ac1, ac2 }: Props = $props();
 
   let styleVars = $derived(`
-    --color-foreground: ${fg1};
-    --color-hover: ${ac1};
+    --color-foreground: ${ac1};
+    --color-hover: ${ac2};
   `);
 </script>
 
