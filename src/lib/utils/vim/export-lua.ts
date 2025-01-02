@@ -56,9 +56,18 @@ export function replaceColorPlaceholders(content: string, theme: Theme): string 
   content = content.replace(/\${ERROR_FG}/g, toHex6(getForegroundFor(theme.uiColors.ERROR)));
   content = content.replace(/\${WARNING_FG}/g, toHex6(getForegroundFor(theme.uiColors.WARNING)));
   content = content.replace(/\${SUCCESS_FG}/g, toHex6(getForegroundFor(theme.uiColors.SUCCESS)));
-  content = content.replace(/\${SELECTION_FG}/g, toHex6(getForegroundFor(theme.uiColors.selection)));
-  content = content.replace(/\${FIND_MATCH_FG}/g, toHex6(getForegroundFor(theme.uiColors.findMatch)));
-  content = content.replace(/\${LINE_HIGHLIGHT_FG}/g, toHex6(getForegroundFor(theme.uiColors.lineHighlight)));
+  content = content.replace(
+    /\${SELECTION_FG}/g,
+    toHex6(getForegroundFor(theme.uiColors.selection))
+  );
+  content = content.replace(
+    /\${FIND_MATCH_FG}/g,
+    toHex6(getForegroundFor(theme.uiColors.findMatch))
+  );
+  content = content.replace(
+    /\${LINE_HIGHLIGHT_FG}/g,
+    toHex6(getForegroundFor(theme.uiColors.lineHighlight))
+  );
 
   // Replace syntax colors
   content = content.replace(/\${keyword}/g, toHex6(theme.syntaxColors.keyword));
@@ -69,7 +78,10 @@ export function replaceColorPlaceholders(content: string, theme: Theme): string 
   content = content.replace(/\${methodCall}/g, toHex6(theme.syntaxColors.methodCall));
   content = content.replace(/\${variable}/g, toHex6(theme.syntaxColors.variable));
   content = content.replace(/\${variableReadonly}/g, toHex6(theme.syntaxColors.variableReadonly));
-  content = content.replace(/\${variableDeclaration}/g, toHex6(theme.syntaxColors.variableDeclaration));
+  content = content.replace(
+    /\${variableDeclaration}/g,
+    toHex6(theme.syntaxColors.variableDeclaration)
+  );
   content = content.replace(/\${variableProperty}/g, toHex6(theme.syntaxColors.variableProperty));
   content = content.replace(/\${type}/g, toHex6(theme.syntaxColors.type));
   content = content.replace(/\${typeParameter}/g, toHex6(theme.syntaxColors.typeParameter));
@@ -77,7 +89,10 @@ export function replaceColorPlaceholders(content: string, theme: Theme): string 
   content = content.replace(/\${class}/g, toHex6(theme.syntaxColors.class));
   content = content.replace(/\${parameter}/g, toHex6(theme.syntaxColors.parameter));
   content = content.replace(/\${property}/g, toHex6(theme.syntaxColors.property));
-  content = content.replace(/\${propertyDeclaration}/g, toHex6(theme.syntaxColors.propertyDeclaration));
+  content = content.replace(
+    /\${propertyDeclaration}/g,
+    toHex6(theme.syntaxColors.propertyDeclaration)
+  );
   content = content.replace(/\${operator}/g, toHex6(theme.syntaxColors.operator));
   content = content.replace(/\${storage}/g, toHex6(theme.syntaxColors.storage));
   content = content.replace(/\${other}/g, toHex6(theme.syntaxColors.other));

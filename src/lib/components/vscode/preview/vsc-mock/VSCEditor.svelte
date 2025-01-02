@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Color from 'color';
+  import { wcagLuminance } from 'culori';
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
   import ActivityBar from './ActivityBar.svelte';
@@ -10,22 +10,22 @@
 
   const fgAc1 = $derived.by(() => {
     if (selectedThemeState().theme?.isDark) {
-      return Color(selectedThemeState().theme?.uiColors.AC1).isDark()
+      return wcagLuminance(selectedThemeState().theme?.uiColors.AC1) < 0.5
         ? selectedThemeState().theme?.uiColors.FG1
         : selectedThemeState().theme?.uiColors.FG3;
     } else {
-      return Color(selectedThemeState().theme?.uiColors.AC1).isDark()
+      return wcagLuminance(selectedThemeState().theme?.uiColors.AC1) < 0.5
         ? selectedThemeState().theme?.uiColors.FG3
         : selectedThemeState().theme?.uiColors.FG1;
     }
   });
   const fgAc2 = $derived.by(() => {
     if (selectedThemeState().theme?.isDark) {
-      return Color(selectedThemeState().theme?.uiColors.AC2).isDark()
+      return wcagLuminance(selectedThemeState().theme?.uiColors.AC2) < 0.5
         ? selectedThemeState().theme?.uiColors.FG1
         : selectedThemeState().theme?.uiColors.FG3;
     } else {
-      return Color(selectedThemeState().theme?.uiColors.AC2).isDark()
+      return wcagLuminance(selectedThemeState().theme?.uiColors.AC2) < 0.5
         ? selectedThemeState().theme?.uiColors.FG3
         : selectedThemeState().theme?.uiColors.FG1;
     }

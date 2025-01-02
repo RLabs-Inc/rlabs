@@ -6,15 +6,15 @@ export interface Theme {
   userName: string;
   isDark: boolean;
   scheme: string;
-  baseHue: number;
+  baseHue?: number;
   name: string;
   isPublic: boolean;
-  schemeHues: number[];
+  schemeHues?: number[];
   uiColors: UIColors;
   syntaxColors: SyntaxColors;
   ansiColors: AnsiColors;
-  shares: number;
-  downloads: number;
+  shares?: number;
+  downloads?: number;
   createdAt: Date;
   updatedAt: Date;
 }

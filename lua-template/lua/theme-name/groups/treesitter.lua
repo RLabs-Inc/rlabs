@@ -8,24 +8,24 @@ function M.get(c)
         ['@comment'] = { fg = c.comment }, -- For comments
         ['@error'] = { fg = c.error },
         ['@none'] = { fg = c.fg0 },
-        ['@preproc'] = { fg = c.keyword }, -- Various preprocessor directives & shebangs
+        ['@preproc'] = { fg = c.accent1 }, -- Various preprocessor directives & shebangs
         ['@define'] = { fg = c.keyword }, -- Preprocessor definition directives
         ['@operator'] = { fg = c.operator }, -- For any operator: +, but also -> and * in C
 
         -- Punctuation
         ['@punctuation.delimiter'] = { fg = c.punctuation_comma }, -- For delimiters (e.g. `;` / `.` / `,`)
         ['@punctuation.bracket'] = { fg = c.punctuation_brace }, -- For brackets and parenthesis
-        ['@punctuation.special'] = { fg = c.punctuation }, -- For special punctuation such as * in C
-        ['@punctuation.special.markdown'] = { fg = c.accent0, bold = true },
+        ['@punctuation.special'] = { fg = c.accent1 }, -- For special punctuation such as * in C
+        ['@punctuation.special.markdown'] = { fg = c.accent1, bold = true },
 
         -- Literals
         ['@string'] = { fg = c.fg0 }, -- For string literals
-        ['@string.regex'] = { fg = c.fg0 }, -- For regexes
-        ['@string.escape'] = { fg = c.fg0 }, -- For escape characters within a string
-        ['@string.special'] = { fg = c.fg0 }, -- Other special strings (e.g. dates)
+        ['@string.regex'] = { fg = c.fg1 }, -- For regexes
+        ['@string.escape'] = { fg = c.fg1 }, -- For escape characters within a string
+        ['@string.special'] = { fg = c.datetime }, -- Other special strings (e.g. dates)
 
         ['@character'] = { fg = c.fg0 }, -- Character literals
-        ['@character.special'] = { fg = c.accent0 }, -- Special characters (e.g. wildcards)
+        ['@character.special'] = { fg = c.accent1 }, -- Special characters (e.g. wildcards)
 
         ['@boolean'] = { fg = c.constant }, -- For booleans
         ['@number'] = { fg = c.constant }, -- For all numbers
@@ -44,13 +44,13 @@ function M.get(c)
 
         -- Keywords
         ['@keyword'] = { fg = c.keyword }, -- For keywords that don't fall in previous categories
-        ['@keyword.function'] = { fg = c.keyword }, -- For keywords used to define a function
+        ['@keyword.function'] = { fg = c.func }, -- For keywords used to define a function
         ['@keyword.operator'] = { fg = c.operator }, -- For new keyword operator
         ['@keyword.return'] = { fg = c.control_flow },
         ['@conditional'] = { fg = c.control_flow }, -- For keywords related to conditionals
         ['@repeat'] = { fg = c.control_flow }, -- For keywords related to loops
-        ['@debug'] = { fg = c.keyword }, -- For debugging keywords
-        ['@label'] = { fg = c.keyword }, -- For labels: label: in C and :label: in Lua
+        ['@debug'] = { fg = c.warning }, -- For debugging keywords
+        ['@label'] = { fg = c.language }, -- For labels: label: in C and :label: in Lua
         ['@include'] = { fg = c.control_import }, -- For includes: #include in C, use or extern crate in Rust, or require in Lua
         ['@exception'] = { fg = c.error }, -- For exception related keywords
 
@@ -58,9 +58,9 @@ function M.get(c)
         ['@type'] = { fg = c.type }, -- For types
         ['@type.builtin'] = { fg = c.support }, -- For builtin types
         ['@type.definition'] = { fg = c.type }, -- Type definitions (e.g. `typedef` in C)
-        ['@type.qualifier'] = { fg = c.keyword }, -- Type qualifiers (e.g. `const`)
+        ['@type.qualifier'] = { fg = c.storage }, -- Type qualifiers (e.g. `const`)
 
-        ['@storageclass'] = { fg = c.storage }, -- Visibility/life-time/etc. modifiers (e.g. `static`)
+        ['@storageclass'] = { fg = c.modifier }, -- Visibility/life-time/etc. modifiers (e.g. `static`)
         ['@attribute'] = { fg = c.attribute }, -- Attribute annotations (e.g. Python decorators)
         ['@field'] = { fg = c.property }, -- For fields
         ['@property'] = { fg = c.property }, -- Same as @field
@@ -88,7 +88,7 @@ function M.get(c)
         ['@text.math'] = { fg = c.constant }, -- Math environments (e.g. `$ ... $` in LaTeX)
         ['@text.environment'] = { fg = c.fg1 }, -- Text environments of markup languages
         ['@text.environment.name'] = { fg = c.type }, -- Text/string indicating the type of text environment
-        ['@text.reference'] = { fg = c.accent0 }, -- References
+        ['@text.reference'] = { fg = c.accent1 }, -- References
 
         ['@text.todo'] = { fg = c.info_fg, bg = c.info },
         ['@text.note'] = { fg = c.info_fg, bg = c.info },
@@ -104,8 +104,8 @@ function M.get(c)
         ['@tag.delimiter'] = { fg = c.tag_punctuation }, -- Tag delimiters like < > /
 
         -- Markup
-        ['@text.title.markdown'] = { fg = c.accent0, bold = true },
-        ['@text.title.markdown.markdown_inline'] = { fg = c.accent0, bold = true },
+        ['@text.title.markdown'] = { fg = c.accent1, bold = true },
+        ['@text.title.markdown.markdown_inline'] = { fg = c.accent1, bold = true },
         ['@text.reference.markdown'] = { fg = c.accent0 },
         ['@text.reference.markdown.markdown_inline'] = { fg = c.accent0 },
         ['@text.literal.markdown'] = { fg = c.fg1 },
@@ -137,8 +137,8 @@ function M.get(c)
         ['@text.diff.delete.markdown_inline'] = { fg = c.error },
 
         -- Markdown
-        ['@text.title.1.markdown'] = { fg = c.accent0, bold = true },
-        ['@text.title.2.markdown'] = { fg = c.accent1, bold = true },
+        ['@text.title.1.markdown'] = { fg = c.accent1, bold = true },
+        ['@text.title.2.markdown'] = { fg = c.accent0, bold = true },
         ['@text.title.3.markdown'] = { fg = c.yellow, bold = true },
         ['@text.title.4.markdown'] = { fg = c.red, bold = true },
         ['@text.title.5.markdown'] = { fg = c.green, bold = true },
@@ -146,8 +146,8 @@ function M.get(c)
 
         ['@text.literal.markdown'] = { fg = c.fg1 },
         ['@text.literal.block.markdown'] = { fg = c.fg1 },
-        ['@text.reference.markdown'] = { fg = c.accent0 },
-        ['@text.uri.markdown'] = { fg = c.accent0 },
+        ['@text.reference.markdown'] = { fg = c.accent1 },
+        ['@text.uri.markdown'] = { fg = c.info, underline = true },
         ['@text.math.markdown'] = { fg = c.constant },
         ['@text.environment.markdown'] = { fg = c.fg1 },
         ['@text.environment.name.markdown'] = { fg = c.type },
@@ -190,8 +190,8 @@ function M.get(c)
         ['@attribute.html.css.pseudo_class'] = { fg = c.type },
 
         -- JavaScript/TypeScript
-        ['@constructor.javascript'] = { fg = c.type }, -- Constructor calls and definitions
-        ['@constructor.typescript'] = { fg = c.type }, -- Constructor calls and definitions
+        ['@constructor.javascript'] = { fg = c.class }, -- Constructor calls and definitions
+        ['@constructor.typescript'] = { fg = c.class }, -- Constructor calls and definitions
         ['@type.typescript'] = { fg = c.type },
         ['@variable.member.typescript'] = { fg = c.variable_property },
         ['@property.typescript'] = { fg = c.property },
@@ -205,6 +205,8 @@ function M.get(c)
 
         -- JSON
         ['@label.json'] = { fg = c.property }, -- JSON labels
+        ['@property.json'] = { fg = c.property },
+        ['@property.id.json'] = { fg = c.variable_property },
 
         -- YAML
         ['@property.yaml'] = { fg = c.property },
@@ -217,45 +219,16 @@ function M.get(c)
         -- XML
         ['@tag.xml'] = { fg = c.tag },
         ['@attribute.xml'] = { fg = c.attribute },
-        ['@attribute.xml.css'] = { fg = c.attribute },
-        ['@attribute.xml.css.id'] = { fg = c.variable_property },
-        ['@attribute.xml.css.class'] = { fg = c.class },
-        ['@attribute.xml.css.pseudo_class'] = { fg = c.type },
-
-        -- C
-        ['@type.qualifier.c'] = { fg = c.storage },
-
-        -- C++
-        ['@type.qualifier.cpp'] = { fg = c.storage },
-
-        -- C#
-        ['@type.qualifier.cs'] = { fg = c.storage },
-
-        -- Rust
-        ['@type.qualifier.rust'] = { fg = c.storage },
-        
-        -- Go
-        ['@type.qualifier.go'] = { fg = c.storage },
+        ['@separator.xml'] = { fg = c.tag_punctuation },
 
         -- Python
-        ['@type.qualifier.python'] = { fg = c.storage },
         ['@variable.builtin.python'] = { fg = c.support_variable },
-        ['@property.python'] = { fg = c.property },
-        ['@property.id.python'] = { fg = c.variable_property },
-        ['@property.class.python'] = { fg = c.class },
-
-        -- Java
-        ['@type.qualifier.java'] = { fg = c.storage },
-        ['@variable.builtin.java'] = { fg = c.support_variable },
-        ['@property.java'] = { fg = c.property },
-        ['@property.id.java'] = { fg = c.variable_property },
-        ['@property.class.java'] = { fg = c.class },
 
         -- Ruby
-        ['@symbol.ruby'] = { fg = c.constant },
+        ['@symbol.ruby'] = { fg = c.accent1 },
 
         -- Lua
-        ['@constructor.lua'] = { fg = c.fg0 }, -- Constructor calls and definitions
+        ['@constructor.lua'] = { fg = c.class }, -- Constructor calls and definitions
 
         -- Markdown
         ['@text.title.1.markdown'] = { fg = c.accent0, bold = true },
@@ -268,7 +241,7 @@ function M.get(c)
         ['@text.title.1.marker.markdown'] = { fg = c.accent0, bold = true },
         ['@text.title.2.marker.markdown'] = { fg = c.accent1, bold = true },
         ['@text.title.3.marker.markdown'] = { fg = c.yellow, bold = true },
-        ['@text.title.4.marker.markdown'] = { fg = c    .red, bold = true },
+        ['@text.title.4.marker.markdown'] = { fg = c.red, bold = true },
         ['@text.title.5.marker.markdown'] = { fg = c.green, bold = true },
         ['@text.title.6.marker.markdown'] = { fg = c.blue, bold = true },
     }

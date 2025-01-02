@@ -15,7 +15,7 @@ function M.get(c)
         lCursor = { fg = c.accent0_fg, bg = c.accent0 },
         iCursor = { fg = c.accent1_fg, bg = c.accent1 },
         vCursor = { fg = c.accent0_fg, bg = c.accent0 },
-        CursorLine = { fg = c.line_highlight_fg,bg = c.line_highlight },
+        CursorLine = { fg = c.line_highlight_fg, bg = c.line_highlight },
         CursorColumn = { fg = c.line_highlight_fg, bg = c.line_highlight },
         ColorColumn = { fg = c.line_highlight_fg, bg = c.line_highlight },
         LineNr = { fg = c.comment },
@@ -23,28 +23,28 @@ function M.get(c)
         SignColumn = { bg = config.transparent and 'NONE' or c.bg0 },
         VertSplit = { fg = c.border, bg = config.transparent and 'NONE' or c.bg0 },
         EndOfBuffer = { fg = config.transparent and 'NONE' or c.bg0 },
-        StatusLine = { fg = c.accent0_fg, bg = c.accent0 },
-        StatusLineNC = { fg = c.accent1_fg, bg = c.accent1 },
-        StatusLineTerm = { fg = c.accent0_fg, bg = c.accent0 },
-        StatusLineTermNC = { fg = c.accent1_fg, bg = c.accent1 },
+        StatusLine = { fg = c.accent1_fg, bg = c.accent1 },
+        StatusLineNC = { fg = c.accent0_fg, bg = c.accent0 },
+        StatusLineTerm = { fg = c.accent1_fg, bg = c.accent1 },
+        StatusLineTermNC = { fg = c.accent0_fg, bg = c.accent0 },
         QuickFixLine = { fg = c.accent0, bg = c.bg1 },
-        Pmenu = { fg = c.fg1, bg = c.bg1 },
+        Pmenu = { fg = c.fg1, bg = c.bg2 },
         PmenuSel = { fg = c.accent1_fg, bg = c.accent1 },
-        PmenuSbar = { bg = c.bg2 },
-        PmenuThumb = { bg = c.fg2 },
-        TabLine = { fg = c.fg2, bg = c.bg2 },
+        PmenuSbar = { bg = c.bg1 },
+        PmenuThumb = { bg = c.fg0 },
+        TabLine = { fg = c.fg1, bg = c.bg2 },
         TabLineFill = { bg = c.bg2 },
-        TabLineSel = { fg = c.accent1_fg, bg = c.accent1 },
+        TabLineSel = { fg = c.fg0, bg = c.bg0 },
         
         -- Gutter
-        Folded = { fg = c.fg1, bg = c.bg1 },
+        Folded = { fg = c.comment, bg = c.line_highlight },
         FoldColumn = { fg = c.fg1, bg = config.transparent and 'NONE' or c.bg0 },
         
         -- Diffs
-        DiffAdd = { bg = c.success },
-        DiffChange = { bg = c.info },
-        DiffDelete = { bg = c.error },
-        DiffText = { bg = c.info },
+        DiffAdd = { bg = c.success, fg = c.success_fg },
+        DiffChange = { bg = c.info, fg = c.info_fg },
+        DiffDelete = { bg = c.error, fg = c.error_fg },
+        DiffText = { bg = c.info, fg = c.info_fg },
         
         -- Search/Replace
         Search = { bg = c.find_match, fg = c.find_match_fg },
@@ -57,13 +57,13 @@ function M.get(c)
         VisualNOS = { bg = c.selection, fg = c.selection_fg },
         
         -- Popup menus
-        Pmenu = { fg = c.fg1, bg = c.bg1 },
+        Pmenu = { fg = c.fg1, bg = c.bg2 },
         PmenuSel = { fg = c.accent1_fg, bg = c.accent1 },
         PmenuSbar = { bg = c.bg2 },
         PmenuThumb = { bg = c.fg2 },
         
         -- Messages
-        MsgArea = { fg = c.fg0, bg = config.transparent and 'NONE' or c.bg0 },
+        MsgArea = { fg = c.fg1, bg = c.bg2 },
         MsgSeparator = { fg = c.border },
         MoreMsg = { fg = c.info },
         WarningMsg = { fg = c.warning },
@@ -94,7 +94,7 @@ function M.get(c)
         
         PreProc = { fg = c.keyword },
         Include = { fg = c.control_import },
-        Define = { fg = c.keyword },
+        Define = { fg = c.storage },
         Macro = { fg = c.keyword },
         PreCondit = { fg = c.keyword },
         
@@ -104,16 +104,16 @@ function M.get(c)
         Typedef = { fg = c.type },
         
         Special = { fg = c.accent1 },
-        SpecialChar = { fg = c.fg0 },
+        SpecialChar = { fg = c.accent1 },
         Tag = { fg = c.tag },
         Delimiter = { fg = c.punctuation_comma },
         SpecialComment = { fg = c.comment },
         Debug = { fg = c.warning },
         
         -- Whitespace
-        Whitespace = { fg = c.line_highlight },
-        NonText = { fg = c.line_highlight },
-        SpecialKey = { fg = c.line_highlight },
+        Whitespace = { fg = c.comment },
+        NonText = { fg = c.comment },
+        SpecialKey = { fg = c.comment },
         
         -- Spelling
         SpellBad = { sp = c.error, undercurl = true },
@@ -122,19 +122,20 @@ function M.get(c)
         SpellRare = { sp = c.info, undercurl = true },
         
         -- Misc
-        MatchParen = { bg = c.selection },
-        Directory = { fg = c.accent0 },
+        MatchParen = { bg = c.selection, fg = c.selection_fg },
+        Directory = { fg = c.fg1 },
         Conceal = { fg = c.comment },
-        Title = { fg = c.accent0, bold = true },
+        Title = { fg = c.accent1, bold = true },
         
         -- Window/Tab/Status
         VertSplit = { fg = c.border },
+        HoriSplit = { fg = c.border },
         WinSeparator = { fg = c.border },
         TabLine = { fg = c.fg1, bg = c.bg2 },
-        TabLineSel = { fg = c.accent1_fg, bg = c.accent1 },
-        TabLineFill = { bg = c.bg1 },
-        StatusLine = { fg = c.accent0_fg, bg = c.accent0 },
-        StatusLineNC = { fg = c.accent1_fg, bg = c.accent1 },
+        TabLineSel = { fg = c.fg0, bg = c.bg0 },
+        TabLineFill = { bg = c.bg2 },
+        StatusLine = { fg = c.accent1_fg, bg = c.accent1 },
+        StatusLineNC = { fg = c.accent0_fg, bg = c.accent0 },
         WildMenu = { fg = c.accent1_fg, bg = c.accent1 },
         
         -- Git
@@ -143,7 +144,7 @@ function M.get(c)
         diffChanged = { fg = c.info },
         diffOldFile = { fg = c.warning },
         diffNewFile = { fg = c.info },
-        diffFile = { fg = c.accent0 },
+        diffFile = { fg = c.accent1 },
         diffLine = { fg = c.fg2 },
         diffIndexLine = { fg = c.fg2 },
         
