@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Color from 'color';
+  import { wcagLuminance } from 'culori';
   import { Lock, Unlock } from 'lucide-svelte';
   import { Button } from '$lib/components/ui/button';
   import { getUiColors } from '$lib/state/vscode/ui-colors.svelte';
@@ -17,7 +17,7 @@
 
   const textColor = $derived.by(() => {
     if (hasAlpha) return '--text-foreground';
-    if (Color(color).isDark()) return 'white';
+    if (wcagLuminance(color) < 0.5) return 'white';
     return 'black';
   });
 </script>
