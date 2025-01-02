@@ -18,9 +18,9 @@ export function replaceColorPlaceholders(content: string, theme: Theme): string 
     const colorLum = wcagLuminance(color);
 
     if (bgLum < 0.5) {
-      return colorLum < 0.5 ? theme.uiColors.FG1 : theme.uiColors.FG3;
+      return colorLum < 0.3 ? theme.uiColors.FG1 : theme.uiColors.FG3;
     } else {
-      return colorLum < 0.5 ? theme.uiColors.FG3 : theme.uiColors.FG1;
+      return colorLum < 0.3 ? theme.uiColors.FG3 : theme.uiColors.FG1;
     }
   };
 

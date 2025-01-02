@@ -15,37 +15,37 @@ export function generateSemanticThemeJSON(
 
   const getAC1Foreground = () => {
     if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.AC1) < 0.5 ? colors.FG1 : colors.FG3;
+      return wcagLuminance(colors.AC1) < 0.3 ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.AC1) < 0.5 ? colors.FG3 : colors.FG1;
+      return wcagLuminance(colors.AC1) < 0.3 ? colors.FG3 : colors.FG1;
     }
   };
   const getAC2Foreground = () => {
     if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.AC2) < 0.5 ? colors.FG1 : colors.FG3;
+      return wcagLuminance(colors.AC2) < 0.3 ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.AC2) < 0.5 ? colors.FG3 : colors.FG1;
+      return wcagLuminance(colors.AC2) < 0.3 ? colors.FG3 : colors.FG1;
     }
   };
   const getINFOForeground = () => {
     if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.INFO) < 0.5 ? colors.FG1 : colors.FG3;
+      return wcagLuminance(colors.INFO) < 0.3 ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.INFO) < 0.5 ? colors.FG3 : colors.FG1;
+      return wcagLuminance(colors.INFO) < 0.3 ? colors.FG3 : colors.FG1;
     }
   };
   const getWARNINGForeground = () => {
     if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.WARNING) < 0.5 ? colors.FG1 : colors.FG3;
+      return wcagLuminance(colors.WARNING) < 0.3 ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.WARNING) < 0.5 ? colors.FG3 : colors.FG1;
+      return wcagLuminance(colors.WARNING) < 0.3 ? colors.FG3 : colors.FG1;
     }
   };
   const getERRORForeground = () => {
     if (wcagLuminance(colors.BG1) < 0.5) {
-      return wcagLuminance(colors.ERROR) < 0.5 ? colors.FG1 : colors.FG3;
+      return wcagLuminance(colors.ERROR) < 0.3 ? colors.FG1 : colors.FG3;
     } else {
-      return wcagLuminance(colors.ERROR) < 0.5 ? colors.FG3 : colors.FG1;
+      return wcagLuminance(colors.ERROR) < 0.3 ? colors.FG3 : colors.FG1;
     }
   };
 

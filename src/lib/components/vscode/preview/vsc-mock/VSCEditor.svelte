@@ -10,22 +10,22 @@
 
   const fgAc1 = $derived.by(() => {
     if (selectedThemeState().theme?.isDark) {
-      return wcagLuminance(selectedThemeState().theme?.uiColors.AC1) < 0.5
+      return wcagLuminance(selectedThemeState().theme?.uiColors.AC1) < 0.3
         ? selectedThemeState().theme?.uiColors.FG1
         : selectedThemeState().theme?.uiColors.FG3;
     } else {
-      return wcagLuminance(selectedThemeState().theme?.uiColors.AC1) < 0.5
+      return wcagLuminance(selectedThemeState().theme?.uiColors.AC1) < 0.3
         ? selectedThemeState().theme?.uiColors.FG3
         : selectedThemeState().theme?.uiColors.FG1;
     }
   });
   const fgAc2 = $derived.by(() => {
     if (selectedThemeState().theme?.isDark) {
-      return wcagLuminance(selectedThemeState().theme?.uiColors.AC2) < 0.5
+      return wcagLuminance(selectedThemeState().theme?.uiColors.AC2) < 0.3
         ? selectedThemeState().theme?.uiColors.FG1
         : selectedThemeState().theme?.uiColors.FG3;
     } else {
-      return wcagLuminance(selectedThemeState().theme?.uiColors.AC2) < 0.5
+      return wcagLuminance(selectedThemeState().theme?.uiColors.AC2) < 0.3
         ? selectedThemeState().theme?.uiColors.FG3
         : selectedThemeState().theme?.uiColors.FG1;
     }

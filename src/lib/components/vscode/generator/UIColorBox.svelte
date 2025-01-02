@@ -17,7 +17,7 @@
 
   const textColor = $derived.by(() => {
     if (hasAlpha) return '--text-foreground';
-    if (wcagLuminance(color) < 0.5) return 'white';
+    if (wcagLuminance(color) < 0.3) return 'white';
     return 'black';
   });
 </script>
