@@ -121,37 +121,6 @@ function M.get(c)
         ['@lsp.typemod.property.defaultLibrary.typescript'] = { fg = c.support_property },
         ['@lsp.typemod.property.defaultLibrary.javascript'] = { fg = c.support_property },
 
-        -- Diagnostics
-        DiagnosticError = { fg = c.error },
-        DiagnosticWarn = { fg = c.warning },
-        DiagnosticInfo = { fg = c.info },
-        DiagnosticHint = { fg = c.success },
-        DiagnosticOk = { fg = c.success },
-
-        DiagnosticSignError = { fg = c.error },
-        DiagnosticSignWarn = { fg = c.warning },
-        DiagnosticSignInfo = { fg = c.info },
-        DiagnosticSignHint = { fg = c.success },
-        DiagnosticSignOk = { fg = c.success },
-
-        DiagnosticVirtualTextError = { fg = c.error_fg, bg = c.error },
-        DiagnosticVirtualTextWarn = { fg = c.warning_fg, bg = c.warning },
-        DiagnosticVirtualTextInfo = { fg = c.info_fg, bg = c.info },
-        DiagnosticVirtualTextHint = { fg = c.success_fg, bg = c.success },
-        DiagnosticVirtualTextOk = { fg = c.success_fg, bg = c.success },
-
-        DiagnosticUnderlineError = { sp = c.error, undercurl = true },
-        DiagnosticUnderlineWarn = { sp = c.warning, undercurl = true },
-        DiagnosticUnderlineInfo = { sp = c.info, undercurl = true },
-        DiagnosticUnderlineHint = { sp = c.success, undercurl = true },
-        DiagnosticUnderlineOk = { sp = c.success, undercurl = true },
-
-        DiagnosticFloatingError = { fg = c.error },
-        DiagnosticFloatingWarn = { fg = c.warning },
-        DiagnosticFloatingInfo = { fg = c.info },
-        DiagnosticFloatingHint = { fg = c.success },
-        DiagnosticFloatingOk = { fg = c.success },
-
         -- LSP References/Context
         LspReferenceText = { bg = c.selection, fg = c.selection_fg },
         LspReferenceRead = { bg = c.selection, fg = c.selection_fg },

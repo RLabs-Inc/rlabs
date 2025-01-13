@@ -11,12 +11,12 @@ function M.get(c)
         Normal = { fg = c.fg0, bg = config.transparent and 'NONE' or c.bg0 },
         NormalFloat = { fg = c.fg0, bg = c.bg1 },
         NormalNC = { fg = c.fg1, bg = config.transparent and 'NONE' or c.bg0 },
-        Cursor = { fg = c.accent0_fg, bg = c.accent0 },
+        Cursor = { fg = c.accent1_fg, bg = c.accent1 },
         lCursor = { fg = c.accent0_fg, bg = c.accent0 },
-        iCursor = { fg = c.accent1_fg, bg = c.accent1 },
-        vCursor = { fg = c.accent0_fg, bg = c.accent0 },
-        CursorLine = { fg = c.line_highlight_fg, bg = c.line_highlight },
-        CursorColumn = { fg = c.line_highlight_fg, bg = c.line_highlight },
+        iCursor = { fg = c.accent0_fg, bg = c.accent0 },
+        vCursor = { fg = c.accent1_fg, bg = c.accent1 },
+        CursorLine = { bg = c.line_highlight },
+        CursorColumn = { bg = c.line_highlight },
         ColorColumn = { fg = c.line_highlight_fg, bg = c.line_highlight },
         LineNr = { fg = c.comment },
         CursorLineNr = { fg = c.accent0 },
@@ -178,15 +178,6 @@ function M.get(c)
         DiagnosticFloatingInfo = { fg = c.info },
         DiagnosticFloatingHint = { fg = c.success },
         DiagnosticFloatingOk = { fg = c.success },
-
-        -- LSP References/Context
-        LspReferenceText = { bg = c.selection, fg = c.selection_fg },
-        LspReferenceRead = { bg = c.selection, fg = c.selection_fg },
-        LspReferenceWrite = { bg = c.selection, fg = c.selection_fg },
-
-        -- Code Lens
-        LspCodeLens = { fg = c.comment },
-        LspCodeLensSeparator = { fg = c.border },
     }
 end
 

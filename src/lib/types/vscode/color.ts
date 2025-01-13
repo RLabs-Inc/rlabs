@@ -315,7 +315,105 @@ export enum ColorSchemes {
   AdiabaticInvariants = 'AdiabaticInvariants',
   ChernSimons = 'ChernSimons',
   YangMillsFields = 'YangMillsFields',
-  EinsteinManifold = 'EinsteinManifold'
+  EinsteinManifold = 'EinsteinManifold',
+
+  // Advanced Mathematical Symmetries
+  MoebiusTransformations = 'MoebiusTransformations',
+  LieGroupSymmetries = 'LieGroupSymmetries',
+  FrobeniusManifolds = 'FrobeniusManifolds',
+  CoxeterDiagrams = 'CoxeterDiagrams',
+  NoncommutativeGeometry = 'NoncommutativeGeometry',
+  SpinorFields = 'SpinorFields',
+  TwistedK3Surfaces = 'TwistedK3Surfaces',
+  FanoVarieties = 'FanoVarieties',
+  SymplecticStructures = 'SymplecticStructures',
+  CalabiFoldings = 'CalabiFoldings',
+
+  // Quantum Topology and Knot Theory
+  JonesPolynomials = 'JonesPolynomials',
+  KhovanovHomology = 'KhovanovHomology',
+  QuantumGroups = 'QuantumGroups',
+  BraidPatterns = 'BraidPatterns',
+  HopfLinks = 'HopfLinks',
+  BorromeansRings = 'BorromeansRings',
+  TrefoilSymmetries = 'TrefoilSymmetries',
+  WildKnots = 'WildKnots',
+  KnotCrossings = 'KnotCrossings',
+
+  // Algebraic Geometry and Mirror Symmetry
+  CalabiYauFlows = 'CalabiYauFlows',
+  MirrorManifolds = 'MirrorManifolds',
+  TropicalCurves = 'TropicalCurves',
+  EnriquesGeometry = 'EnriquesGeometry',
+  GromovWitten = 'GromovWitten',
+  QuiverVarieties = 'QuiverVarieties',
+  ToricDiagrams = 'ToricDiagrams',
+  FlopsTransitions = 'FlopsTransitions',
+  WeightLattices = 'WeightLattices',
+  ModuliSpaces = 'ModuliSpaces',
+
+  // Hyperbolic Geometry and Tessellations
+  HyperbolicTessellations = 'HyperbolicTessellations',
+  PoincareDisc = 'PoincareDisc',
+  KleinModel = 'KleinModel',
+  ModularGroup = 'ModularGroup',
+  FuchsianGroups = 'FuchsianGroups',
+  HyperbolicKnots = 'HyperbolicKnots',
+  UniformTilings = 'UniformTilings',
+  SchottkyGroups = 'SchottkyGroups',
+  AutomorphicForms = 'AutomorphicForms',
+  GeodeticFlows = 'GeodeticFlows',
+  CosmicPatterns = 'CosmicPatterns',
+
+  // Natural Phenomena and Cosmic Structures
+  GalaxySpirals = 'GalaxySpirals',
+  WaveInterference = 'WaveInterference',
+  CrystalFormation = 'CrystalFormation',
+  PlantGrowth = 'PlantGrowth',
+  FluidDynamics = 'FluidDynamics',
+  QuantumOscillations = 'QuantumOscillations',
+  CosmicInflation = 'CosmicInflation',
+  MagneticFields = 'MagneticFields',
+  BiorhythmPatterns = 'BiorhythmPatterns',
+  ResonanceWaves = 'ResonanceWaves',
+
+  // Cosmic Structures and Universal Patterns
+  EventHorizonPatterns = 'EventHorizonPatterns',
+  CosmicWebStructures = 'CosmicWebStructures',
+  VacuumFluctuations = 'VacuumFluctuations',
+  PrimordialWaves = 'PrimordialWaves',
+  DarkEnergyFields = 'DarkEnergyFields',
+  GravitationalLensing = 'GravitationalLensing',
+  SpacetimeFoams = 'SpacetimeFoams',
+  QuantumVacuum = 'QuantumVacuum',
+  CosmicStrings = 'CosmicStrings',
+  UniversalConstants = 'UniversalConstants',
+
+  // New Patterns
+  FeynmanDiagrams = 'FeynmanDiagrams',
+  PathIntegrals = 'PathIntegrals',
+  SupersymmetryPatterns = 'SupersymmetryPatterns',
+  StringVibrations = 'StringVibrations',
+  BraneGeometry = 'BraneGeometry',
+  HolographicDuality = 'HolographicDuality',
+  QuantumEntropy = 'QuantumEntropy',
+  InformationFields = 'InformationFields',
+  ComplexityPatterns = 'ComplexityPatterns',
+  QuantumChaos = 'QuantumChaos',
+  TopologicalComputing = 'TopologicalComputing',
+  QuantumAutomata = 'QuantumAutomata',
+
+  // Quantum Dynamics and Phase Transitions
+  NonlinearQuantum = 'NonlinearQuantum',
+  PhaseTransitions = 'PhaseTransitions',
+  ErrorCorrection = 'ErrorCorrection',
+  QuantumNeuralNets = 'QuantumNeuralNets',
+  QuantumThermodynamics = 'QuantumThermodynamics',
+  QuantumGameTheory = 'QuantumGameTheory',
+  DissipativeSystems = 'DissipativeSystems',
+  CoherentStates = 'CoherentStates',
+  QuantumWalks = 'QuantumWalks',
+  AdiabaticEvolution = 'AdiabaticEvolution'
 }
 
 export const UIColorsSchema = z.object({

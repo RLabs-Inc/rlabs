@@ -19,7 +19,7 @@ end
 
 -- Ensure the theme's Lua modules are available
 add_to_rtp()
-
+t
 -- Create user command to reload the theme
 vim.api.nvim_create_user_command('${themeNamePascal}Reload', function()
   -- Clear existing highlights

@@ -175,6 +175,138 @@ function M.setup(c)
         }
     end
 
+    if plugins.nvim_tree then
+        highlights.nvim_tree = {
+            NvimTreeFolderIcon = { fg = c.fg1 },
+            NvimTreeFolderName = { fg = c.fg1 },
+            NvimTreeOpenedFolderName = { fg = c.accent1 },
+            NvimTreeEmptyFolderName = { fg = c.comment },
+            NvimTreeGitDirty = { fg = c.warning },
+            NvimTreeGitNew = { fg = c.success },
+            NvimTreeGitDeleted = { fg = c.error },
+            NvimTreeGitIgnored = { fg = c.comment },
+            NvimTreeIndentMarker = { fg = c.line_highlight },
+            NvimTreeNormal = { fg = c.fg1 },
+            NvimTreeNormalNC = { fg = c.fg1 },
+            NvimTreeRootFolder = { fg = c.accent1 },
+            NvimTreeSymlink = { fg = c.info },
+            NvimTreeWinSeparator = { fg = c.border },
+        }
+    end
+
+    -- if plugins.lualine then
+    --     highlights.lualine = {
+    --         normal = {
+    --             a = { bg = c.accent1, fg = c.accent1_fg, gui='bold' },
+    --             b = { bg = c.bg2, fg = c.fg0 },
+    --             c = { bg = c.bg1, fg = c.fg1 },
+    --         },
+    --         insert = {
+    --             a = { bg = c.accent0, fg = c.accent0_fg, gui='bold' },
+    --             b = { bg = c.bg2, fg = c.fg0 },
+    --             c = { bg = c.bg1, fg = c.fg1 },
+    --         },
+    --         visual = {
+    --             a = { bg = c.info, fg = c.info_fg, gui='bold' },
+    --             b = { bg = c.bg2, fg = c.fg0 },
+    --             c = { bg = c.bg1, fg = c.fg1 },
+    --         },
+    --         replace = {
+    --             a = { bg = c.warning, fg = c.warning_fg, gui='bold' },
+    --             b = { bg = c.bg2, fg = c.fg0 },
+    --             c = { bg = c.bg1, fg = c.fg1 },
+    --         },
+    --         command = {
+    --             a = { bg = c.accent1, fg = c.accent1_fg, gui='bold' },
+    --             b = { bg = c.bg2, fg = c.fg0 },
+    --             c = { bg = c.bg1, fg = c.fg1 },
+    --         },
+    --         terminal = {
+    --             a = { bg = c.success, fg = c.success_fg, gui='bold' },
+    --             b = { bg = c.bg2, fg = c.fg0 },
+    --             c = { bg = c.bg1, fg = c.fg1 },
+    --         },
+    --         inactive = {
+    --             a = { bg = c.bg1, fg = c.comment, gui='bold' },
+    --             b = { bg = c.bg2, fg = c.fg0 },
+    --             c = { bg = c.bg1, fg = c.fg1 }, 
+    --         },
+    --     }
+    -- end
+
+    -- Coc
+    -- hi! link CocErrorSign         DiagnosticError
+    -- hi! link CocWarningSign       DiagnosticWarn
+    -- hi! link CocInfoSign          DiagnosticInfo
+    -- hi! link CocHintSign          DiagnosticHint
+
+    -- hi! link CocErrorFloat        DiagnosticFloatingError
+    -- hi! link CocWarningFloat      DiagnosticFloatingWarn
+    -- hi! link CocInfoFloat         DiagnosticFloatingInfo
+    -- hi! link CocHintFloat         DiagnosticFloatingHint
+
+    -- hi! link CocErrorHighlight    DiagnosticError
+    -- hi! link CocWarningHighlight  DiagnosticWarn
+    -- hi! link CocInfoHighlight     DiagnosticInfo
+    -- hi! link CocHintHighlight     DiagnosticHint
+
+    -- hi! link CocSem_angle             Keyword
+    -- hi! link CocSem_annotation        Keyword
+    -- hi! link CocSem_attribute         Type
+    -- hi! link CocSem_bitwise           Keyword
+    -- hi! link CocSem_boolean           Boolean
+    -- hi! link CocSem_brace             Normal
+    -- hi! link CocSem_bracket           Normal
+    -- hi! link CocSem_builtinAttribute  Type
+    -- hi! link CocSem_builtinType       Type
+    -- hi! link CocSem_character         String
+    -- hi! link CocSem_class             Structure
+    -- hi! link CocSem_colon             Normal
+    -- hi! link CocSem_comma             Normal
+    -- hi! link CocSem_comment           Comment
+    -- hi! link CocSem_comparison        Keyword
+    -- hi! link CocSem_concept           Keyword
+    -- hi! link CocSem_constParameter    Identifier
+    -- hi! link CocSem_dependent         Keyword
+    -- hi! link CocSem_dot               Keyword
+    -- hi! link CocSem_enum              Structure
+    -- hi! link CocSem_enumMember        Constant
+    -- hi! link CocSem_escapeSequence    Type
+    -- hi! link CocSem_event             Identifier
+    -- hi! link CocSem_formatSpecifier   Type
+    -- hi! link CocSem_function          Function
+    -- hi! link CocSem_interface         Type
+    -- hi! link CocSem_keyword           Keyword
+    -- hi! link CocSem_label             Keyword
+    -- hi! link CocSem_logical           Keyword
+    -- hi! link CocSem_macro             Macro
+    -- hi! link CocSem_method            Function
+    -- hi! link CocSem_modifier          Keyword
+    -- hi! link CocSem_namespace         Identifier
+    -- hi! link CocSem_number            Number
+    -- hi! link CocSem_operator          Operator
+    -- hi! link CocSem_parameter         Identifier
+    -- hi! link CocSem_parenthesis       Normal
+    -- hi! link CocSem_property          Identifier
+    -- hi! link CocSem_punctuation       Keyword
+    -- hi! link CocSem_regexp            Type
+    -- hi! link CocSem_selfKeyword       Constant
+    -- hi! link CocSem_semicolon         Normal
+    -- hi! link CocSem_string            String
+    -- hi! link CocSem_struct            Structure
+    -- hi! link CocSem_type              Type
+    -- hi! link CocSem_typeAlias         Type
+    -- hi! link CocSem_typeParameter     Type
+    -- hi! link CocSem_unknown           Normal
+    -- hi! link CocSem_variable          Identifier
+
+    -- call <sid>hi('CocHighlightRead',   s:gui0B, s:gui01,  s:cterm0B, s:cterm01, '', '')
+    -- call <sid>hi('CocHighlightText',   s:gui0A, s:gui01,  s:cterm0A, s:cterm01, '', '')
+    -- call <sid>hi('CocHighlightWrite',  s:gui08, s:gui01,  s:cterm08, s:cterm01, '', '')
+    -- call <sid>hi('CocListMode',        s:gui01, s:gui0B,  s:cterm01, s:cterm0B, 'bold', '')
+    -- call <sid>hi('CocListPath',        s:gui01, s:gui0B,  s:cterm01, s:cterm0B, '', '')
+    -- call <sid>hi('CocSessionsName',    s:gui05, '', s:cterm05, '', '', '')
+
     -- Apply highlights
     for _, group in pairs(highlights) do
         for name, opts in pairs(group) do
