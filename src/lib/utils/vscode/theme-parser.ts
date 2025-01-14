@@ -105,6 +105,21 @@ export const getERRORForeground = (colors: UIColors): string => {
     return wcagLuminance(colors.ERROR) < 0.5 ? colors.FG3 : colors.FG1;
   }
 };
+export const getSUCCESSForeground = (colors: UIColors): string => {
+  if (wcagLuminance(colors.BG1) < 0.5) {
+    return wcagLuminance(colors.SUCCESS) < 0.5 ? colors.FG1 : colors.FG3;
+  } else {
+    return wcagLuminance(colors.SUCCESS) < 0.5 ? colors.FG3 : colors.FG1;
+  }
+};
+
+export const getSelectionForeground = (colors: UIColors): string => {
+  if (wcagLuminance(colors.BG1) < 0.5) {
+    return wcagLuminance(colors.selection) < 0.5 ? colors.FG1 : colors.FG3;
+  } else {
+    return wcagLuminance(colors.selection) < 0.5 ? colors.FG3 : colors.FG1;
+  }
+};
 
 export const getColorWithOpacity = (color: string, opacity: string): string => {
   if (color.length > 7) {
