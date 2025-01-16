@@ -7,9 +7,9 @@ import { getPublicThemes, getThemeById } from '$lib/server/vscode/themes';
 // Import all template files
 const vimTemplateFiles = import.meta.glob(
   [
-    '/vim-template/**/*.vim', // All Vim files
-    '/vim-template/**/*.md', // README and other markdown files
-    '/vim-template/LICENSE' // License file
+    '/templates/vim-template/**/*.vim', // All Vim files
+    '/templates/vim-template/**/*.md', // README and other markdown files
+    '/templates/vim-template/LICENSE' // License file
   ],
   {
     query: '?raw',
@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 // Import logo separately
-const logo = import.meta.glob('/vim-template/images/RLabs-Lamp.png', {
+const logo = import.meta.glob('/templates/vim-template/images/RLabs-Lamp.png', {
   query: '?inline',
   import: 'default',
   eager: true
@@ -62,20 +62,20 @@ export const actions: Actions = {
         const content = fileData as string;
         let targetPath: string;
 
-        if (filePath === '/vim-template/README.md') {
+        if (filePath === '/templates/vim-template/README.md') {
           // Place README at root
           let readme = content;
           readme = readme.replace(/\${themeName}/g, themeData.name);
           readme = readme.replace(/\${themeNameKebab}/g, themeNameKebab);
           targetPath = `${themeNameKebab}/README.md`;
           zipObj[targetPath] = Buffer.from(readme);
-        } else if (filePath === '/vim-template/LICENSE') {
+        } else if (filePath === '/templates/vim-template/LICENSE') {
           // Place LICENSE at root
           let license = content;
           license = license.replace(/\${year}/g, new Date().getFullYear().toString());
           targetPath = `${themeNameKebab}/LICENSE`;
           zipObj[targetPath] = Buffer.from(license);
-        } else if (filePath === '/vim-template/colors/theme/index.vim') {
+        } else if (filePath === '/templates/vim-template/colors/theme/index.vim') {
           // Main theme file goes in colors directory
           const processedContent = content
             .replace(/\${themeName}/g, themeData.name)
@@ -84,7 +84,7 @@ export const actions: Actions = {
             .replace(/\${author}/g, themeData.userName);
           targetPath = `${themeNameKebab}/colors/theme/index.vim`;
           zipObj[targetPath] = Buffer.from(processedContent);
-        } else if (filePath === '/vim-template/colors/theme.vim') {
+        } else if (filePath === '/templates/vim-template/colors/theme.vim') {
           // Main theme file goes in colors directory
           const processedContent = replaceColorPlaceholders(content, themeData)
             .replace(/\${themeName}/g, themeData.name)
@@ -93,7 +93,7 @@ export const actions: Actions = {
             .replace(/\${author}/g, themeData.userName);
           targetPath = `${themeNameKebab}/colors/${themeNameKebab}.vim`;
           zipObj[targetPath] = Buffer.from(processedContent);
-        } else if (filePath === '/vim-template/colors/theme/utils/options.vim') {
+        } else if (filePath === '/templates/vim-template/colors/theme/utils/options.vim') {
           // Main theme file goes in colors directory
           const processedContent = content
             .replace(/\${themeName}/g, themeData.name)
@@ -102,20 +102,20 @@ export const actions: Actions = {
             .replace(/\${author}/g, themeData.userName);
           targetPath = `${themeNameKebab}/colors/theme/utils/options.vim`;
           zipObj[targetPath] = Buffer.from(processedContent);
-        } else if (filePath.includes('/vim-template/colors/theme/')) {
+        } else if (filePath.includes('/templates/vim-template/colors/theme/')) {
           // Theme components go in colors/theme directory
-          const relativePath = filePath.replace('/vim-template/colors/theme/', '');
+          const relativePath = filePath.replace('/templates/vim-template/colors/theme/', '');
           targetPath = `${themeNameKebab}/colors/theme/${relativePath}`;
           const processedContent = content;
           processedContent.replace(/\${themeNameUnderline}/g, themeNameUnderline);
           zipObj[targetPath] = Buffer.from(processedContent);
-        } else if (filePath.includes('/vim-template/colors/theme/utils/')) {
-          const relativePath = filePath.replace('/vim-template/colors/theme/utils/', '');
+        } else if (filePath.includes('/templates/vim-template/colors/theme/utils/')) {
+          const relativePath = filePath.replace('/templates/vim-template/colors/theme/utils/', '');
           targetPath = `${themeNameKebab}/colors/theme/utils/${relativePath}`;
           const processedContent = replaceColorPlaceholders(content, themeData);
           processedContent.replace(/\${themeNameUnderline}/g, themeNameUnderline);
           zipObj[targetPath] = Buffer.from(processedContent);
-        } else if (filePath === '/vim-template/images/RLabs-Lamp.png') {
+        } else if (filePath === '/templates/vim-template/images/RLabs-Lamp.png') {
           // Place logo in images directory
           targetPath = `${themeNameKebab}/images/RLabs-Lamp.png`;
           zipObj[targetPath] = Buffer.from(base64Logo, 'base64');

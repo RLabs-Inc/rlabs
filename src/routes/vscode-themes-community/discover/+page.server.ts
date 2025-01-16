@@ -3,12 +3,12 @@ import { zipSync } from 'fflate';
 import { generateSemanticThemeJSON } from '$lib/utils/vscode/export';
 import { getPublicThemes, getThemeById, updateThemeDownloads } from '$lib/server/vscode/themes';
 
-const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
+const vsixTemplateFiles = import.meta.glob('/templates/vsix-template/**/*', {
   query: '?raw',
   import: 'default',
   eager: true
 });
-const logo = import.meta.glob('/vsix-template/images/RLabs-Lamp.png', {
+const logo = import.meta.glob('/templates/vsix-template/images/RLabs-Lamp.png', {
   query: '?inline',
   import: 'default',
   eager: true
@@ -44,7 +44,7 @@ export const actions: Actions = {
     const zipObj: Record<string, Uint8Array> = {};
 
     for (const [filePath, fileData] of Object.entries(vsixTemplateFiles)) {
-      if (filePath === '/vsix-template/package.json') {
+      if (filePath === '/templates/vsix-template/package.json') {
         let jsonData = fileData as string;
         jsonData = jsonData.replace(/\${themeName}/g, theme.name);
         jsonData = jsonData.replace(
@@ -53,13 +53,13 @@ export const actions: Actions = {
         );
         jsonData = jsonData.replace(/\${uiTheme}/g, theme.isDark ? 'vs-dark' : 'vs');
         zipObj['extension/package.json'] = Buffer.from(jsonData);
-      } else if (filePath === '/vsix-template/README.md') {
+      } else if (filePath === '/templates/vsix-template/README.md') {
         let readme = fileData as string;
         readme = readme.replace(/\${themeName}/g, theme.name);
         zipObj['extension/README.md'] = Buffer.from(readme);
-      } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
+      } else if (filePath === '/templates/vsix-template/images/RLabs-Lamp.png') {
         zipObj['extension/images/RLabs-Lamp.png'] = Buffer.from(base64Data, 'base64');
-      } else if (filePath === '/vsix-template/LICENSE') {
+      } else if (filePath === '/templates/vsix-template/LICENSE') {
         let license = fileData as string;
         license = license.replace(/\${year}/g, new Date().getFullYear().toString());
         zipObj['extension/LICENSE'] = Buffer.from(license);

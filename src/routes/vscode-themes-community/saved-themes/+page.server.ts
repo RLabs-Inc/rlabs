@@ -7,10 +7,10 @@ import { replaceColorPlaceholders } from '$lib/utils/vim/export-lua';
 // Import all template files
 const luaTemplateFiles = import.meta.glob(
   [
-    '/lua-template/**/*.lua', // All Lua files
-    '/lua-template/**/*.md', // README and other markdown files
-    '/lua-template/LICENSE', // License file
-    '/lua-template/plugin/**/*' // Plugin files
+    '/templates/lua-template/**/*.lua', // All Lua files
+    '/templates/lua-template/**/*.md', // README and other markdown files
+    '/templates/lua-template/LICENSE', // License file
+    '/templates/lua-template/plugin/**/*' // Plugin files
   ],
   {
     query: '?raw',
@@ -18,12 +18,12 @@ const luaTemplateFiles = import.meta.glob(
     eager: true
   }
 );
-const vsixTemplateFiles = import.meta.glob('/vsix-template/**/*', {
+const vsixTemplateFiles = import.meta.glob('/templates/vsix-template/**/*', {
   query: '?raw',
   import: 'default',
   eager: true
 });
-const logo = import.meta.glob('/vsix-template/images/RLabs-Lamp.png', {
+const logo = import.meta.glob('/templates/vsix-template/images/RLabs-Lamp.png', {
   query: '?inline',
   import: 'default',
   eager: true
@@ -58,7 +58,7 @@ export const actions: Actions = {
     const zipObj: Record<string, Uint8Array> = {};
 
     for (const [filePath, fileData] of Object.entries(vsixTemplateFiles)) {
-      if (filePath === '/vsix-template/package.json') {
+      if (filePath === '/templates/vsix-template/package.json') {
         let jsonData = fileData as string;
         jsonData = jsonData.replace(/\${themeName}/g, theme.name);
         jsonData = jsonData.replace(
@@ -67,13 +67,13 @@ export const actions: Actions = {
         );
         jsonData = jsonData.replace(/\${uiTheme}/g, theme.isDark ? 'vs-dark' : 'vs');
         zipObj['extension/package.json'] = Buffer.from(jsonData);
-      } else if (filePath === '/vsix-template/README.md') {
+      } else if (filePath === '/templates/vsix-template/README.md') {
         let readme = fileData as string;
         readme = readme.replace(/\${themeName}/g, theme.name);
         zipObj['extension/README.md'] = Buffer.from(readme);
-      } else if (filePath === '/vsix-template/images/RLabs-Lamp.png') {
+      } else if (filePath === '/templates/vsix-template/images/RLabs-Lamp.png') {
         zipObj['extension/images/RLabs-Lamp.png'] = Buffer.from(base64Data, 'base64');
-      } else if (filePath === '/vsix-template/LICENSE') {
+      } else if (filePath === '/templates/vsix-template/LICENSE') {
         let license = fileData as string;
         license = license.replace(/\${year}/g, new Date().getFullYear().toString());
         zipObj['extension/LICENSE'] = Buffer.from(license);
@@ -120,7 +120,10 @@ export const actions: Actions = {
         const content = fileData as string;
         let targetPath: string;
 
-        if (filePath === '/lua-template/README.md' || filePath === '/lua-template/QUICK_START.md') {
+        if (
+          filePath === '/templates/lua-template/README.md' ||
+          filePath === '/templates/lua-template/QUICK_START.md'
+        ) {
           // Place README and QUICK_START at root
           let processedContent = content;
           processedContent = processedContent.replace(/\${themeName}/g, themeData.name);
@@ -129,13 +132,13 @@ export const actions: Actions = {
           processedContent = processedContent.replace(/\${isDark}/g, themeData.isDark.toString());
           targetPath = `${themeNameKebab}/${filePath.split('/').pop()}`;
           zipObj[targetPath] = Buffer.from(processedContent);
-        } else if (filePath === '/lua-template/LICENSE') {
+        } else if (filePath === '/templates/lua-template/LICENSE') {
           // Place LICENSE at root
           let license = content;
           license = license.replace(/\${year}/g, new Date().getFullYear().toString());
           targetPath = `${themeNameKebab}/LICENSE`;
           zipObj[targetPath] = Buffer.from(license);
-        } else if (filePath === '/lua-template/plugin/theme.lua') {
+        } else if (filePath === '/templates/lua-template/plugin/theme.lua') {
           // Process plugin file
           targetPath = `${themeNameKebab}/plugin/${themeNameKebab}.lua`;
           const processedContent = content
@@ -151,9 +154,9 @@ export const actions: Actions = {
             )
             .replace(/\${author}/g, themeData.userName);
           zipObj[targetPath] = Buffer.from(processedContent);
-        } else if (filePath.includes('/lua-template/lua/theme-name/')) {
+        } else if (filePath.includes('/templates/lua-template/lua/theme-name/')) {
           // Process Lua theme files
-          const relativePath = filePath.replace('/lua-template/lua/theme-name/', '');
+          const relativePath = filePath.replace('/templates/lua-template/lua/theme-name/', '');
           targetPath = `${themeNameKebab}/lua/${themeNameKebab}/${relativePath}`;
           const processedContent = replaceColorPlaceholders(content, themeData)
             .replace(/\${themeName}/g, themeData.name)

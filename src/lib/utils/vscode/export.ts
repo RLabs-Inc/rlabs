@@ -95,7 +95,7 @@ export function generateSemanticThemeJSON(
       //"terminal.findMatchHighlightBorder": //# Border color of the other search matches in the terminal.
       // "terminal.hoverHighlightBackground": //# Color of the highlight when hovering a link in the terminal.
       // "terminalCursor.background": //# The background color of the terminal cursor. Allows customizing the color of a character overlapped by a block cursor.
-      // "terminalCursor.foreground": //# The foreground color of the terminal cursor.
+      'terminalCursor.foreground': colors.AC2, //# The foreground color of the terminal cursor.
       // "terminal.dropBackground": //# The background color when dragging on top of terminals. The color should have transparency so that the terminal contents can still shine through.
       // "terminal.tab.activeBorder": //# Border on the side of the terminal tab in the panel. This defaults to tab.activeBorder.
       // "terminalCommandDecoration.defaultBackground": //# The default terminal command decoration background color.
@@ -117,7 +117,7 @@ export function generateSemanticThemeJSON(
       foreground: colors.FG1, // Overall foreground color. This color is only used if not overridden by a component
       disabledForeground: syntaxColors.comment, // Overall foreground for disabled elements. This color is only used if not overridden by a component.
       'widget.border': colors.BORDER, // Border color of widgets such as Find/Replace inside the editor.
-      // "widget.shadow-sm": colors.FG2, // Shadow color of widgets such as Find/Replace inside the editor
+      'widget.shadow-sm': colors.BORDER, // Shadow color of widgets such as Find/Replace inside the editor
       'selection.background': colors.selection, // Background color of text selections in the workbench (for input fields or text areas, does not apply to selections within the editor and the terminal)
       // 'selection.foreground': Color(colors.AC2) < 0.5 ? colors.FG1 : colors.FG3, // Foreground color of text selections in the workbench
       descriptionForeground: colors.FG2, // Foreground color for description text providing additional information, for example for a label.
@@ -160,7 +160,7 @@ export function generateSemanticThemeJSON(
 
       //# Dropdown Control
       'dropdown.background': colors.BG3, // Dropdown background
-      //"dropdown.listBackground": // # Dropdown list background.
+      'dropdown.listBackground': colors.BG3, // # Dropdown list background.
       'dropdown.border': syntaxColors.comment, // Dropdown border
       'dropdown.foreground': colors.FG1, // Dropdown foreground
 
@@ -185,7 +185,7 @@ export function generateSemanticThemeJSON(
       'inputValidation.errorBorder': colors.ERROR, // Input validation border color for error severity
 
       //# Scroll Bar Control
-      // "scrollbar.shadow-sm": //# Scroll Bar shadow to indicate that the view is scrolled
+      'scrollbar.shadow-sm': colors.BORDER, //# Scroll Bar shadow to indicate that the view is scrolled
       // "scrollbarSlider.activeBackground": //# Slider background color when active
       // "scrollbarSlider.background": //# Slider background color
       // "scrollbarSlider.hoverBackground": //# Slider background color when hovering
@@ -224,15 +224,15 @@ export function generateSemanticThemeJSON(
       // "list.filterMatchBackground": colors.BG3, // Background color of the filtered matches in lists and trees.
       // "list.filterMatchBorder": colors.BORDER, // Border color of the filtered matches in lists and trees.
 
-      // tree.indentGuidesStroke: //# Tree Widget's stroke color for indent guides.
-      // tree.inactiveIndentGuidesStroke: //# Tree stroke color for the indentation guides that are not active.
-      // tree.tableColumnsBorder: //# Tree stroke color for the indentation guides.
-      // tree.tableOddRowsBackground: //# Background color for odd table rows.
+      'tree.indentGuidesStroke': colors.AC1, //# Tree Widget's stroke color for indent guides.
+      'tree.inactiveIndentGuidesStroke': colors.lineHighlight, //# Tree stroke color for the indentation guides that are not active.
+      'tree.tableColumnsBorder': colors.lineHighlight, //# Tree stroke color for the indentation guides.
+      'tree.tableOddRowsBackground': colors.BG3, //# Background color for odd table rows.
 
       'listFilterWidget.background': colors.BG3, //# Background color of the type filter widget in lists and trees.
       'listFilterWidget.outline': colors.BORDER, //# Outline color of the type filter widget in lists and trees.
       'listFilterWidget.noMatchesOutline': colors.ERROR, //# Outline color of the type filter widget in lists and trees, when there are no matches.
-      // "listFilterWidget.shadow-sm": "#2d4026", //# Shadow color of the type filter widget in lists and tree.
+      'listFilterWidget.shadow-sm': colors.BORDER, //# Shadow color of the type filter widget in lists and tree.
 
       //# Activity Bar
       //# The Activity Bar is usually displayed either on the far left or right of the workbench and allows fast switching between views of the Side Bar.
@@ -281,7 +281,7 @@ export function generateSemanticThemeJSON(
       // minimap.selectionHighlight: //# Highlight color for the editor selection.
       // minimap.errorHighlight: //# Highlight color for errors within the editor.
       // minimap.warningHighlight: //# Highlight color for warnings within the editor.
-      'minimap.background': colors.BG2, //# Minimap background color.
+      'minimap.background': colors.BG1, //# Minimap background color.
       // minimap.selectionOccurrenceHighlight: //# Minimap marker color for repeating editor selections.
       // minimap.foregroundOpacity: //# Opacity of foreground elements rendered in the minimap. For example, "#000000c0" will render the elements with 75% opacity.
       // minimap.infoHighlight: //# Minimap marker color for infos.
@@ -396,7 +396,7 @@ export function generateSemanticThemeJSON(
       // CODE LENS
       'editorCodeLens.foreground': syntaxColors.comment,
 
-      // "editorInlayHint.background": colors.BG1, // Background color of inline hints.
+      'editorInlayHint.background': colors.BG3, // Background color of inline hints.
       // "editorInlayHint.foreground": colors.FG1, // Foreground color of inline hints.
       // "editorInlayHint.typeForeground": colors.FG1, // Foreground color of inline hints for types
       // "editorInlayHint.typeBackground": colors.BG1, // Background color of inline hints for types
@@ -453,11 +453,11 @@ export function generateSemanticThemeJSON(
       // editorCommentsWidget.rangeActiveBackground: # Color of background for currently selected or hovered comment range.
       // editorCommentsWidget.replyInputBackground: # Background color for comment reply input box.
 
-      'editorWidget.background': colors.BG1, // Background color of editor widgets, such as Find/Replace
+      'editorWidget.background': colors.BG3, // Background color of editor widgets, such as Find/Replace
       'editorWidget.foreground': colors.FG1, // Foreground color of editor widgets, such as find/replace.
       'editorWidget.border': colors.BORDER, // Border color of the editor widget unless the widget does not contain a border or defines its own border color
       // editorWidget.resizeBorder: # Border color of the resize bar of editor widgets. The color is only used if the widget chooses to have a resize border and if the color is not overridden by a widget.
-      'editorSuggestWidget.background': colors.BG1, // Background color of the suggestion widget
+      'editorSuggestWidget.background': colors.BG3, // Background color of the suggestion widget
       'editorSuggestWidget.border': colors.BORDER, // Border color of the suggestion widget
       'editorSuggestWidget.foreground': syntaxColors.comment, // Foreground color of the suggestion widget
       'editorSuggestWidget.highlightForeground': colors.FG1, // Color of the match highlights in the suggestion widget
@@ -466,11 +466,11 @@ export function generateSemanticThemeJSON(
       'editorSuggestWidget.selectedForeground': getAC2Foreground(), // Foreground color of the selected entry in the suggest widget.
       // "editorSuggestWidget.selectedIconForeground": colors.FG1, // Icon foreground color of the selected entry in the suggest widget.
       // editorSuggestWidgetStatus.foreground: # Foreground color of the suggest widget status.
-      'editorHoverWidget.background': colors.BG1, // Background color of the editor hover
+      'editorHoverWidget.background': colors.BG3, // Background color of the editor hover
       'editorHoverWidget.foreground': colors.FG1, // Foreground color of the editor hover.
       'editorHoverWidget.border': colors.BORDER, // Border color of the editor hover
       'editorHoverWidget.highlightForeground': colors.FG1, // Foreground color of the active item in the parameter hint.
-      'editorHoverWidget.statusBarBackground': colors.BG1, // Background color of the editor hover status bar.
+      'editorHoverWidget.statusBarBackground': colors.BG3, // Background color of the editor hover status bar.
       // editorGhostText.border: # Border color of the ghost text shown by inline completion providers and the suggest preview.
       // editorGhostText.background: # Background color of the ghost text in the editor.
       // editorGhostText.foreground: # Foreground color of the ghost text shown by inline completion providers and the suggest preview.
