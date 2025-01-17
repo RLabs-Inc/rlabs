@@ -20,7 +20,8 @@ export function generateSchemeHues(baseHue: number, scheme: ColorSchemes): numbe
   // Try to get the pattern function for the scheme
   const patternFunction = getPatternFunction(scheme);
   if (patternFunction) {
-    return [baseHue, ...patternFunction(baseHue)];
+    result = [baseHue, ...patternFunction(baseHue)];
+    return result;
   }
 
   // If no pattern function found, use traditional schemes

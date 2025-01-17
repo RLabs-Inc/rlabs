@@ -1,6 +1,5 @@
 import { generateUIColors } from '$lib/utils/vscode/uiColors.svelte';
 import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
-import { getSyntaxColors } from '$lib/state/vscode/syntax-colors.svelte';
 
 import { type UIColors } from '$lib/types/vscode/color';
 import type { UIColorsGenerationOptions } from '$lib/types/vscode/theme';
@@ -29,12 +28,9 @@ export function getUiColors() {
   }
 
   function generate(fewerColors: boolean) {
-    const syntaxColorsState = getSyntaxColors();
-    const lockedSyntaxColors = syntaxColorsState().lockedSyntaxColors;
     const options: UIColorsGenerationOptions = {
       few: fewerColors,
-      lockedColors: lockedUIColors,
-      syntaxLockedColors: lockedSyntaxColors
+      lockedColors: lockedUIColors
     };
     const { generatedUIColors } = generateUIColors(options);
     setUiColors(generatedUIColors);

@@ -14,19 +14,6 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
   const controlsState = getControls();
   const { few, lockedColors } = options;
 
-  // Get the syntax locked colors from the options
-  const syntaxLockedColors = options.syntaxLockedColors || {};
-
-  // Generate scheme hues considering both UI and syntax locked colors
-  if (
-    (lockedColors && Object.keys(lockedColors).length > 0) ||
-    Object.keys(syntaxLockedColors).length > 0
-  ) {
-    schemeHuesState().generateWithLocks(lockedColors, syntaxLockedColors);
-  } else {
-    schemeHuesState().generate();
-  }
-
   const getRandomHue = () => {
     return schemeHuesState().schemeHues[
       randomInteger(0, schemeHuesState().schemeHues.length - 1) %

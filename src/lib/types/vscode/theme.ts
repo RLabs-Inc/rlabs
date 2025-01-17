@@ -90,7 +90,6 @@ export type InsertTheme = z.infer<typeof ThemeInsertSchema>;
 export type UIColorsGenerationOptions = {
   few?: boolean;
   lockedColors: Partial<UIColors>;
-  syntaxLockedColors: Partial<SyntaxColors>;
 };
 
 export type SyntaxColorsGenerationOptions = {

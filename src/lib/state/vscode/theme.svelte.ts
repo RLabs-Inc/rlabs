@@ -131,7 +131,19 @@ export function getSelectedTheme() {
 
   function generate(fewerColors: boolean) {
     selectedColorState().setSelectedColor(null);
-    schemeHuesState().generate();
+    // Generate scheme hues considering both UI and syntax locked colors
+    if (
+      (uiColorsState().lockedUIColors && Object.keys(uiColorsState().lockedUIColors).length > 0) ||
+      (syntaxColorsState().lockedSyntaxColors &&
+        Object.keys(syntaxColorsState().lockedSyntaxColors).length > 0)
+    ) {
+      schemeHuesState().generateWithLocks(
+        uiColorsState().lockedUIColors,
+        syntaxColorsState().lockedSyntaxColors
+      );
+    } else {
+      schemeHuesState().generate();
+    }
     uiColorsState().generate(fewerColors);
     syntaxColorsState().generate(fewerColors);
     ansiColorsState().generate();
@@ -161,7 +173,20 @@ export function getSelectedTheme() {
     controlsState().setBaseHue([randomInteger(0, 360)]);
     controlsState().setThemeName('');
     controlsState().setThemeIsPublic(false);
-    schemeHuesState().generate();
+    // Generate scheme hues considering both UI and syntax locked colors
+    if (
+      (uiColorsState().lockedUIColors && Object.keys(uiColorsState().lockedUIColors).length > 0) ||
+      (syntaxColorsState().lockedSyntaxColors &&
+        Object.keys(syntaxColorsState().lockedSyntaxColors).length > 0)
+    ) {
+      schemeHuesState().generateWithLocks(
+        uiColorsState().lockedUIColors,
+        syntaxColorsState().lockedSyntaxColors
+      );
+    } else {
+      schemeHuesState().generate();
+    }
+    // Generate theme colors
     uiColorsState().generate(fewerColors);
     syntaxColorsState().generate(fewerColors);
     ansiColorsState().generate();

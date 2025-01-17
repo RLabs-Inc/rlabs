@@ -42,11 +42,13 @@ export function getControls() {
 
   function generate() {
     const selectedTheme = getSelectedTheme();
+    console.log('generate from controls');
     selectedTheme().generate(fewerGeneratedColors);
   }
 
   function randomize() {
     const selectedTheme = getSelectedTheme();
+    console.log('randomize from controls');
     selectedTheme().randomize(fewerRandomColors);
   }
 
