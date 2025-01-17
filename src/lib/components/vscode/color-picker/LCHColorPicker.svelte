@@ -33,7 +33,7 @@
   }
   // Update color when any value changes
   function updateColor() {
-    onChange?.(LCH_to_sRGB_string(colorState, true));
+    onChange?.(LCH_to_sRGB_string(colorState));
   }
 
   let colorState = $derived.by(() => {
@@ -148,6 +148,7 @@
       </div>
 
       <SliderPicker
+        type="multiple"
         value={pickerColorState().pickerAlpha}
         onValueChange={(value) => {
           pickerColorState().setPickerAlpha(value);
@@ -192,6 +193,7 @@
     <TwoDMap bind:this={lcMap} type="lightness-chroma" color={colorState} onChange={updateColor} />
 
     <SliderPicker
+      type="multiple"
       value={pickerColorState().pickerLightness}
       onValueChange={(value) => {
         pickerColorState().setPickerLightness(value);
@@ -238,6 +240,7 @@
     </div>
 
     <SliderPicker
+      type="multiple"
       value={pickerColorState().pickerChroma}
       onValueChange={(value) => {
         pickerColorState().setPickerChroma(value);
@@ -282,6 +285,7 @@
     <TwoDMap bind:this={hlMap} type="hue-lightness" color={colorState} onChange={updateColor} />
 
     <SliderPicker
+      type="multiple"
       value={pickerColorState().pickerHue}
       onValueChange={(value) => {
         pickerColorState().setPickerHue(value);
