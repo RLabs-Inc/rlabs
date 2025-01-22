@@ -8,8 +8,7 @@
   import { getIsEditing, getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import type { Theme } from '$lib/types/vscode/theme';
   import { randomInteger } from '$lib/utils/common/math';
-  import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
-
+  import { getColorWithOpacity } from '$lib/utils/vscode/colorUtils.svelte';
   import clsx from 'clsx';
 
   const { data }: { data: { themes: Theme[] } } = $props();
@@ -62,7 +61,7 @@
 
 <section
   class={clsx('flex min-h-[calc(100vh-2rem)] w-full flex-col items-center')}
-  style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '60')}; transition-property: all; transition-duration: 350ms;`}
+  style={`background: ${getColorWithOpacity(selectedTheme().theme?.uiColors.BG1, '60')}; transition-property: all; transition-duration: 350ms;`}
 >
   <div class="px-4 pt-16 pb-2">
     <Alert class="border-foreground bg-transparent backdrop-blur-sm">
@@ -84,7 +83,7 @@
   </div>
   <section
     class="border-border sticky -top-[3rem] z-10 w-full border-b shadow-xs backdrop-blur-3xl"
-    style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '80')}; transition-property: all; transition-duration: 350ms;`}
+    style={`background: ${getColorWithOpacity(selectedTheme().theme?.uiColors.BG1, '80')}; transition-property: all; transition-duration: 350ms;`}
   >
     <h1
       class="px-5 pt-[1rem] text-center font-black drop-shadow-md sm:text-lg md:pt-[1rem] md:text-xl lg:text-xl 2xl:text-2xl"

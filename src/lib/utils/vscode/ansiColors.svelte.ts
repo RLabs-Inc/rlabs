@@ -20,25 +20,25 @@ export function generateAnsiColors(options: AnsiColorsGenerationOptions): {
       : formatHex8(randomizeColor([280, 281], isDarkTheme ? [5, 10] : [0, 10], [0, 5]))!,
     Red: lockedColors.Red
       ? lockedColors.Red
-      : randomizeColor([23, 37], isDarkTheme ? [40, 70] : [10, 70], [10, 30]),
+      : randomizeColor([23, 37], isDarkTheme ? [40, 70] : [10, 70], [10, 40]),
     Green: lockedColors.Green
       ? lockedColors.Green
-      : formatHex8(randomizeColor([115, 175], isDarkTheme ? [40, 70] : [10, 70], [10, 30]))!,
+      : formatHex8(randomizeColor([115, 175], isDarkTheme ? [40, 70] : [10, 70], [10, 40]))!,
     Yellow: lockedColors.Yellow
       ? lockedColors.Yellow
-      : formatHex8(randomizeColor([40, 96], isDarkTheme ? [40, 70] : [10, 70], [10, 30]))!, // Center on orange-yellow
+      : formatHex8(randomizeColor([40, 96], isDarkTheme ? [40, 70] : [10, 70], [10, 40]))!, // Center on orange-yellow
     Blue: lockedColors.Blue
       ? lockedColors.Blue
-      : formatHex8(randomizeColor([233, 270], isDarkTheme ? [40, 70] : [10, 70], [10, 30]))!,
+      : formatHex8(randomizeColor([233, 270], isDarkTheme ? [40, 70] : [10, 70], [10, 40]))!,
     Magenta: lockedColors.Magenta
       ? lockedColors.Magenta
-      : formatHex8(randomizeColor([280, 360], isDarkTheme ? [40, 70] : [10, 70], [10, 30]))!,
+      : formatHex8(randomizeColor([280, 360], isDarkTheme ? [40, 70] : [10, 70], [10, 40]))!,
     Cyan: lockedColors.Cyan
       ? lockedColors.Cyan
-      : formatHex8(randomizeColor([180, 225], isDarkTheme ? [40, 70] : [10, 70], [10, 30]))!,
+      : formatHex8(randomizeColor([180, 225], isDarkTheme ? [40, 70] : [10, 70], [10, 40]))!,
     White: lockedColors.White
       ? lockedColors.White
-      : formatHex8(randomizeColor([50, 90], isDarkTheme ? [95, 100] : [85, 95], [10, 30]))!,
+      : formatHex8(randomizeColor([50, 90], isDarkTheme ? [95, 100] : [85, 95], [10, 40]))!,
     BrightBlack: lockedColors.BrightBlack
       ? lockedColors.BrightBlack
       : formatHex8(randomizeColor([280, 281], isDarkTheme ? [10, 15] : [5, 15], [0, 5]))!,
@@ -56,7 +56,7 @@ export function generateAnsiColors(options: AnsiColorsGenerationOptions): {
     // : formatHex8(randomizeColor([180, 225], isDarkTheme ? [40, 85] : [40, 70], [0, 40])),
     BrightWhite: lockedColors.BrightWhite
       ? lockedColors.BrightWhite
-      : formatHex8(randomizeColor([50, 90], isDarkTheme ? [95, 100] : [85, 95], [0, 20]))!
+      : formatHex8(randomizeColor([50, 90], isDarkTheme ? [95, 100] : [85, 95], [0, 10]))!
   };
 
   // Generate bright colors based on their counterparts

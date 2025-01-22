@@ -81,7 +81,7 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
       randomizeColor([getRandomHue()], controlsState().isDark ? [0, 100] : [0, 100], [0, 40]),
     BORDER:
       lockedColors?.BORDER ||
-      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 40] : [90, 100], [0, 10]),
+      randomizeColor([getRandomHue()], controlsState().isDark ? [0, 40] : [80, 100], [0, 10]),
     INFO:
       lockedColors?.INFO ||
       randomizeColor([233, 270], controlsState().isDark ? [20, 100] : [0, 100], [10, 40]),
@@ -97,14 +97,14 @@ export function generateUIColors(options: UIColorsGenerationOptions): {
     lineHighlight:
       lockedColors?.lineHighlight ||
       randomizeColor([getRandomHue()], controlsState().isDark ? [5, 40] : [65, 100], [0, 25]) +
-        '70',
+        '50',
     selection:
       lockedColors?.selection ||
       randomizeColor([getRandomHue()], controlsState().isDark ? [5, 40] : [65, 100], [0, 25]) +
-        '70',
+        '50',
     findMatch:
       lockedColors?.findMatch ||
-      randomizeColor([getRandomHue()], controlsState().isDark ? [5, 40] : [65, 100], [0, 25]) + '70'
+      randomizeColor([getRandomHue()], controlsState().isDark ? [5, 40] : [65, 100], [0, 25]) + '50'
   };
 
   // Ensure readability for specific colors

@@ -4,6 +4,7 @@ import type { TokenColors, VSCodeTheme } from '$lib/types/vscode/theme';
 import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/vscode/color';
 import { getAllTokenColors } from './export-theme';
 import { getSemanticTokenColors } from './export-theme/semantic';
+import { getColorWithOpacity } from './colorUtils.svelte';
 
 export function generateSemanticThemeJSON(
   name: string = 'Generated Color Theme',
@@ -46,14 +47,6 @@ export function generateSemanticThemeJSON(
       return wcagLuminance(colors.ERROR) < 0.3 ? colors.FG1 : colors.FG3;
     } else {
       return wcagLuminance(colors.ERROR) < 0.3 ? colors.FG3 : colors.FG1;
-    }
-  };
-
-  const getColorWithOpacity = (color: string, opacity: string) => {
-    if (color.length > 7) {
-      return color.slice(0, -2) + opacity;
-    } else {
-      return color + opacity;
     }
   };
 

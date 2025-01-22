@@ -78,94 +78,97 @@ export function generateSyntaxColors(options: SyntaxColorsGenerationOptions): {
     ];
 
   const syntaxColors: SyntaxColors = {
-    comment: lockedColors?.comment || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
-    keyword: lockedColors?.keyword || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
-    storage: lockedColors?.storage || randomizeColor([AC2hue], [0, 100], [0, 100]),
-    modifier: lockedColors?.modifier || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
-    other: lockedColors?.other || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
+    comment: lockedColors?.comment || randomizeColor([getRandomHue()], [0, 100], [0, 5]),
+    keyword: lockedColors?.keyword || randomizeColor([getRandomHue()], [0, 100], [0, 40]),
+    storage: lockedColors?.storage || randomizeColor([AC2hue], [0, 100], [0, 40]),
+    modifier: lockedColors?.modifier || randomizeColor([getRandomHue()], [0, 100], [0, 40]),
+    other: lockedColors?.other || randomizeColor([getRandomHue()], [0, 100], [0, 40]),
 
-    language: lockedColors?.language || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
-    operator: lockedColors?.operator || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
-    control: lockedColors?.control || randomizeColor([controlHue], [0, 100], [0, 100]),
-    controlFlow: lockedColors?.controlFlow || randomizeColor([controlHue], [0, 100], [0, 100]),
-    controlImport: lockedColors?.controlImport || randomizeColor([controlHue], [0, 100], [0, 100]),
-    support: lockedColors?.support || randomizeColor([supportHue], [0, 100], [0, 100]),
+    language: lockedColors?.language || randomizeColor([getRandomHue()], [0, 100], [0, 40]),
+    operator: lockedColors?.operator || randomizeColor([getRandomHue()], [0, 100], [0, 40]),
+    control: lockedColors?.control || randomizeColor([controlHue], [0, 100], [0, 40]),
+    controlFlow: lockedColors?.controlFlow || randomizeColor([controlHue], [0, 100], [0, 40]),
+    controlImport: lockedColors?.controlImport || randomizeColor([controlHue], [0, 100], [0, 40]),
+    support: lockedColors?.support || randomizeColor([supportHue], [0, 100], [0, 40]),
     supportFunction:
       lockedColors?.supportFunction ||
-      randomizeColor([few ? supportHue : supportFunctionHue], [0, 100], [0, 100]),
+      randomizeColor([few ? supportHue : supportFunctionHue], [0, 100], [0, 40]),
     supportMethod:
       lockedColors?.supportMethod ||
-      randomizeColor([few ? supportHue : supportFunctionHue], [0, 100], [0, 100]),
+      randomizeColor([few ? supportHue : supportFunctionHue], [0, 100], [0, 40]),
     supportVariable:
-      lockedColors?.supportVariable || randomizeColor([supportHue], [0, 100], [0, 100]),
+      lockedColors?.supportVariable || randomizeColor([supportHue], [0, 100], [0, 40]),
     supportProperty:
-      lockedColors?.supportProperty || randomizeColor([supportHue], [0, 100], [0, 100]),
+      lockedColors?.supportProperty || randomizeColor([supportHue], [0, 100], [0, 40]),
 
-    function: lockedColors?.function || randomizeColor([functionHue], [0, 100], [0, 100]),
-    functionCall: lockedColors?.functionCall || randomizeColor([functionHue], [0, 100], [0, 100]),
+    function: lockedColors?.function || randomizeColor([functionHue], [0, 100], [0, 40]),
+    functionCall: lockedColors?.functionCall || randomizeColor([functionHue], [0, 100], [0, 40]),
     method:
-      lockedColors?.method || randomizeColor([few ? functionHue : methodHue], [0, 100], [0, 100]),
+      lockedColors?.method || randomizeColor([few ? functionHue : methodHue], [0, 100], [0, 40]),
     methodCall:
       lockedColors?.methodCall ||
-      randomizeColor([few ? functionHue : methodHue], [0, 100], [0, 100]),
+      randomizeColor([few ? functionHue : methodHue], [0, 100], [0, 40]),
     selector:
       lockedColors?.selector ||
-      randomizeColor([few ? functionHue : getRandomHue()], [0, 100], [0, 100]),
+      randomizeColor([few ? functionHue : getRandomHue()], [0, 100], [0, 40]),
 
     parameter:
       lockedColors?.parameter ||
-      randomizeColor([few ? variableHue : getRandomHue()], [0, 100], [0, 100]),
-    variable: lockedColors?.variable || randomizeColor([variableHue], [0, 100], [0, 100]),
+      randomizeColor([few ? variableHue : getRandomHue()], [0, 100], [0, 40]),
+    variable: lockedColors?.variable || randomizeColor([variableHue], [0, 100], [0, 40]),
     variableReadonly:
-      lockedColors?.variableReadonly || randomizeColor([variableHue], [0, 100], [0, 100]),
+      lockedColors?.variableReadonly || randomizeColor([variableHue], [0, 100], [0, 40]),
     variableDeclaration:
-      lockedColors?.variableDeclaration || randomizeColor([variableHue], [0, 100], [0, 100]),
+      lockedColors?.variableDeclaration || randomizeColor([variableHue], [0, 100], [0, 40]),
     variableProperty:
       lockedColors?.variableProperty ||
-      randomizeColor([few ? variableHue : propertyHue], [0, 100], [0, 100]),
+      randomizeColor([few ? variableHue : propertyHue], [0, 100], [0, 40]),
     property:
       lockedColors?.property ||
-      randomizeColor([few ? variableHue : propertyHue], [0, 100], [0, 100]),
+      randomizeColor([few ? variableHue : propertyHue], [0, 100], [0, 40]),
     propertyDeclaration:
       lockedColors?.propertyDeclaration ||
-      randomizeColor([few ? variableHue : propertyHue], [0, 100], [0, 100]),
+      randomizeColor([few ? variableHue : propertyHue], [0, 100], [0, 40]),
     class:
-      lockedColors?.class || randomizeColor([few ? typeHue : getRandomHue()], [0, 100], [0, 100]),
-    type: lockedColors?.type || randomizeColor([typeHue], [0, 100], [0, 100]),
-    typeParameter: lockedColors?.typeParameter || randomizeColor([typeHue], [0, 100], [0, 100]),
+      lockedColors?.class || randomizeColor([few ? typeHue : getRandomHue()], [0, 100], [0, 40]),
+    type: lockedColors?.type || randomizeColor([typeHue], [0, 100], [0, 40]),
+    typeParameter: lockedColors?.typeParameter || randomizeColor([typeHue], [0, 100], [0, 40]),
 
-    tag: lockedColors?.tag || randomizeColor([tagHue], [0, 100], [0, 100]),
+    tag: lockedColors?.tag || randomizeColor([tagHue], [0, 100], [0, 40]),
     attribute:
       lockedColors?.attribute ||
-      randomizeColor([few ? variableHue : getRandomHue()], [0, 100], [0, 100]),
-    constant: lockedColors?.constant || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
-    unit: lockedColors?.unit || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
-    datetime: lockedColors?.datetime || randomizeColor([getRandomHue()], [0, 100], [0, 100]),
+      randomizeColor([few ? variableHue : getRandomHue()], [0, 100], [0, 40]),
+    constant: lockedColors?.constant || randomizeColor([getRandomHue()], [0, 100], [0, 40]),
+    unit: lockedColors?.unit || randomizeColor([getRandomHue()], [0, 100], [0, 40]),
+    datetime: lockedColors?.datetime || randomizeColor([getRandomHue()], [0, 100], [0, 40]),
 
-    tagPunctuation: lockedColors?.tagPunctuation || randomizeColor([tagHue], [0, 100], [0, 100]),
-    punctuation: lockedColors?.punctuation || randomizeColor([punctuationHue], [0, 100], [0, 100]),
+    tagPunctuation: lockedColors?.tagPunctuation || randomizeColor([tagHue], [0, 100], [0, 40]),
+    punctuation: lockedColors?.punctuation || randomizeColor([punctuationHue], [0, 100], [0, 40]),
     punctuationQuote:
-      lockedColors?.punctuationQuote || randomizeColor([punctuationHue], [0, 100], [0, 100]),
+      lockedColors?.punctuationQuote || randomizeColor([punctuationHue], [0, 100], [0, 40]),
     punctuationBrace:
-      lockedColors?.punctuationBrace || randomizeColor([punctuationHue], [0, 100], [0, 100]),
+      lockedColors?.punctuationBrace || randomizeColor([punctuationHue], [0, 100], [0, 40]),
     punctuationComma:
-      lockedColors?.punctuationComma || randomizeColor([punctuationHue], [0, 100], [0, 100])
+      lockedColors?.punctuationComma || randomizeColor([punctuationHue], [0, 100], [0, 40])
   };
   // Ensure readability and harmony
   Object.keys(syntaxColors).forEach((key) => {
-    if (!lockedColors?.[key as keyof SyntaxColors]) {
-      syntaxColors[key as keyof SyntaxColors] = ensureReadability(
-        syntaxColors[key as keyof SyntaxColors],
-        uiColorsState().uiColors.BG1,
-        5.5
-      );
+    if (key != 'comment') {
+      if (!lockedColors?.[key as keyof SyntaxColors]) {
+        syntaxColors[key as keyof SyntaxColors] = ensureReadability(
+          syntaxColors[key as keyof SyntaxColors],
+          uiColorsState().uiColors.BG1,
+          5.5
+        );
+      }
     }
   });
   // Apply the new comment color adjustment
   if (!lockedColors?.comment) {
     syntaxColors.comment = adjustCommentColor(
       syntaxColors.comment,
-      controlsState().isDark ? uiColorsState().uiColors.BG1 : uiColorsState().uiColors.BG2,
+      uiColorsState().uiColors.BG1,
+      uiColorsState().uiColors.BG3,
       controlsState().isDark
     );
   }

@@ -1,11 +1,11 @@
 import { converter, formatHex8, type Oklch } from 'culori';
 
-const toOKLCH = converter('oklch');
-const toRGB = converter('rgb');
-const toP3 = converter('p3');
-const toRec2020 = converter('rec2020');
+export const toOKLCH = converter('oklch');
+export const toRGB = converter('rgb');
+export const toP3 = converter('p3');
+export const toRec2020 = converter('rec2020');
 
-function LCH_to_P3(lch: [number, number, number]) {
+export function LCH_to_P3(lch: [number, number, number]) {
   const p3 = toP3({
     mode: 'oklch',
     l: lch[0],
@@ -15,7 +15,7 @@ function LCH_to_P3(lch: [number, number, number]) {
   return [p3.r, p3.g, p3.b];
 }
 
-function LCH_to_r2020(lch: [number, number, number]) {
+export function LCH_to_r2020(lch: [number, number, number]) {
   const rec2020 = toRec2020({
     mode: 'oklch',
     l: lch[0],
@@ -25,9 +25,6 @@ function LCH_to_r2020(lch: [number, number, number]) {
   return [rec2020.r, rec2020.g, rec2020.b];
 }
 
-/**
- * Checks if an LCH color is within the sRGB gamut
- */
 export function isLCH_within_sRGB(l: number, c: number, h: number): boolean {
   const rgb = toRGB({
     mode: 'oklch',
@@ -136,21 +133,6 @@ export function forceIntoGamut(
   }
 
   return [Math.round(bestColor.l * 100), Math.round(bestColor.c * 132), bestColor.h];
-}
-
-/**
- * Converts a CSS color string to LCH values
- */
-export function colorToLCH(color: string) {
-  const parsed = toOKLCH(color);
-  if (!parsed) return null;
-
-  return {
-    lightness: Math.round(parsed.l * 100), // 0-100
-    chroma: Math.round(parsed.c * 132), // Scale to match Lea's range (0-132)
-    hue: Math.round(parsed.h || 0), // 0-360
-    alpha: Math.round((parsed.alpha || 1) * 100) // 0-100
-  };
 }
 
 export const supportsP3 =
