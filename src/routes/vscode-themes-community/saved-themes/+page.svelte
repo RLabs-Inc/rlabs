@@ -5,7 +5,7 @@
   import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
   import { getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import { getIsEditing } from '$lib/state/vscode/editor.svelte';
-  import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
+  import { getColorWithOpacity } from '$lib/utils/vscode/colorUtils.svelte';
   import type { Theme } from '$lib/types/vscode/theme';
 
   const { data }: { data: { themes: Theme[] } } = $props();
@@ -36,11 +36,11 @@
 {:else}
   <section
     class="min-h-[calc(100vh-2rem)] w-full flex-col items-center"
-    style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '60')}; transition-property: all; transition-duration: 200ms;`}
+    style={`background: ${getColorWithOpacity(selectedTheme().theme?.uiColors.BG1, '60')}; transition-property: all; transition-duration: 200ms;`}
   >
     <section
       class="border-border sticky top-10 z-10 w-full border-b shadow-xs backdrop-blur-3xl md:top-[3rem]"
-      style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, '80')}; transition-property: all; transition-duration: 350ms;`}
+      style={`background: ${getColorWithOpacity(selectedTheme().theme?.uiColors.BG1, '80')}; transition-property: all; transition-duration: 350ms;`}
     >
       <div class="flex w-full flex-row items-center justify-center gap-5 px-5 pt-10 pb-8">
         <div
