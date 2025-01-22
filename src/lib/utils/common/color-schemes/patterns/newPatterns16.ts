@@ -7,10 +7,6 @@ TropicalCurves
 EnriquesGeometry
 GromovWitten
 QuiverVarieties
-ToricDiagrams
-FlopsTransitions
-WeightLattices
-ModuliSpaces
 */
 
 export function getCalabiYauFlows(baseHue: number): number[] {
@@ -169,5 +165,3 @@ export function getQuiverVarieties(baseHue: number): number[] {
   }
   return angles;
 }
-
-// More patterns will be added in subsequent files...

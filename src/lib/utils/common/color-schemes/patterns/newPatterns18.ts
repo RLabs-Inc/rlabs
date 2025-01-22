@@ -277,5 +277,3 @@ export function getResonanceWaves(baseHue: number): number[] {
   }
   return angles;
 }
-
-// ... More patterns to follow

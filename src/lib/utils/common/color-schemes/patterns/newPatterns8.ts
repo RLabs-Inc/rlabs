@@ -14,30 +14,6 @@ LightCodes
 CreationMatrix
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-case ColorSchemes.SoundMatrices:
-    return getSoundMatrices(baseHue);
-case ColorSchemes.DivineNetworks:
-    return getDivineNetworks(baseHue);
-case ColorSchemes.CosmicSeed:
-    return getCosmicSeed(baseHue);
-case ColorSchemes.MirrorSymmetries:
-    return getMirrorSymmetries(baseHue);
-case ColorSchemes.EntanglementFields:
-    return getEntanglementFields(baseHue);
-case ColorSchemes.CrystallineConsciousness:
-    return getCrystallineConsciousness(baseHue);
-case ColorSchemes.LifeGeometry:
-    return getLifeGeometry(baseHue);
-case ColorSchemes.UniversalFlow:
-    return getUniversalFlow(baseHue);
-case ColorSchemes.LightCodes:
-    return getLightCodes(baseHue);
-case ColorSchemes.CreationMatrix:
-    return getCreationMatrix(baseHue);
-*/
-
 export function getSoundMatrices(baseHue: number): number[] {
   const angles: number[] = [];
   const phi = 1.618033988749895;
@@ -51,7 +27,7 @@ export function getSoundMatrices(baseHue: number): number[] {
     ti: 963
   };
 
-  for (const [note, freq] of Object.entries(frequencies)) {
+  for (const freq of Object.values(frequencies)) {
     // Sound wave geometry
     for (let i = 0; i < 12; i++) {
       const theta = (2 * Math.PI * i) / 12;

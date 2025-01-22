@@ -168,7 +168,6 @@ export function getMinkowskiSpacetime(baseHue: number): number[] {
   const angles: number[] = [];
   const events = 8;
   const dimensions = 4;
-  const c = 299792458; // Speed of light
 
   for (let event = 1; event <= events; event++) {
     for (let d = 1; d <= dimensions; d++) {

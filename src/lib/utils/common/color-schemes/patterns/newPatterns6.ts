@@ -14,30 +14,6 @@ VoidGeometry
 LightMatrix
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-case ColorSchemes.QuantumField:
-    return getQuantumField(baseHue);
-case ColorSchemes.SacredBiology:
-    return getSacredBiology(baseHue);
-case ColorSchemes.CosmicString:
-    return getCosmicString(baseHue);
-case ColorSchemes.HolographicUniverse:
-    return getHolographicUniverse(baseHue);
-case ColorSchemes.PlasmaDynamics:
-    return getPlasmaDynamics(baseHue);
-case ColorSchemes.ZeroPoint:
-    return getZeroPoint(baseHue);
-case ColorSchemes.TorusEnergy:
-    return getTorusEnergy(baseHue);
-case ColorSchemes.SacredFractals:
-    return getSacredFractals(baseHue);
-case ColorSchemes.VoidGeometry:
-    return getVoidGeometry(baseHue);
-case ColorSchemes.LightMatrix:
-    return getLightMatrix(baseHue);
-*/
-
 export function getQuantumField(baseHue: number): number[] {
   const angles: number[] = [];
   const planckLength = 1.616255 * Math.pow(10, -35);
@@ -119,7 +95,6 @@ export function getHolographicUniverse(baseHue: number): number[] {
   const angles: number[] = [];
   const dimensions = 4;
   const phi = 1.618033988749895;
-  const planckScale = 1.616255 * Math.pow(10, -35);
 
   for (let d = 1; d <= dimensions; d++) {
     // Holographic principle: surface encodes volume

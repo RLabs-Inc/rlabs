@@ -14,30 +14,6 @@ SacredHarmonograph
 UnifiedField
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-case ColorSchemes.FlowerOfLifeMetamorphosis:
-    return getFlowerOfLifeMetamorphosis(baseHue);
-case ColorSchemes.SacredWaveFunctions:
-    return getSacredWaveFunctions(baseHue);
-case ColorSchemes.CosmicLattice:
-    return getCosmicLattice(baseHue);
-case ColorSchemes.DivineMatrix:
-    return getDivineMatrix(baseHue);
-case ColorSchemes.CrystalSystems:
-    return getCrystalSystems(baseHue);
-case ColorSchemes.AtomicOrbital:
-    return getAtomicOrbital(baseHue);
-case ColorSchemes.DNAHelix:
-    return getDNAHelix(baseHue);
-case ColorSchemes.QuantumVortex:
-    return getQuantumVortex(baseHue);
-case ColorSchemes.SacredHarmonograph:
-    return getSacredHarmonograph(baseHue);
-case ColorSchemes.UnifiedField:
-    return getUnifiedField(baseHue);
-*/
-
 export function getFlowerOfLifeMetamorphosis(baseHue: number): number[] {
   const angles: number[] = [];
   const stages = 7; // Seven stages of metamorphosis
@@ -152,7 +128,7 @@ export function getCrystalSystems(baseHue: number): number[] {
     triclinic: [70, 80, 100]
   };
 
-  for (const [system, angles_] of Object.entries(systems)) {
+  for (const angles_ of Object.values(systems)) {
     const [alpha, beta, gamma] = angles_;
     // System base angles
     angles.push((baseHue + alpha) % 360);

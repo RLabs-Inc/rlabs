@@ -14,30 +14,6 @@ SoundGeometry
 CrystallineGrid
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-case ColorSchemes.CymaticPatterns:
-    return getCymaticPatterns(baseHue);
-case ColorSchemes.SacredPolyhedra:
-    return getSacredPolyhedra(baseHue);
-case ColorSchemes.QuantumEntanglement:
-    return getQuantumEntanglement(baseHue);
-case ColorSchemes.CosmicMicrostructures:
-    return getCosmicMicrostructures(baseHue);
-case ColorSchemes.TempleGeometry:
-    return getTempleGeometry(baseHue);
-case ColorSchemes.ChakraVortex:
-    return getChakraVortex(baseHue);
-case ColorSchemes.GalacticSpiral:
-    return getGalacticSpiral(baseHue);
-case ColorSchemes.MerkabaField:
-    return getMerkabaField(baseHue);
-case ColorSchemes.SoundGeometry:
-    return getSoundGeometry(baseHue);
-case ColorSchemes.CrystallineGrid:
-    return getCrystallineGrid(baseHue);
-*/
-
 export function getCymaticPatterns(baseHue: number): number[] {
   const angles: number[] = [];
   // Frequencies that create specific cymatic patterns
@@ -76,7 +52,7 @@ export function getSacredPolyhedra(baseHue: number): number[] {
     icosahedron: { vertices: 12, faces: 20, edges: 30 }
   };
 
-  for (const [name, data] of Object.entries(polyhedra)) {
+  for (const data of Object.values(polyhedra)) {
     // Vertex angles
     for (let i = 0; i < data.vertices; i++) {
       angles.push((baseHue + (360 * i) / data.vertices) % 360);
@@ -217,7 +193,6 @@ export function getGalacticSpiral(baseHue: number): number[] {
 
     for (let t = 0; t <= rotations * Math.PI; t += Math.PI / 12) {
       // Logarithmic spiral
-      const r = Math.exp(phi * t);
       const theta = (t * 180) / Math.PI;
 
       // Spiral arm angles

@@ -330,5 +330,3 @@ export function getUniversalConstants(baseHue: number): number[] {
   }
   return angles;
 }
-
-// ... More cosmic patterns will follow

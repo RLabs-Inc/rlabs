@@ -3,12 +3,9 @@
 /*
 HyperbolicTessellations
 PoincareDisc
-KleinModel
 ModularGroup
 FuchsianGroups
-HyperbolicKnots
 UniformTilings
-SchottkyGroups
 AutomorphicForms
 GeodeticFlows
 */

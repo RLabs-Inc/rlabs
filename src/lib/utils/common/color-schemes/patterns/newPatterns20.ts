@@ -10,7 +10,9 @@ HolographicDuality
 QuantumEntropy
 InformationFields
 ComplexityPatterns
-EmergentStructures
+QuantumChaos
+TopologicalComputing
+QuantumAutomata
 */
 
 export function getFeynmanDiagrams(baseHue: number): number[] {
@@ -455,5 +457,3 @@ export function getQuantumAutomata(baseHue: number): number[] {
   }
   return angles;
 }
-
-// ... More patterns to follow

@@ -14,30 +14,6 @@ SacredPolygonNesting
 QuantumGeometryGrid
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-case ColorSchemes.MerkabaFieldHarmonics:
-    return getMerkabaFieldHarmonics(baseHue);
-case ColorSchemes.CosmicCubeProjections:
-    return getCosmicCubeProjections(baseHue);
-case ColorSchemes.VectorEquilibrium:
-    return getVectorEquilibrium(baseHue);
-case ColorSchemes.StellatedOctahedron:
-    return getStellatedOctahedron(baseHue);
-case ColorSchemes.FractalPenrose:
-    return getFractalPenrose(baseHue);
-case ColorSchemes.SacredVortex:
-    return getSacredVortex(baseHue);
-case ColorSchemes.PhiSpiralMandala:
-    return getPhiSpiralMandala(baseHue);
-case ColorSchemes.DoubleFibonacci:
-    return getDoubleFibonacci(baseHue);
-case ColorSchemes.SacredPolygonNesting:
-    return getSacredPolygonNesting(baseHue);
-case ColorSchemes.QuantumGeometryGrid:
-    return getQuantumGeometryGrid(baseHue);
-*/
-
 export function getMerkabaFieldHarmonics(baseHue: number): number[] {
   const angles: number[] = [];
   const phi = 1.618033988749895;
@@ -92,7 +68,6 @@ export function getVectorEquilibrium(baseHue: number): number[] {
 
 export function getStellatedOctahedron(baseHue: number): number[] {
   const angles: number[] = [];
-  const vertices = 14; // 6 original + 8 stellated points
   const starAngles = [0, 45, 90, 135, 180, 225, 270, 315];
   const octahedronAngles = [0, 60, 120, 180, 240, 300];
 
@@ -140,7 +115,6 @@ export function getSacredVortex(baseHue: number): number[] {
 export function getPhiSpiralMandala(baseHue: number): number[] {
   const angles: number[] = [];
   const phi = 1.618033988749895;
-  const layers = 12;
   const petalCounts = [8, 13, 21, 34, 55, 89]; // Fibonacci numbers
 
   for (const petals of petalCounts) {

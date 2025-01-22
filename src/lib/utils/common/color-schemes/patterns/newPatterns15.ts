@@ -3,12 +3,7 @@
 /*
 JonesPolynomials
 KhovanovHomology
-QuantumGroups
 BraidPatterns
-TorusKnots
-HopfLinks
-BorromeansRings
-TrefoilSymmetries
 WildKnots
 KnotCrossings
 */

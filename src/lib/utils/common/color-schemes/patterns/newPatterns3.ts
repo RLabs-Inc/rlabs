@@ -19,40 +19,6 @@ MetatronVariations
 PentagonalSymmetries
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-case ColorSchemes.VesicaPiscesSequence:
-    return getVesicaPiscesSequence(baseHue);
-case ColorSchemes.VitruvianProportions:
-    return getVitruvianProportions(baseHue);
-case ColorSchemes.TorusKnots:
-    return getTorusKnots(baseHue);
-case ColorSchemes.HypercubeProjections:
-    return getHypercubeProjections(baseHue);
-case ColorSchemes.PythagoreanSpiral:
-    return getPythagoreanSpiral(baseHue);
-case ColorSchemes.LoxodromicSpiral:
-    return getLoxodromicSpiral(baseHue);
-case ColorSchemes.SacredTriangles:
-    return getSacredTriangles(baseHue);
-case ColorSchemes.FlowerOfLifeHarmonics:
-    return getFlowerOfLifeHarmonics(baseHue);
-case ColorSchemes.CubeOfSpace:
-    return getCubeOfSpace(baseHue);
-case ColorSchemes.PlatonicSolidsDuals:
-    return getPlatonicSolidsDuals(baseHue);
-case ColorSchemes.FibonacciSpiralMatrix:
-    return getFibonacciSpiralMatrix(baseHue);
-case ColorSchemes.GoldenRectangleSubdivisions:
-    return getGoldenRectangleSubdivisions(baseHue);
-case ColorSchemes.SacredSoundFrequencies:
-    return getSacredSoundFrequencies(baseHue);
-case ColorSchemes.MetatronVariations:
-    return getMetatronVariations(baseHue);
-case ColorSchemes.PentagonalSymmetries:
-    return getPentagonalSymmetries(baseHue);
-*/
-
 export function getVesicaPiscesSequence(baseHue: number): number[] {
   const angles: number[] = [];
   const vesicaRatio = Math.sqrt(3);

@@ -29,44 +29,6 @@ DivineProportion
 TetractysPattern
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-[Previous cases remain the same...]
-
-case ColorSchemes.FibonacciSpiralMatrix:
-    return getFibonacciSpiralMatrix(baseHue);
-case ColorSchemes.GoldenRectangleSubdivisions:
-    return getGoldenRectangleSubdivisions(baseHue);
-case ColorSchemes.SacredSoundFrequencies:
-    return getSacredSoundFrequencies(baseHue);
-case ColorSchemes.MetatronVariations:
-    return getMetatronVariations(baseHue);
-case ColorSchemes.PentagonalSymmetries:
-    return getPentagonalSymmetries(baseHue);
-case ColorSchemes.PhiGridSystem:
-    return getPhiGridSystem(baseHue);
-case ColorSchemes.SacredIntersectionPoints:
-    return getSacredIntersectionPoints(baseHue);
-case ColorSchemes.HarmonicResonance:
-    return getHarmonicResonance(baseHue);
-case ColorSchemes.SeedOfLifeVariations:
-    return getSeedOfLifeVariations(baseHue);
-case ColorSchemes.OctahedronProjections:
-    return getOctahedronProjections(baseHue);
-case ColorSchemes.RhombicDodecahedron:
-    return getRhombicDodecahedron(baseHue);
-case ColorSchemes.TruncatedIcosahedron:
-    return getTruncatedIcosahedron(baseHue);
-case ColorSchemes.SacredSpirals:
-    return getSacredSpirals(baseHue);
-case ColorSchemes.DivineProportion:
-    return getDivineProportion(baseHue);
-case ColorSchemes.TetractysPattern:
-    return getTetractysPattern(baseHue);
-*/
-
-// [Previous functions remain exactly the same...]
-
 export function getFibonacciSpiralMatrix(baseHue: number): number[] {
   const angles: number[] = [];
   const fibMatrix = [
@@ -319,5 +281,3 @@ export function getTetractysPattern(baseHue: number): number[] {
   }
   return angles;
 }
-
-// [Previous functions remain exactly the same...]

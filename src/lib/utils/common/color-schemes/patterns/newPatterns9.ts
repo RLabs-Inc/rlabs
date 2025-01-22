@@ -14,30 +14,6 @@ HarmonyPatterns
 EnergyGeometry
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-case ColorSchemes.TimeGeometry:
-    return getTimeGeometry(baseHue);
-case ColorSchemes.DivineArchitecture:
-    return getDivineArchitecture(baseHue);
-case ColorSchemes.CosmicMemory:
-    return getCosmicMemory(baseHue);
-case ColorSchemes.SymmetryFields:
-    return getSymmetryFields(baseHue);
-case ColorSchemes.ProportionMatrix:
-    return getProportionMatrix(baseHue);
-case ColorSchemes.SpaceGeometry:
-    return getSpaceGeometry(baseHue);
-case ColorSchemes.ConsciousnessGrid:
-    return getConsciousnessGrid(baseHue);
-case ColorSchemes.NatureGeometry:
-    return getNatureGeometry(baseHue);
-case ColorSchemes.HarmonyPatterns:
-    return getHarmonyPatterns(baseHue);
-case ColorSchemes.EnergyGeometry:
-    return getEnergyGeometry(baseHue);
-*/
-
 export function getTimeGeometry(baseHue: number): number[] {
   const angles: number[] = [];
   const phi = 1.618033988749895;

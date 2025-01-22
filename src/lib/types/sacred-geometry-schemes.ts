@@ -174,6 +174,7 @@ export enum ColorSchemes {
   VibrationGeometry = 'VibrationGeometry',
   VoidPatterns = 'VoidPatterns',
 
+  // Set 11: Harmonic Ressonance
   HarmonicRessonance = 'HarmonicRessonance',
   RhombieDodecahedron = 'RhombieDodecahedron',
 
@@ -255,11 +256,7 @@ export enum ColorSchemes {
   // Quantum Topology and Knot Theory
   JonesPolynomials = 'JonesPolynomials',
   KhovanovHomology = 'KhovanovHomology',
-  QuantumGroups = 'QuantumGroups',
   BraidPatterns = 'BraidPatterns',
-  HopfLinks = 'HopfLinks',
-  BorromeansRings = 'BorromeansRings',
-  TrefoilSymmetries = 'TrefoilSymmetries',
   WildKnots = 'WildKnots',
   KnotCrossings = 'KnotCrossings',
 
@@ -270,23 +267,15 @@ export enum ColorSchemes {
   EnriquesGeometry = 'EnriquesGeometry',
   GromovWitten = 'GromovWitten',
   QuiverVarieties = 'QuiverVarieties',
-  ToricDiagrams = 'ToricDiagrams',
-  FlopsTransitions = 'FlopsTransitions',
-  WeightLattices = 'WeightLattices',
-  ModuliSpaces = 'ModuliSpaces',
 
   // Hyperbolic Geometry and Tessellations
   HyperbolicTessellations = 'HyperbolicTessellations',
   PoincareDisc = 'PoincareDisc',
-  KleinModel = 'KleinModel',
   ModularGroup = 'ModularGroup',
   FuchsianGroups = 'FuchsianGroups',
-  HyperbolicKnots = 'HyperbolicKnots',
   UniformTilings = 'UniformTilings',
-  SchottkyGroups = 'SchottkyGroups',
   AutomorphicForms = 'AutomorphicForms',
   GeodeticFlows = 'GeodeticFlows',
-  CosmicPatterns = 'CosmicPatterns',
 
   // Natural Phenomena and Cosmic Structures
   GalaxySpirals = 'GalaxySpirals',
@@ -334,9 +323,7 @@ export enum ColorSchemes {
   QuantumThermodynamics = 'QuantumThermodynamics',
   QuantumGameTheory = 'QuantumGameTheory',
   DissipativeSystems = 'DissipativeSystems',
-  CoherentStates = 'CoherentStates',
-  QuantumWalks = 'QuantumWalks',
-  AdiabaticEvolution = 'AdiabaticEvolution'
+  CoherentStates = 'CoherentStates'
 }
 
 export type ColorScheme = keyof typeof ColorSchemes;

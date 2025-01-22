@@ -261,5 +261,3 @@ export function getCalabiFoldings(baseHue: number): number[] {
   }
   return angles;
 }
-
-// More patterns can be added following similar mathematical principles...

@@ -14,30 +14,6 @@ AethericField
 WindSpirals
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-case ColorSchemes.UnifiedFieldResonance:
-    return getUnifiedFieldResonance(baseHue);
-case ColorSchemes.SacredWater:
-    return getSacredWater(baseHue);
-case ColorSchemes.ElementalPatterns:
-    return getElementalPatterns(baseHue);
-case ColorSchemes.CelestialHarmonics:
-    return getCelestialHarmonics(baseHue);
-case ColorSchemes.TimeSpirals:
-    return getTimeSpirals(baseHue);
-case ColorSchemes.QuantumConsciousness:
-    return getQuantumConsciousness(baseHue);
-case ColorSchemes.EarthGrid:
-    return getEarthGrid(baseHue);
-case ColorSchemes.CosmicFire:
-    return getCosmicFire(baseHue);
-case ColorSchemes.AethericField:
-    return getAethericField(baseHue);
-case ColorSchemes.WindSpirals:
-    return getWindSpirals(baseHue);
-*/
-
 export function getUnifiedFieldResonance(baseHue: number): number[] {
   const angles: number[] = [];
   const phi = 1.618033988749895;
@@ -104,7 +80,7 @@ export function getElementalPatterns(baseHue: number): number[] {
     aether: { angles: [0, 72, 144, 216, 288], ratio: 2.618033989 }
   };
 
-  for (const [element, data] of Object.entries(elements)) {
+  for (const data of Object.values(elements)) {
     // Element base geometry
     for (const angle of data.angles) {
       angles.push((baseHue + angle) % 360);
@@ -133,7 +109,7 @@ export function getCelestialHarmonics(baseHue: number): number[] {
     jupiter: { orbit: 4333, ratio: 2.618033989 }
   };
 
-  for (const [planet, data] of Object.entries(planets)) {
+  for (const data of Object.values(planets)) {
     // Orbital resonance
     const orbitalAngle = (360 * data.orbit) / 365;
     angles.push((baseHue + orbitalAngle) % 360);
@@ -161,7 +137,7 @@ export function getTimeSpirals(baseHue: number): number[] {
     precession: 25920
   };
 
-  for (const [cycle, period] of Object.entries(cycles)) {
+  for (const period of Object.values(cycles)) {
     // Time cycle geometry
     for (let i = 0; i < period; i++) {
       const cycleAngle = (360 * i) / period;

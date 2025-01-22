@@ -14,30 +14,6 @@ SoulGeometry
 InfiniteCreation
 */
 
-// Add these cases to the switch statement in generateSchemeHues:
-/*
-case ColorSchemes.VibrationGeometry:
-    return getVibrationGeometry(baseHue);
-case ColorSchemes.MerkabaFields:
-    return getMerkabaFields(baseHue);
-case ColorSchemes.VoidPatterns:
-    return getVoidPatterns(baseHue);
-case ColorSchemes.BreathGeometry:
-    return getBreathGeometry(baseHue);
-case ColorSchemes.LightLanguage:
-    return getLightLanguage(baseHue);
-case ColorSchemes.CosmicSeedLife:
-    return getCosmicSeedLife(baseHue);
-case ColorSchemes.HeartGeometry:
-    return getHeartGeometry(baseHue);
-case ColorSchemes.MatrixCode:
-    return getMatrixCode(baseHue);
-case ColorSchemes.SoulGeometry:
-    return getSoulGeometry(baseHue);
-case ColorSchemes.InfiniteCreation:
-    return getInfiniteCreation(baseHue);
-*/
-
 export function getVibrationGeometry(baseHue: number): number[] {
   const angles: number[] = [];
   const phi = 1.618033988749895;

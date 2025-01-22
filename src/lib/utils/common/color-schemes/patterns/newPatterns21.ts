@@ -5,12 +5,6 @@ NonlinearQuantum
 PhaseTransitions
 ErrorCorrection
 QuantumNeuralNets
-QuantumThermodynamics
-QuantumGameTheory
-DissipativeSystems
-CoherentStates
-QuantumWalks
-AdiabaticEvolution
 */
 
 export function getNonlinearQuantum(baseHue: number): number[] {
@@ -172,5 +166,3 @@ export function getQuantumNeuralNets(baseHue: number): number[] {
   }
   return angles;
 }
-
-// ... More patterns to follow

@@ -2,7 +2,7 @@ import { generateSchemeHues } from '$lib/utils/common/color-schemes/index.svelte
 import { generateSchemeHuesWithLocks } from '$lib/utils/common/color-schemes/locked-schemes';
 import { getControls } from '$lib/state/vscode/controls.svelte';
 
-import { ColorSchemes } from '$lib/types/vscode/color';
+import { ColorSchemes, type ColorScheme } from '$lib/types/sacred-geometry-schemes';
 
 let schemeHues = $state<number[]>([]);
 
@@ -16,7 +16,7 @@ export function getSchemeHues() {
     set(
       generateSchemeHues(
         controlsState().baseHue[0],
-        ColorSchemes[controlsState().scheme as keyof typeof ColorSchemes]
+        ColorSchemes[controlsState().scheme as ColorScheme]
       )
     );
   }
@@ -28,7 +28,7 @@ export function getSchemeHues() {
     set(
       generateSchemeHuesWithLocks({
         baseHue: controlsState().baseHue[0],
-        scheme: ColorSchemes[controlsState().scheme as keyof typeof ColorSchemes],
+        scheme: ColorSchemes[controlsState().scheme as ColorScheme],
         uiLockedColors,
         syntaxLockedColors
       })
@@ -36,10 +36,7 @@ export function getSchemeHues() {
   }
 
   function generateAdditionalHues(baseHue: number, scheme: string) {
-    const additionalHues = generateSchemeHues(
-      baseHue,
-      ColorSchemes[scheme as keyof typeof ColorSchemes]
-    );
+    const additionalHues = generateSchemeHues(baseHue, ColorSchemes[scheme as ColorScheme]);
     set([...schemeHues, ...additionalHues]);
   }
 
