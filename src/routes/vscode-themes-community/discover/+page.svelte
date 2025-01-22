@@ -6,7 +6,7 @@
   import { getIsEditing, getSelectedFile } from '$lib/state/vscode/editor.svelte';
   import type { Theme } from '$lib/types/vscode/theme';
   import { randomInteger } from '$lib/utils/common/math';
-  import { getAlphaColor } from '$lib/utils/vscode/colorUtils.svelte';
+  import { getColorWithOpacity } from '$lib/utils/vscode/colorUtils.svelte';
 
   const { data }: { data: { themes: Theme[] } } = $props();
   const selectedTheme = getSelectedTheme();
@@ -50,7 +50,7 @@
 
 <section
   class="flex min-h-[calc(100vh-2rem)] w-full flex-col items-center"
-  style={`background: ${getAlphaColor(selectedTheme().theme?.uiColors.BG1, 'dd')}; transition-property: all; transition-duration: 200ms;`}
+  style={`background: ${getColorWithOpacity(selectedTheme().theme?.uiColors.BG1, 'dd')}; transition-property: all; transition-duration: 200ms;`}
 >
   <h1
     class="text-bass px-5 pt-[4rem] text-center font-black drop-shadow-md sm:text-lg md:pt-[5rem] md:text-xl lg:text-xl 2xl:text-2xl"
