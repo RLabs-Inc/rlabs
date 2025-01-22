@@ -2,7 +2,7 @@ import { generateSchemeHues } from '$lib/utils/common/color-schemes/index.svelte
 import { generateSchemeHuesWithLocks } from '$lib/utils/common/color-schemes/locked-schemes';
 import { getControls } from '$lib/state/vim/controls.svelte';
 
-import { ColorSchemes } from '$lib/types/vim/color';
+import { ColorSchemes } from '$lib/types/sacred-geometry-schemes';
 
 let schemeHues = $state<number[]>([]);
 

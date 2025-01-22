@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ColorSchemes } from '$lib/types/vscode/color';
+import { ColorSchemes } from '$lib/types/sacred-geometry-schemes';
 import { type Theme, ThemeSchema } from '$lib/types/vscode/theme';
 
 export function parseThemeFromDB(rawTheme: any): Theme {

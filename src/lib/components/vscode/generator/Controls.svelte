@@ -19,7 +19,7 @@
   import ColorPicker from '$lib/components/vscode/generator/ColorPicker.svelte';
   import LoadSaveTheme from './LoadSaveTheme.svelte';
 
-  import { ColorSchemes } from '$lib/types/vscode/color';
+  import { ColorSchemes } from '$lib/types/sacred-geometry-schemes';
   import type { Theme } from '$lib/types/vscode/theme';
   import Export from './Export.svelte';
   import { SliderPicker } from '$lib/components/ui/slider-picker';

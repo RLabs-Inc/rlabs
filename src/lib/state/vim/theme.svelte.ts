@@ -10,7 +10,7 @@ import { getAnsiColors } from '$lib/state/vim/ansi-colors.svelte';
 // import { getMonacoEditor } from '$lib/components/vim/monaco-editor/monaco.svelte';
 
 import type { Theme } from '$lib/types/vim/theme';
-import { ColorSchemes } from '$lib/types/vscode/color';
+import { ColorSchemes } from '$lib/types/sacred-geometry-schemes';
 import { initialUIColors, initialSyntaxColors, initialAnsiColors } from '$lib/constants/colors';
 
 let theme = $state<Theme>({

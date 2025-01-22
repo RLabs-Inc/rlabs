@@ -8,7 +8,7 @@ import {
   type UIColors,
   type AnsiColors
 } from './color';
-import { ColorSchemes } from './color';
+import { ColorSchemes } from '$lib/types/sacred-geometry-schemes';
 
 // Token types
 export type Colors = Record<string, string>;

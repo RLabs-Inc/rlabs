@@ -10,7 +10,7 @@ import { getAnsiColors } from '$lib/state/vscode/ansi-colors.svelte';
 import { getMonacoEditor } from '$lib/components/vscode/monaco-editor/monaco.svelte';
 
 import type { Theme } from '$lib/types/vscode/theme';
-import { ColorSchemes } from '$lib/types/vscode/color';
+import { ColorSchemes } from '$lib/types/sacred-geometry-schemes';
 import { initialUIColors, initialSyntaxColors, initialAnsiColors } from '$lib/constants/colors';
 
 let theme = $state<Theme>({

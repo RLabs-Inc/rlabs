@@ -1,7 +1,7 @@
 import { randomInteger, randomEnum } from '$lib/utils/common/math';
 import { getSelectedTheme } from '$lib/state/vscode/theme.svelte';
 
-import { ColorSchemes } from '$lib/types/vscode/color';
+import { ColorSchemes } from '$lib/types/sacred-geometry-schemes';
 
 let isDark = $state(true);
 let scheme = $state(randomEnum(Object(ColorSchemes)));
