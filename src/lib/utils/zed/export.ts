@@ -11,13 +11,7 @@ interface ZedTheme {
   }[];
 }
 
-interface ThemeToken {
-  color: string;
-  font_style: string | null;
-  font_weight: number | null;
-}
-
-function getThemeToken(color: string): ThemeToken {
+function getThemeToken(color: string) {
   return {
     color,
     font_style: null,
@@ -37,52 +31,60 @@ export function generateZedThemeJSON(
   vscodeTheme: VSCodeTheme
 ): string {
   const style = {
-    // Base colors and accents
+    // UI Tokens merged from both sources
     'background.appearance': 'opaque' as const,
+    accents: [colors.AC1, colors.AC2, colors.INFO, colors.SUCCESS, colors.WARNING, colors.ERROR],
     background: colors.BG1,
-
-    // Elevated surfaces and panels
     'elevated_surface.background': colors.BG2,
     'surface.background': colors.BG2,
-
-    // Borders
     border: colors.BORDER,
     'border.variant': colors.AC1,
     'border.focused': colors.AC2,
     'border.selected': colors.AC1,
     'border.transparent': withOpacity(colors.BORDER, '20'),
     'border.disabled': syntaxColors.comment,
-
-    // Element states
     'element.background': colors.BG3,
     'element.hover': withOpacity(colors.AC2, '40'),
     'element.active': withOpacity(colors.AC2, '60'),
     'element.selected': withOpacity(colors.AC2, '50'),
     'element.disabled': syntaxColors.comment,
     'drop_target.background': withOpacity(colors.BG2, '66'),
-
-    // Ghost elements
     'ghost_element.background': withOpacity(colors.BG2, '59'),
     'ghost_element.hover': withOpacity(colors.AC2, '40'),
     'ghost_element.active': withOpacity(colors.AC2, '60'),
     'ghost_element.selected': withOpacity(colors.AC2, '50'),
     'ghost_element.disabled': syntaxColors.comment,
-
-    // Text styles
     text: colors.FG1,
     'text.muted': syntaxColors.comment,
     'text.placeholder': syntaxColors.comment,
-    'text.disabled': syntaxColors.comment,
+    // 'text.disabled': syntaxColors.comment,
     'text.accent': colors.AC2,
-
-    // Icons
     icon: colors.FG1,
     'icon.muted': syntaxColors.comment,
-    'icon.disabled': syntaxColors.comment,
+    // 'icon.disabled': syntaxColors.comment,
     'icon.placeholder': syntaxColors.comment,
     'icon.accent': colors.AC2,
-
-    // Editor core
+    'status_bar.background': colors.AC2,
+    'title_bar.background': colors.BG2,
+    'title_bar.inactive_background': withOpacity(colors.BG2, '70'),
+    'toolbar.background': colors.BG1,
+    'tab_bar.background': colors.BG2,
+    'tab.inactive_background': colors.BG3,
+    'tab.active_background': colors.BG1,
+    'search.match_background': colors.findMatch,
+    'search.match_border': colors.FG1,
+    'panel.background': colors.BG3,
+    'panel.focused_border': colors.BORDER,
+    'panel.indent_guide': withOpacity(colors.BORDER, '99'),
+    'panel.indent_guide_active': syntaxColors.comment,
+    'panel.indent_guide_hover': colors.AC2,
+    'pane.focused_border': colors.BORDER,
+    'pane_group.border': colors.BORDER,
+    'scrollbar.thumb.background': withOpacity(colors.AC2, '33'),
+    'scrollbar.thumb.hover_background': syntaxColors.comment,
+    'scrollbar.thumb.border': colors.AC2,
+    'scrollbar.track.background': null,
+    'scrollbar.track.border': withOpacity(colors.FG1, '12'),
     'editor.foreground': colors.FG1,
     'editor.background': colors.BG1,
     'editor.gutter.background': colors.BG1,
@@ -92,41 +94,22 @@ export function generateZedThemeJSON(
     'editor.line_number': syntaxColors.comment,
     'editor.active_line_number': colors.AC2,
     'editor.invisible': withOpacity(syntaxColors.comment, '66'),
-
-    // Editor UI elements
-    'editor.indent_guide': colors.lineHighlight,
-    'editor.indent_guide_active': colors.AC2,
-    'editor.indent_guide_hover': colors.AC1,
     'editor.wrap_guide': colors.lineHighlight,
     'editor.active_wrap_guide': colors.AC2,
-
-    // Editor selections and highlights
+    'editor.indent_guide': syntaxColors.comment,
+    'editor.indent_guide_active': colors.AC2,
     'editor.selection.background': colors.selection,
     'editor.matching_bracket.background': colors.findMatch,
-
-    // Search
-    'search.match_background': colors.findMatch,
-    'search.match_border': colors.FG1,
-
-    // Status bar
-    'status_bar.background': colors.AC2,
-
-    // Title bar
-    'title_bar.background': colors.BG2,
-    'title_bar.inactive_background': withOpacity(colors.BG2, '70'),
-
-    // Panels
-    'panel.background': colors.BG3,
-    'panel.focused_border': colors.BORDER,
-    // Panes
-    'pane.focused_border': colors.BORDER,
-    'pane_group.border': colors.BORDER,
+    'editor.document_highlight.bracket_background': withOpacity(colors.AC1, '40'),
+    'editor.document_highlight.read_background': withOpacity(colors.FG1, '20'),
+    'editor.document_highlight.write_background': withOpacity(colors.FG1, '20'),
 
     // Terminal colors
     'terminal.background': colors.BG1,
+    'terminal.ansi.background': colors.BG1,
     'terminal.foreground': colors.FG1,
-    'terminal.bright_foreground': colors.FG1,
     'terminal.dim_foreground': colors.FG2,
+    'terminal.bright_foreground': colors.FG1,
     'terminal.ansi.black': ansiColors.Black,
     'terminal.ansi.red': ansiColors.Red,
     'terminal.ansi.green': ansiColors.Green,
@@ -144,7 +127,7 @@ export function generateZedThemeJSON(
     'terminal.ansi.bright_cyan': ansiColors.BrightCyan,
     'terminal.ansi.bright_white': ansiColors.BrightWhite,
 
-    // Players
+    // Players section
     players: [
       {
         cursor: colors.AC1,
@@ -178,183 +161,72 @@ export function generateZedThemeJSON(
       }
     ],
 
-    // Syntax highlighting tokens
+    // Syntax tokens from merged.json
     syntax: {
-      // Variables
-      variable: getThemeToken(syntaxColors.variable),
-      'variable.builtin': getThemeToken(syntaxColors.variableDeclaration),
-      'variable.parameter': getThemeToken(syntaxColors.parameter),
-      'variable.member': getThemeToken(syntaxColors.variableProperty),
-      'variable.special': getThemeToken(syntaxColors.variableReadonly),
-
-      // Constants
-      constant: getThemeToken(syntaxColors.constant),
-      'constant.builtin': getThemeToken(syntaxColors.language),
-      'constant.macro': getThemeToken(syntaxColors.constant),
-      boolean: getThemeToken(syntaxColors.constant),
-      number: getThemeToken(syntaxColors.constant),
-      float: getThemeToken(syntaxColors.constant),
-
-      // Strings and characters
-      string: getThemeToken(colors.FG1),
-      'string.special': getThemeToken(colors.FG2),
-      'string.escape': getThemeToken(syntaxColors.other),
-      'string.regexp': getThemeToken(syntaxColors.other),
-      character: getThemeToken(syntaxColors.other),
-      'character.special': getThemeToken(syntaxColors.other),
-
-      // Functions and methods
-      function: getThemeToken(syntaxColors.function),
-      'function.builtin': getThemeToken(syntaxColors.supportFunction),
-      'function.call': getThemeToken(syntaxColors.functionCall),
-      'function.method': getThemeToken(syntaxColors.method),
-      'function.method.call': getThemeToken(syntaxColors.methodCall),
-
-      // Keywords and operators
-      keyword: getThemeToken(syntaxColors.keyword),
-      'keyword.control': getThemeToken(syntaxColors.control),
-      'keyword.control.import': getThemeToken(syntaxColors.controlImport),
-      'keyword.operator': getThemeToken(syntaxColors.operator),
-      'keyword.directive': getThemeToken(syntaxColors.keyword),
-      operator: getThemeToken(syntaxColors.operator),
-
-      // Types and modules
-      type: getThemeToken(syntaxColors.type),
-      'type.builtin': getThemeToken(syntaxColors.support),
-      module: getThemeToken(syntaxColors.typeParameter),
-      namespace: getThemeToken(syntaxColors.class),
-
-      // Tags and markup
-      tag: getThemeToken(syntaxColors.tag),
-      'tag.attribute': getThemeToken(syntaxColors.attribute),
-      'tag.delimiter': getThemeToken(syntaxColors.tagPunctuation),
-
-      // Properties and attributes
-      property: getThemeToken(syntaxColors.property),
       attribute: getThemeToken(syntaxColors.attribute),
-      label: getThemeToken(syntaxColors.property),
-
-      // Punctuation
-      punctuation: getThemeToken(syntaxColors.punctuation),
-      'punctuation.delimiter': getThemeToken(syntaxColors.punctuationComma),
-      'punctuation.bracket': getThemeToken(syntaxColors.punctuationBrace),
-      'punctuation.special': getThemeToken(syntaxColors.punctuation),
-
-      // Comments
+      boolean: getThemeToken(syntaxColors.language),
+      character: getThemeToken(colors.FG2),
+      'character.special': getThemeToken(colors.FG2),
+      class: getThemeToken(syntaxColors.class),
+      'class.builtin': getThemeToken(syntaxColors.support),
       comment: getThemeToken(syntaxColors.comment),
-      'comment.line': getThemeToken(syntaxColors.comment),
       'comment.block': getThemeToken(syntaxColors.comment),
       'comment.doc': getThemeToken(syntaxColors.comment),
       'comment.error': getThemeToken(colors.ERROR),
-      'comment.warning': getThemeToken(colors.WARNING),
+      'comment.hint': getThemeToken(colors.INFO),
+      'comment.line': getThemeToken(syntaxColors.comment),
       'comment.note': getThemeToken(colors.INFO),
-      'comment.todo': getThemeToken(colors.WARNING),
-
-      // Diffs
-      'diff.plus': getThemeToken(colors.SUCCESS),
-      'diff.minus': getThemeToken(colors.ERROR),
-      'diff.delta': getThemeToken(colors.WARNING),
-
-      // Special tokens
-      constructor: getThemeToken(syntaxColors.class),
+      'comment.warning': getThemeToken(colors.WARNING),
+      concept: getThemeToken(syntaxColors.type),
+      constant: getThemeToken(syntaxColors.constant),
+      'constant.builtin': getThemeToken(syntaxColors.support),
+      constructor: getThemeToken(syntaxColors.function),
       embedded: getThemeToken(colors.FG2),
-      emphasis: getThemeToken(colors.FG1),
-      'emphasis.strong': {
-        color: colors.FG1,
-        font_style: null,
-        font_weight: 700
-      },
-      hint: getThemeToken(syntaxColors.comment),
+      emphasis: getThemeToken(colors.FG2),
+      'emphasis.strong': getThemeToken(colors.FG2),
+      enum: getThemeToken(syntaxColors.type),
+      field: getThemeToken(syntaxColors.property),
+      function: getThemeToken(syntaxColors.function),
+      'function.builtin': getThemeToken(syntaxColors.support),
+      'function.decorator': getThemeToken(syntaxColors.function),
+      hint: getThemeToken(colors.INFO),
+      interface: getThemeToken(syntaxColors.class),
+      keyword: getThemeToken(syntaxColors.keyword),
+      'keyword.control': getThemeToken(syntaxColors.control),
+      'keyword.control.conditional': getThemeToken(syntaxColors.controlFlow),
+      'keyword.control.flow': getThemeToken(syntaxColors.controlFlow),
+      'keyword.control.import': getThemeToken(syntaxColors.controlImport),
+      'keyword.directive': getThemeToken(syntaxColors.modifier),
+      'keyword.function': getThemeToken(syntaxColors.storage),
+      'keyword.operator': getThemeToken(syntaxColors.operator),
+      label: getThemeToken(syntaxColors.class),
       link_text: getThemeToken(colors.INFO),
       link_uri: getThemeToken(colors.INFO),
-
-      class: getThemeToken(syntaxColors.class),
-      'class.builtin': getThemeToken(syntaxColors.support),
-      interface: getThemeToken(syntaxColors.type),
-      enum: getThemeToken(syntaxColors.type),
-      'type.parameter': getThemeToken(syntaxColors.typeParameter),
-
-      // Keywords and operators
-      'function.decorator': getThemeToken(syntaxColors.function),
-
-      // Keywords and operators
-      'keyword.control.flow': getThemeToken(syntaxColors.controlFlow),
-      'keyword.modifier': getThemeToken(syntaxColors.modifier),
-      'keyword.type': getThemeToken(syntaxColors.storage),
-      'keyword.coroutine': getThemeToken(syntaxColors.keyword),
-      'keyword.function': getThemeToken(syntaxColors.storage),
-      'keyword.storage': getThemeToken(syntaxColors.storage),
-      'keyword.repeat': getThemeToken(syntaxColors.keyword),
-      'keyword.return': getThemeToken(syntaxColors.controlFlow),
-      'keyword.debug': getThemeToken(syntaxColors.keyword),
-      'keyword.exception': getThemeToken(syntaxColors.control),
-      'keyword.conditional': getThemeToken(syntaxColors.controlFlow),
-      'keyword.conditional.ternary': getThemeToken(syntaxColors.controlFlow),
-
-      // Storage
-      storage: getThemeToken(syntaxColors.storage),
-      'storage.type': getThemeToken(syntaxColors.storage),
-      'storage.modifier': getThemeToken(syntaxColors.modifier),
-
-      'comment.hint': getThemeToken(syntaxColors.comment),
-
-      'text.doctype': getThemeToken(syntaxColors.keyword),
-
-      // Support types
-      support: getThemeToken(syntaxColors.support),
-      'support.function': getThemeToken(syntaxColors.supportFunction),
-      'support.variable': getThemeToken(syntaxColors.supportVariable),
-      'support.property': getThemeToken(syntaxColors.supportProperty),
-      'support.method': getThemeToken(syntaxColors.supportMethod),
-
-      // Special types
-      unit: getThemeToken(syntaxColors.unit),
-      datetime: getThemeToken(syntaxColors.datetime),
-
-      // Embedded content
-      'embedded.language': getThemeToken(syntaxColors.language),
-
-      // Language-specific highlights
-      field: getThemeToken(syntaxColors.variableProperty),
-      symbol: getThemeToken(syntaxColors.other),
-
-      // Special states
-      invalid: getThemeToken(colors.ERROR),
-      deprecated: getThemeToken(colors.WARNING),
-      information: getThemeToken(colors.INFO),
-      warning: getThemeToken(colors.WARNING),
-      error: getThemeToken(colors.ERROR),
-
-      // Additional semantic highlights
-      concept: getThemeToken(syntaxColors.type),
-      parent: getThemeToken(syntaxColors.type),
-      variant: getThemeToken(syntaxColors.type),
-
-      // Markdown specific
-      'text.heading': getThemeToken(colors.AC1),
-      'text.bold': {
-        color: colors.WARNING,
-        font_style: null,
-        font_weight: 700
-      },
-      'text.italic': {
-        color: colors.ERROR,
-        font_style: null,
-        font_weight: null
-      },
-      'text.quote': getThemeToken(colors.FG2),
-      'text.link': getThemeToken(colors.INFO),
-      'text.raw': getThemeToken(colors.SUCCESS),
+      module: getThemeToken(syntaxColors.typeParameter),
+      namespace: getThemeToken(syntaxColors.class),
+      number: getThemeToken(syntaxColors.constant),
+      operator: getThemeToken(syntaxColors.operator),
+      parameter: getThemeToken(syntaxColors.parameter),
+      parent: getThemeToken(syntaxColors.class),
+      property: getThemeToken(syntaxColors.property),
+      punctuation: getThemeToken(syntaxColors.punctuation),
+      'punctuation.bracket': getThemeToken(syntaxColors.punctuationBrace),
+      'punctuation.delimiter': getThemeToken(syntaxColors.punctuationComma),
+      'punctuation.special': getThemeToken(syntaxColors.punctuationQuote),
+      string: getThemeToken(colors.FG1),
+      'string.escape': getThemeToken(colors.FG2),
+      'string.regex': getThemeToken(colors.FG2),
+      'string.special': getThemeToken(colors.AC2),
+      'string.special.symbol': getThemeToken(colors.AC1),
+      tag: getThemeToken(syntaxColors.tag),
+      'tag.attribute': getThemeToken(syntaxColors.attribute),
+      'tag.delimiter': getThemeToken(syntaxColors.tagPunctuation),
       'text.literal': getThemeToken(colors.FG2),
-      'text.math': getThemeToken(syntaxColors.other),
-      'text.reference': getThemeToken(colors.FG2),
-      'text.url': getThemeToken(colors.INFO),
-      'text.emph': getThemeToken(colors.FG1),
-      'text.strong': {
-        color: colors.FG1,
-        font_style: null,
-        font_weight: 700
-      }
+      title: getThemeToken(colors.FG1),
+      type: getThemeToken(syntaxColors.type),
+      variable: getThemeToken(syntaxColors.variable),
+      'variable.special': getThemeToken(colors.AC2),
+      variant: getThemeToken(syntaxColors.variableProperty)
     }
   };
 
