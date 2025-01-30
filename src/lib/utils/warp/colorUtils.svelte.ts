@@ -68,37 +68,6 @@ export const randomizeColor = (hue: number[], lightness: number[], chroma: numbe
   return formatHex(clampChroma(newColor, 'oklch'));
 };
 
-export function adjustCommentColor(
-  commentColor: string,
-  backgroundColor: string,
-  isDarkTheme: boolean
-): string {
-  const minContrast = isDarkTheme ? 2 : 1.5;
-  const maxContrast = isDarkTheme ? 3 : 2.5;
-  let comment = oklch(commentColor);
-  const bgColor = oklch(backgroundColor);
-  let iterations = 0;
-  const MAX_ITERATIONS = 150;
-
-  while (iterations < MAX_ITERATIONS) {
-    const contrast = wcagContrast(comment!, bgColor!);
-    if (contrast < minContrast || contrast > maxContrast) {
-      if (contrast > maxContrast) {
-        comment = isDarkTheme ? darkenColor(comment!) : brightenColor(comment!);
-      } else if (contrast < minContrast) {
-        comment = isDarkTheme ? brightenColor(comment!) : darkenColor(comment!);
-      }
-    } else {
-      break;
-    }
-
-    comment = clampChroma(comment!, 'oklch');
-    iterations++;
-  }
-
-  return formatHex8(comment!);
-}
-
 export function ensureReadability(
   foreground: string,
   background: string,

@@ -11,11 +11,7 @@ import { generateSchemeHues } from '../common/color-schemes/patterns';
 import { clampChroma, formatHex, random } from 'culori';
 import { toOKLCH } from '$lib/components/vscode/color-picker/color-utils.svelte';
 
-export const randomizeColor = (
-  hue: number[] = [0, 360],
-  lightness: number[] = [0, 100],
-  chroma: number[] = [0, 40]
-) => {
+export const randomizeColor = (hue: number[], lightness: number[], chroma: number[]) => {
   const newColor = random('oklch', {
     l: lightness.length > 1 ? [lightness[0] / 100, lightness[1] / 100] : lightness[0] / 100,
     c: chroma.length > 1 ? [chroma[0] / 100, chroma[1] / 100] : chroma[0] / 100,
@@ -32,17 +28,6 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
   const lockedColors = options.lockedColors || {};
 
   const usedHues = new Set<number>();
-
-  //   // Generate scheme hues considering both UI and syntax locked colors
-  //   if (lockedColors && Object.keys(lockedColors).length > 0) {
-  //     schemeHues.generateWithLocks(lockedColors);
-  //   } else {
-  //     schemeHues.generate();
-  //   }
-
-  // const getRandomHue = () => {
-  //   return schemeHues[randomInteger(0, schemeHues.length - 1) % schemeHues.length];
-  // };
 
   const getUniqueRandomHue = () => {
     // If all hues have been used, reset the set
@@ -85,7 +70,8 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
       lockedColors?.background ||
       randomizeColor(uiColorHues.background, isDark ? [0, 35] : [89, 100], [0, 40]),
     foreground:
-      lockedColors?.foreground || randomizeColor(uiColorHues.foreground, [0, 100], [0, 40]),
+      lockedColors?.foreground ||
+      randomizeColor(uiColorHues.foreground, isDark ? [90, 100] : [0, 25], [0, 40]),
     accent: lockedColors?.accent || randomizeColor(uiColorHues.accent, [0, 100], [0, 40]),
     cursor: lockedColors?.cursor || randomizeColor(uiColorHues.accent, [0, 100], [0, 40])
   };
@@ -94,7 +80,7 @@ export function generateTheme(options: ThemeGenerationOptions): CssVariables {
   uiColors.cursor = ensureReadability(uiColors.cursor, uiColors.background, 5.5);
 
   uiColors.foreground = ensureReadability(uiColors.foreground, uiColors.background, 7.5);
-  uiColors.foreground = ensureReadability(uiColors.foreground, uiColors.accent, 2.5);
+  // uiColors.foreground = ensureReadability(uiColors.foreground, uiColors.accent, 2.5);
 
   // const normalLightness = [randomInteger(0, 90)];
   const normalLightness = [0, 90];
