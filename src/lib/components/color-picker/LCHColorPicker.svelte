@@ -75,15 +75,14 @@
         <div
           class="pattern-isometric pattern-bg-white pattern-gray-500 pattern-opacity-20 pattern-size-2 absolute inset-0 overflow-hidden rounded"
           style="background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
-					linear-gradient(135deg, #ccc 25%, transparent 25%),
-					linear-gradient(45deg, transparent 75%, #ccc 75%),
-					linear-gradient(135deg, transparent 75%, #ccc 75%);
-				background-size: 5px 5px;
-				background-position:
-					0 0,
-					2.5px 0,
-					2.5px -2.5px,
-					0px 2.5px;"
+					                         linear-gradient(135deg, #ccc 25%, transparent 25%),
+					                         linear-gradient(45deg, transparent 75%, #ccc 75%),
+					                         linear-gradient(135deg, transparent 75%, #ccc 75%);
+                  background-size: 5px 5px;
+                  background-position: 0 0,
+                                       2.5px 0,
+                                       2.5px -2.5px,
+                                       0px 2.5px;"
         ></div>
         <div
           class={clsx(

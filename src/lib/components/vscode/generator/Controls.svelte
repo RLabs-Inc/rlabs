@@ -42,7 +42,8 @@
 
   const baseHueGradient = `linear-gradient(
     to right in oklch longer hue,
-    oklch(70% .3 0) 100% 0%
+    oklch(70% .3 0) 0%,
+    oklch(70% .3 360) 100%
   )`;
 
   function handleKeyDown(event: KeyboardEvent) {
