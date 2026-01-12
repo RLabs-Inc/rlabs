@@ -2,6 +2,7 @@ import type { VSCodeTheme } from '$lib/types/vscode/theme';
 import type { UIColors, SyntaxColors, AnsiColors } from '$lib/types/vscode/color';
 
 interface ZedTheme {
+  $schema?: string;
   name: string;
   author: string;
   themes: {
@@ -11,16 +12,29 @@ interface ZedTheme {
   }[];
 }
 
-function getThemeToken(color: string) {
+interface ThemeTokenStyle {
+  color: string;
+  font_style: 'italic' | 'oblique' | null;
+  font_weight: 'bold' | null;
+}
+
+function getThemeToken(
+  color: string,
+  fontStyle?: 'italic' | 'oblique' | null,
+  fontWeight?: 'bold' | null
+): ThemeTokenStyle {
   return {
     color,
-    font_style: null,
-    font_weight: null
+    font_style: fontStyle ?? null,
+    font_weight: fontWeight ?? null
   };
 }
 
 function withOpacity(color: string, opacity: string): string {
-  return `${color}${opacity}`;
+  if (color.startsWith('#') && color.length === 7) {
+    return `${color}${opacity}`;
+  }
+  return color;
 }
 
 export function generateZedThemeJSON(
@@ -28,211 +42,314 @@ export function generateZedThemeJSON(
   colors: UIColors,
   syntaxColors: SyntaxColors,
   ansiColors: AnsiColors,
-  vscodeTheme: VSCodeTheme
+  vscodeTheme: VSCodeTheme,
+  author: string = 'RLabs Theme Generator'
 ): string {
-  const style = {
-    // UI Tokens merged from both sources
-    'background.appearance': 'opaque' as const,
-    accents: [colors.AC1, colors.AC2, colors.INFO, colors.SUCCESS, colors.WARNING, colors.ERROR],
+  // Build status colors (matching converter's StatusColorsContent)
+  const status = {
+    // Conflict status
+    conflict: colors.WARNING,
+    conflict_background: withOpacity(colors.WARNING, '30'),
+    conflict_border: colors.WARNING,
+
+    // Created status
+    created: colors.SUCCESS,
+    created_background: withOpacity(colors.SUCCESS, '30'),
+    created_border: colors.SUCCESS,
+
+    // Deleted status
+    deleted: colors.ERROR,
+    deleted_background: withOpacity(colors.ERROR, '30'),
+    deleted_border: colors.ERROR,
+
+    // Error status
+    error: colors.ERROR,
+    error_background: withOpacity(colors.ERROR, '30'),
+    error_border: colors.ERROR,
+
+    // Hidden status
+    hidden: syntaxColors.comment,
+    hidden_background: '#00000000',
+    hidden_border: '#00000000',
+
+    // Hint status
+    hint: colors.INFO,
+    hint_background: withOpacity(colors.INFO, '20'),
+    hint_border: colors.INFO,
+
+    // Ignored status
+    ignored: syntaxColors.comment,
+    ignored_background: withOpacity(syntaxColors.comment, '20'),
+    ignored_border: colors.BORDER,
+
+    // Info status
+    info: colors.INFO,
+    info_background: withOpacity(colors.INFO, '30'),
+    info_border: colors.INFO,
+
+    // Modified status
+    modified: colors.INFO,
+    modified_background: withOpacity(colors.INFO, '30'),
+    modified_border: colors.INFO,
+
+    // Predictive status (AI features)
+    predictive: syntaxColors.comment,
+    predictive_background: withOpacity(syntaxColors.comment, '20'),
+    predictive_border: colors.BORDER,
+
+    // Renamed status
+    renamed: colors.AC1,
+    renamed_background: withOpacity(colors.AC1, '30'),
+    renamed_border: colors.AC1,
+
+    // Success status
+    success: colors.SUCCESS,
+    success_background: withOpacity(colors.SUCCESS, '30'),
+    success_border: colors.SUCCESS,
+
+    // Unreachable status
+    unreachable: colors.ERROR,
+    unreachable_background: withOpacity(colors.ERROR, '20'),
+    unreachable_border: colors.ERROR,
+
+    // Warning status
+    warning: colors.WARNING,
+    warning_background: withOpacity(colors.WARNING, '30'),
+    warning_border: colors.WARNING
+  };
+
+  // Build theme colors (matching converter's ThemeColorsContent)
+  const themeColors = {
+    // Borders
+    border_selected: colors.AC1,
+    border_transparent: '#00000000',
+    border_disabled: withOpacity(syntaxColors.comment, '80'),
+
+    // Surface backgrounds
+    elevated_surface_background: colors.BG2,
+    surface_background: colors.BG2,
     background: colors.BG1,
-    'elevated_surface.background': colors.BG2,
-    'surface.background': colors.BG2,
-    border: colors.BORDER,
-    'border.variant': colors.AC1,
-    'border.focused': colors.AC2,
-    'border.selected': colors.AC1,
-    'border.transparent': withOpacity(colors.BORDER, '20'),
-    'border.disabled': syntaxColors.comment,
-    'element.background': colors.BG3,
-    'element.hover': withOpacity(colors.AC2, '40'),
-    'element.active': withOpacity(colors.AC2, '60'),
-    'element.selected': withOpacity(colors.AC2, '50'),
-    'element.disabled': syntaxColors.comment,
-    'drop_target.background': withOpacity(colors.BG2, '66'),
-    'ghost_element.background': withOpacity(colors.BG2, '59'),
-    'ghost_element.hover': withOpacity(colors.AC2, '40'),
-    'ghost_element.active': withOpacity(colors.AC2, '60'),
-    'ghost_element.selected': withOpacity(colors.AC2, '50'),
-    'ghost_element.disabled': syntaxColors.comment,
+
+    // Element states
+    element_background: colors.BG3,
+    element_hover: withOpacity(colors.AC2, '40'),
+    element_active: withOpacity(colors.AC2, '60'),
+    element_selected: withOpacity(colors.AC2, '50'),
+    element_disabled: withOpacity(syntaxColors.comment, '60'),
+    drop_target_background: withOpacity(colors.BG2, '66'),
+
+    // Ghost element states
+    ghost_element_background: '#00000000',
+    ghost_element_hover: withOpacity(colors.AC2, '30'),
+    ghost_element_selected: withOpacity(colors.AC2, '40'),
+    ghost_element_disabled: withOpacity(syntaxColors.comment, '40'),
+
+    // Text colors
     text: colors.FG1,
-    'text.muted': syntaxColors.comment,
-    'text.placeholder': syntaxColors.comment,
-    // 'text.disabled': syntaxColors.comment,
-    'text.accent': colors.AC2,
+    text_muted: colors.FG2,
+    text_placeholder: syntaxColors.comment,
+    text_disabled: withOpacity(syntaxColors.comment, '80'),
+    text_accent: colors.AC2,
+
+    // Icon colors
     icon: colors.FG1,
-    'icon.muted': syntaxColors.comment,
-    // 'icon.disabled': syntaxColors.comment,
-    'icon.placeholder': syntaxColors.comment,
-    'icon.accent': colors.AC2,
-    'status_bar.background': colors.AC2,
-    'title_bar.background': colors.BG2,
-    'title_bar.inactive_background': withOpacity(colors.BG2, '70'),
-    'toolbar.background': colors.BG1,
-    'tab_bar.background': colors.BG2,
-    'tab.inactive_background': colors.BG3,
-    'tab.active_background': colors.BG1,
-    'search.match_background': colors.findMatch,
-    'search.match_border': colors.FG1,
-    'panel.background': colors.BG3,
-    'panel.focused_border': colors.BORDER,
-    'panel.indent_guide': withOpacity(colors.BORDER, '99'),
-    'panel.indent_guide_active': syntaxColors.comment,
-    'panel.indent_guide_hover': colors.AC2,
-    'pane.focused_border': colors.BORDER,
-    'pane_group.border': colors.BORDER,
-    'scrollbar.thumb.background': withOpacity(colors.AC2, '33'),
-    'scrollbar.thumb.hover_background': syntaxColors.comment,
-    'scrollbar.thumb.border': colors.AC2,
-    'scrollbar.track.background': null,
-    'scrollbar.track.border': withOpacity(colors.FG1, '12'),
-    'editor.foreground': colors.FG1,
-    'editor.background': colors.BG1,
-    'editor.gutter.background': colors.BG1,
-    'editor.subheader.background': colors.BG3,
-    'editor.active_line.background': colors.lineHighlight,
-    'editor.highlighted_line.background': colors.lineHighlight,
-    'editor.line_number': syntaxColors.comment,
-    'editor.active_line_number': colors.AC2,
-    'editor.invisible': withOpacity(syntaxColors.comment, '66'),
-    'editor.wrap_guide': colors.lineHighlight,
-    'editor.active_wrap_guide': colors.AC2,
-    'editor.indent_guide': syntaxColors.comment,
-    'editor.indent_guide_active': colors.AC2,
-    'editor.selection.background': colors.selection,
-    'editor.matching_bracket.background': colors.findMatch,
-    'editor.document_highlight.bracket_background': withOpacity(colors.AC1, '40'),
-    'editor.document_highlight.read_background': withOpacity(colors.FG1, '20'),
-    'editor.document_highlight.write_background': withOpacity(colors.FG1, '20'),
+    icon_muted: colors.FG2,
+    icon_disabled: withOpacity(syntaxColors.comment, '80'),
+    icon_placeholder: syntaxColors.comment,
+    icon_accent: colors.AC2,
 
-    // Terminal colors
-    'terminal.background': colors.BG1,
-    'terminal.ansi.background': colors.BG1,
-    'terminal.foreground': colors.FG1,
-    'terminal.dim_foreground': colors.FG2,
-    'terminal.bright_foreground': colors.FG1,
-    'terminal.ansi.black': ansiColors.Black,
-    'terminal.ansi.red': ansiColors.Red,
-    'terminal.ansi.green': ansiColors.Green,
-    'terminal.ansi.yellow': ansiColors.Yellow,
-    'terminal.ansi.blue': ansiColors.Blue,
-    'terminal.ansi.magenta': ansiColors.Magenta,
-    'terminal.ansi.cyan': ansiColors.Cyan,
-    'terminal.ansi.white': ansiColors.White,
-    'terminal.ansi.bright_black': ansiColors.BrightBlack,
-    'terminal.ansi.bright_red': ansiColors.BrightRed,
-    'terminal.ansi.bright_green': ansiColors.BrightGreen,
-    'terminal.ansi.bright_yellow': ansiColors.BrightYellow,
-    'terminal.ansi.bright_blue': ansiColors.BrightBlue,
-    'terminal.ansi.bright_magenta': ansiColors.BrightMagenta,
-    'terminal.ansi.bright_cyan': ansiColors.BrightCyan,
-    'terminal.ansi.bright_white': ansiColors.BrightWhite,
+    // Debug colors
+    debugger_accent: colors.WARNING,
 
-    // Players section
+    // UI element backgrounds
+    status_bar_background: colors.AC2,
+    title_bar_background: colors.BG2,
+    title_bar_inactive_background: withOpacity(colors.BG2, '90'),
+    toolbar_background: colors.BG1,
+    tab_bar_background: colors.BG2,
+    tab_inactive_background: colors.BG3,
+    tab_active_background: colors.BG1,
+
+    // Search related
+    search_match_background: colors.findMatch,
+
+    // Panel and pane
+    panel_background: colors.BG3,
+    panel_focused_border: colors.BORDER,
+    panel_indent_guide: withOpacity(colors.BORDER, '60'),
+    panel_indent_guide_hover: colors.AC2,
+    panel_indent_guide_active: syntaxColors.comment,
+    pane_focused_border: colors.AC2,
+    pane_group_border: colors.BORDER,
+
+    // Scrollbar
+    scrollbar_thumb_background: withOpacity(colors.AC2, '33'),
+    scrollbar_thumb_hover_background: withOpacity(colors.AC2, '50'),
+    scrollbar_thumb_active_background: withOpacity(colors.AC2, '70'),
+    scrollbar_thumb_border: withOpacity(colors.AC2, '20'),
+    scrollbar_track_background: colors.BG1,
+    scrollbar_track_border: withOpacity(colors.BORDER, '30'),
+
+    // Minimap
+    minimap_thumb_background: withOpacity(colors.AC2, '30'),
+    minimap_thumb_hover_background: withOpacity(colors.AC2, '50'),
+    minimap_thumb_active_background: withOpacity(colors.AC2, '70'),
+
+    // Editor
+    editor_foreground: colors.FG1,
+    editor_background: colors.BG1,
+    editor_gutter_background: colors.BG1,
+    editor_subheader_background: colors.BG3,
+    editor_active_line_background: colors.lineHighlight,
+    editor_highlighted_line_background: withOpacity(colors.lineHighlight, 'cc'),
+    editor_debugger_active_line_background: withOpacity(colors.WARNING, '30'),
+    editor_line_number: syntaxColors.comment,
+    editor_active_line_number: colors.AC1,
+    editor_hover_line_number: colors.FG2,
+    editor_invisible: withOpacity(syntaxColors.comment, '50'),
+    editor_wrap_guide: withOpacity(colors.BORDER, '40'),
+    editor_active_wrap_guide: colors.AC2,
+    editor_indent_guide: withOpacity(syntaxColors.comment, '40'),
+    editor_indent_guide_active: syntaxColors.comment,
+    editor_document_highlight_read_background: withOpacity(colors.INFO, '25'),
+    editor_document_highlight_write_background: withOpacity(colors.AC1, '30'),
+    editor_document_highlight_bracket_background: withOpacity(colors.AC1, '40'),
+
+    // Terminal
+    terminal_background: colors.BG1,
+    terminal_foreground: colors.FG1,
+    terminal_ansi_background: colors.BG1,
+    terminal_bright_foreground: colors.FG1,
+    terminal_dim_foreground: colors.FG2,
+    terminal_ansi_black: ansiColors.Black,
+    terminal_ansi_bright_black: ansiColors.BrightBlack,
+    terminal_ansi_dim_black: ansiColors.Black,
+    terminal_ansi_red: ansiColors.Red,
+    terminal_ansi_bright_red: ansiColors.BrightRed,
+    terminal_ansi_dim_red: ansiColors.Red,
+    terminal_ansi_green: ansiColors.Green,
+    terminal_ansi_bright_green: ansiColors.BrightGreen,
+    terminal_ansi_dim_green: ansiColors.Green,
+    terminal_ansi_yellow: ansiColors.Yellow,
+    terminal_ansi_bright_yellow: ansiColors.BrightYellow,
+    terminal_ansi_dim_yellow: ansiColors.Yellow,
+    terminal_ansi_blue: ansiColors.Blue,
+    terminal_ansi_bright_blue: ansiColors.BrightBlue,
+    terminal_ansi_dim_blue: ansiColors.Blue,
+    terminal_ansi_magenta: ansiColors.Magenta,
+    terminal_ansi_bright_magenta: ansiColors.BrightMagenta,
+    terminal_ansi_dim_magenta: ansiColors.Magenta,
+    terminal_ansi_cyan: ansiColors.Cyan,
+    terminal_ansi_bright_cyan: ansiColors.BrightCyan,
+    terminal_ansi_dim_cyan: ansiColors.Cyan,
+    terminal_ansi_white: ansiColors.White,
+    terminal_ansi_bright_white: ansiColors.BrightWhite,
+    terminal_ansi_dim_white: ansiColors.White,
+
+    // Links
+    link_text_hover: colors.INFO,
+
+    // Version control
+    version_control_added: colors.SUCCESS,
+    version_control_deleted: colors.ERROR,
+    version_control_modified: colors.INFO,
+    version_control_renamed: colors.AC1,
+    version_control_conflict: colors.WARNING,
+    version_control_ignored: syntaxColors.comment,
+    version_control_word_added: withOpacity(colors.SUCCESS, '40'),
+    version_control_word_deleted: withOpacity(colors.ERROR, '40'),
+    version_control_conflict_marker_ours: withOpacity(colors.INFO, '50'),
+    version_control_conflict_marker_theirs: withOpacity(colors.SUCCESS, '50')
+  };
+
+  // Build syntax highlighting (matching converter's ZedSyntaxToken mapping)
+  const syntax: Record<string, ThemeTokenStyle> = {
+    attribute: getThemeToken(syntaxColors.attribute),
+    boolean: getThemeToken(syntaxColors.language),
+    comment: getThemeToken(syntaxColors.comment, 'italic'),
+    'comment.doc': getThemeToken(syntaxColors.comment, 'italic'),
+    constant: getThemeToken(syntaxColors.constant),
+    constructor: getThemeToken(syntaxColors.function),
+    embedded: getThemeToken(colors.FG2),
+    emphasis: getThemeToken(colors.FG1, 'italic'),
+    'emphasis.strong': getThemeToken(colors.FG1, null, 'bold'),
+    enum: getThemeToken(syntaxColors.type),
+    function: getThemeToken(syntaxColors.function),
+    hint: getThemeToken(colors.INFO),
+    keyword: getThemeToken(syntaxColors.keyword),
+    label: getThemeToken(syntaxColors.class),
+    link_text: getThemeToken(colors.INFO),
+    link_uri: getThemeToken(colors.INFO, 'italic'),
+    number: getThemeToken(syntaxColors.constant),
+    operator: getThemeToken(syntaxColors.operator),
+    predictive: getThemeToken(syntaxColors.comment, 'italic'),
+    preproc: getThemeToken(syntaxColors.modifier),
+    primary: getThemeToken(colors.FG1),
+    property: getThemeToken(syntaxColors.property),
+    punctuation: getThemeToken(syntaxColors.punctuation),
+    'punctuation.bracket': getThemeToken(syntaxColors.punctuationBrace),
+    'punctuation.delimiter': getThemeToken(syntaxColors.punctuationComma),
+    'punctuation.list_marker': getThemeToken(syntaxColors.punctuation),
+    'punctuation.special': getThemeToken(syntaxColors.punctuationQuote),
+    string: getThemeToken(colors.FG1),
+    'string.escape': getThemeToken(syntaxColors.language),
+    'string.regex': getThemeToken(colors.FG2),
+    'string.special': getThemeToken(colors.AC2),
+    'string.special.symbol': getThemeToken(colors.AC1),
+    tag: getThemeToken(syntaxColors.tag),
+    'text.literal': getThemeToken(colors.FG2),
+    title: getThemeToken(colors.FG1, null, 'bold'),
+    type: getThemeToken(syntaxColors.type),
+    variable: getThemeToken(syntaxColors.variable),
+    'variable.special': getThemeToken(syntaxColors.language),
+    variant: getThemeToken(syntaxColors.variableProperty)
+  };
+
+  // Build the style object (matching converter's ThemeStyleContent)
+  const style = {
+    window_background_appearance: 'opaque' as const,
+    accents: [colors.AC1, colors.AC2, colors.INFO, colors.SUCCESS, colors.WARNING, colors.ERROR],
+    colors: themeColors,
+    status,
     players: [
       {
         cursor: colors.AC1,
-        selection: withOpacity(colors.selection, '80'),
+        selection: withOpacity(colors.AC1, '40'),
         background: colors.AC1
       },
       {
         cursor: colors.AC2,
-        selection: withOpacity(colors.AC2, '33'),
+        selection: withOpacity(colors.AC2, '40'),
         background: colors.AC2
       },
       {
         cursor: colors.INFO,
-        selection: withOpacity(colors.INFO, '33'),
+        selection: withOpacity(colors.INFO, '40'),
         background: colors.INFO
       },
       {
         cursor: colors.WARNING,
-        selection: withOpacity(colors.WARNING, '33'),
+        selection: withOpacity(colors.WARNING, '40'),
         background: colors.WARNING
       },
       {
         cursor: colors.SUCCESS,
-        selection: withOpacity(colors.SUCCESS, '33'),
+        selection: withOpacity(colors.SUCCESS, '40'),
         background: colors.SUCCESS
       },
       {
         cursor: colors.ERROR,
-        selection: withOpacity(colors.ERROR, '33'),
+        selection: withOpacity(colors.ERROR, '40'),
         background: colors.ERROR
       }
     ],
-
-    // Syntax tokens from merged.json
-    syntax: {
-      attribute: getThemeToken(syntaxColors.attribute),
-      boolean: getThemeToken(syntaxColors.language),
-      character: getThemeToken(colors.FG2),
-      'character.special': getThemeToken(colors.FG2),
-      class: getThemeToken(syntaxColors.class),
-      'class.builtin': getThemeToken(syntaxColors.support),
-      comment: getThemeToken(syntaxColors.comment),
-      'comment.block': getThemeToken(syntaxColors.comment),
-      'comment.doc': getThemeToken(syntaxColors.comment),
-      'comment.error': getThemeToken(colors.ERROR),
-      'comment.hint': getThemeToken(colors.INFO),
-      'comment.line': getThemeToken(syntaxColors.comment),
-      'comment.note': getThemeToken(colors.INFO),
-      'comment.warning': getThemeToken(colors.WARNING),
-      concept: getThemeToken(syntaxColors.type),
-      constant: getThemeToken(syntaxColors.constant),
-      'constant.builtin': getThemeToken(syntaxColors.support),
-      constructor: getThemeToken(syntaxColors.function),
-      embedded: getThemeToken(colors.FG2),
-      emphasis: getThemeToken(colors.FG2),
-      'emphasis.strong': getThemeToken(colors.FG2),
-      enum: getThemeToken(syntaxColors.type),
-      field: getThemeToken(syntaxColors.property),
-      function: getThemeToken(syntaxColors.function),
-      'function.builtin': getThemeToken(syntaxColors.support),
-      'function.decorator': getThemeToken(syntaxColors.function),
-      hint: getThemeToken(colors.INFO),
-      interface: getThemeToken(syntaxColors.class),
-      keyword: getThemeToken(syntaxColors.keyword),
-      'keyword.control': getThemeToken(syntaxColors.control),
-      'keyword.control.conditional': getThemeToken(syntaxColors.controlFlow),
-      'keyword.control.flow': getThemeToken(syntaxColors.controlFlow),
-      'keyword.control.import': getThemeToken(syntaxColors.controlImport),
-      'keyword.directive': getThemeToken(syntaxColors.modifier),
-      'keyword.function': getThemeToken(syntaxColors.storage),
-      'keyword.operator': getThemeToken(syntaxColors.operator),
-      label: getThemeToken(syntaxColors.class),
-      link_text: getThemeToken(colors.INFO),
-      link_uri: getThemeToken(colors.INFO),
-      module: getThemeToken(syntaxColors.typeParameter),
-      namespace: getThemeToken(syntaxColors.class),
-      number: getThemeToken(syntaxColors.constant),
-      operator: getThemeToken(syntaxColors.operator),
-      parameter: getThemeToken(syntaxColors.parameter),
-      parent: getThemeToken(syntaxColors.class),
-      property: getThemeToken(syntaxColors.property),
-      punctuation: getThemeToken(syntaxColors.punctuation),
-      'punctuation.bracket': getThemeToken(syntaxColors.punctuationBrace),
-      'punctuation.delimiter': getThemeToken(syntaxColors.punctuationComma),
-      'punctuation.special': getThemeToken(syntaxColors.punctuationQuote),
-      string: getThemeToken(colors.FG1),
-      'string.escape': getThemeToken(colors.FG2),
-      'string.regex': getThemeToken(colors.FG2),
-      'string.special': getThemeToken(colors.AC2),
-      'string.special.symbol': getThemeToken(colors.AC1),
-      tag: getThemeToken(syntaxColors.tag),
-      'tag.attribute': getThemeToken(syntaxColors.attribute),
-      'tag.delimiter': getThemeToken(syntaxColors.tagPunctuation),
-      'text.literal': getThemeToken(colors.FG2),
-      title: getThemeToken(colors.FG1),
-      type: getThemeToken(syntaxColors.type),
-      variable: getThemeToken(syntaxColors.variable),
-      'variable.special': getThemeToken(colors.AC2),
-      variant: getThemeToken(syntaxColors.variableProperty)
-    }
+    syntax
   };
 
   const theme: ZedTheme = {
-    name: 'Generated Theme',
-    author: 'Theme Generator',
+    $schema: 'https://zed.dev/schema/themes/v0.2.0.json',
+    name,
+    author,
     themes: [
       {
         name,
